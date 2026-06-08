@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "4b9f2b8f-1a9a-4c9b-b9f1-a1b2c3d4e5f6",
+		"name": "TradeOffStack API Automatisé",
+		"description": "Collection de tests bout-en-bout pour TradeOffStack API (Production / Docker)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"if(jsonData.token) {",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@tradeoffstack.com\",\n  \"password\": \"Admin123!Secure\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Departments (CRUD)",
+			"item": [
+				{
+					"name": "Create Department",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200/201\", function () {",
+									"    pm.response.to.be.success;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"if(jsonData.id) {",
+									"    pm.environment.set(\"department_id\", jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Département Informatique\",\n  \"description\": \"Gestion de l'IT et des équipements\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Departments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Departments"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Department By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Departments/{{department_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Departments",
+								"{{department_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Department",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Département Informatique (Mise à jour)\",\n  \"description\": \"Nouveau nom pour les tests\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Departments/{{department_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Departments",
+								"{{department_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Department",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Departments/{{department_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Departments",
+								"{{department_id}}"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
