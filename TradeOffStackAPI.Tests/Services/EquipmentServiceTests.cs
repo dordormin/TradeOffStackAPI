@@ -114,7 +114,7 @@ public class EquipmentServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Équipement non trouvé.", response.Message);
+        Assert.Equal("Equipment not found.", response.Message);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class EquipmentServiceTests
         
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Le nom de l'équipement est requis.", response.Message);
+        Assert.Equal("Equipment name is required.", response.Message);
     }
     
     [Fact]

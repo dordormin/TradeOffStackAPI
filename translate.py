@@ -1,7 +1,7 @@
 import os
 import re
 
-directory = "/root/RiderProjects/TradeOffStackAPI/TradeOffStackAPI/Services"
+directory = "/root/RiderProjects/TradeOffStackAPI/TradeOffStackAPI.Tests"
 
 replacements = {
     '"Cet équipement a déjà une demande de maintenance ouverte."': '"This equipment already has an open maintenance request."',

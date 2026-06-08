@@ -42,7 +42,7 @@ public class MaintenanceRequestServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("L'équipement spécifié n'existe pas.", response.Message);
+        Assert.Equal("The specified equipment does not exist.", response.Message);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class MaintenanceRequestServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Cet équipement a déjà une demande de maintenance ouverte.", response.Message);
+        Assert.Equal("This equipment already has an open maintenance request.", response.Message);
     }
 
     [Fact]
@@ -73,6 +73,6 @@ public class MaintenanceRequestServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Demande non trouvée.", response.Message);
+        Assert.Equal("Request not found.", response.Message);
     }
 }

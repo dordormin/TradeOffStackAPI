@@ -111,6 +111,6 @@ public class UserServiceTests
         
         // Assert
         Assert.False(response.Success);
-        Assert.Contains("existe déjà", response.Message);
+        Assert.Contains("already exists", response.Message);
     }
 }
