@@ -1,0 +1,512 @@
+@host = http://localhost:5053
+
+### =========================================================================
+### 0. CONNEXION (ADMINISTRATEUR)
+### =========================================================================
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "super.admin@trade.io", 
+  "password": "Password123!" 
+}
+> {% client.global.set("token", response.body.token); %}
+
+### =========================================================================
+### 1. CRÉATION DE 11 NOUVEAUX UTILISATEURS (Avec images de profil)
+### =========================================================================
+
+# @name u1
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Marc", "last_name": "Tremblay", "email": "mgr1@trade.io", "role": "Manager", "is_active": true, "profile_image": "marc_tremblay.jpg" }
+> {% client.global.set("u1", response.body.id); %}
+
+###
+# @name u2
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Sophie", "last_name": "Roy", "email": "mgr2@trade.io", "role": "Manager", "is_active": true, "profile_image": "sophie_roy.jpg" }
+> {% client.global.set("u2", response.body.id); %}
+
+###
+# @name u3
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Luc", "last_name": "Bernard", "email": "mgr3@trade.io", "role": "Manager", "is_active": true, "profile_image": "luc_bernard.jpg" }
+> {% client.global.set("u3", response.body.id); %}
+
+###
+# @name u4
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Alice", "last_name": "Dubois", "email": "emp1@trade.io", "role": "Employee", "is_active": true, "profile_image": "alice_dubois.jpg" }
+> {% client.global.set("u4", response.body.id); %}
+
+###
+# @name u5
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Paul", "last_name": "Martin", "email": "emp2@trade.io", "role": "Employee", "is_active": true, "profile_image": "paul_martin.jpg" }
+> {% client.global.set("u5", response.body.id); %}
+
+###
+# @name u6
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Julie", "last_name": "Lefebvre", "email": "emp3@trade.io", "role": "Employee", "is_active": true, "profile_image": "julie_lefebvre.jpg" }
+> {% client.global.set("u6", response.body.id); %}
+
+###
+# @name u7
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Thomas", "last_name": "Moreau", "email": "emp4@trade.io", "role": "Employee", "is_active": true, "profile_image": "thomas_moreau.jpg" }
+> {% client.global.set("u7", response.body.id); %}
+
+###
+# @name u8
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Emma", "last_name": "Laurent", "email": "emp5@trade.io", "role": "Employee", "is_active": true, "profile_image": "emma_laurent.jpg" }
+> {% client.global.set("u8", response.body.id); %}
+
+###
+# @name u9
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Nicolas", "last_name": "Simon", "email": "emp6@trade.io", "role": "Employee", "is_active": true, "profile_image": "nicolas_simon.jpg" }
+> {% client.global.set("u9", response.body.id); %}
+
+###
+# @name u10
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Céline", "last_name": "Michel", "email": "emp7@trade.io", "role": "Employee", "is_active": true, "profile_image": "celine_michel.jpg" }
+> {% client.global.set("u10", response.body.id); %}
+
+###
+# @name u11
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "first_name": "Antoine", "last_name": "Garcia", "email": "emp8@trade.io", "role": "Employee", "is_active": true, "profile_image": "antoine_garcia.jpg" }
+> {% client.global.set("u11", response.body.id); %}
+
+
+### =========================================================================
+### 2. CRÉATION DE 20 NOUVEAUX ÉQUIPEMENTS (Avec images)
+### =========================================================================
+
+# @name eq1
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Dell XPS 13", "serial_number": "SN-L-01", "status": "Available", "category": "Laptop", "description": "Laptop de fonction", "price": 1200, "image": "dell_xps_13.jpg" }
+> {% client.global.set("eq1", response.body.id); %}
+
+###
+# @name eq2
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "MacBook Pro 14", "serial_number": "SN-L-02", "status": "Available", "category": "Laptop", "description": "MacBook dev", "price": 2000, "image": "macbook_pro_14.jpg" }
+> {% client.global.set("eq2", response.body.id); %}
+
+###
+# @name eq3
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "ThinkPad T14", "serial_number": "SN-L-03", "status": "Available", "category": "Laptop", "description": "Laptop robuste", "price": 1300, "image": "thinkpad_t14.jpg" }
+> {% client.global.set("eq3", response.body.id); %}
+
+###
+# @name eq4
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "HP EliteBook", "serial_number": "SN-L-04", "status": "Available", "category": "Laptop", "description": "Laptop standard", "price": 1100, "image": "hp_elitebook.jpg" }
+> {% client.global.set("eq4", response.body.id); %}
+
+###
+# @name eq5
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Asus ProBook", "serial_number": "SN-L-05", "status": "Available", "category": "Laptop", "description": "Laptop bureautique", "price": 900, "image": "asus_probook.jpg" }
+> {% client.global.set("eq5", response.body.id); %}
+
+###
+# @name eq6
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Écran Dell 27 4K", "serial_number": "SN-M-01", "status": "Available", "category": "Monitor", "description": "Moniteur externe", "price": 400, "image": "dell_u2723qe.jpg" }
+> {% client.global.set("eq6", response.body.id); %}
+
+###
+# @name eq7
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Écran LG Ultrawide", "serial_number": "SN-M-02", "status": "Available", "category": "Monitor", "description": "Moniteur design", "price": 600, "image": "lg_ultrawide.jpg" }
+> {% client.global.set("eq7", response.body.id); %}
+
+###
+# @name eq8
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Écran Samsung 24", "serial_number": "SN-M-03", "status": "Available", "category": "Monitor", "description": "Moniteur basique", "price": 200, "image": "samsung_24.jpg" }
+> {% client.global.set("eq8", response.body.id); %}
+
+###
+# @name eq9
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Écran BenQ 32", "serial_number": "SN-M-04", "status": "Available", "category": "Monitor", "description": "Moniteur graphisme", "price": 500, "image": "benq_32.jpg" }
+> {% client.global.set("eq9", response.body.id); %}
+
+###
+# @name eq10
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Écran Asus 27", "serial_number": "SN-M-05", "status": "Available", "category": "Monitor", "description": "Moniteur standard", "price": 250, "image": "asus_27.jpg" }
+> {% client.global.set("eq10", response.body.id); %}
+
+###
+# @name eq11
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Souris MX Master 3", "serial_number": "SN-P-01", "status": "Available", "category": "Peripheral", "description": "Souris ergonomique", "price": 100, "image": "mx_master_3.jpg" }
+> {% client.global.set("eq11", response.body.id); %}
+
+###
+# @name eq12
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Clavier Keychron K8", "serial_number": "SN-P-02", "status": "Available", "category": "Peripheral", "description": "Clavier mécanique", "price": 120, "image": "keychron_k8.jpg" }
+> {% client.global.set("eq12", response.body.id); %}
+
+###
+# @name eq13
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Casque Jabra", "serial_number": "SN-P-03", "status": "Available", "category": "Peripheral", "description": "Casque audio pro", "price": 150, "image": "jabra_evolve.jpg" }
+> {% client.global.set("eq13", response.body.id); %}
+
+###
+# @name eq14
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Webcam Logitech C920", "serial_number": "SN-P-04", "status": "Available", "category": "Peripheral", "description": "Caméra 1080p", "price": 80, "image": "logitech_c920.jpg" }
+> {% client.global.set("eq14", response.body.id); %}
+
+###
+# @name eq15
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Station d'accueil Dell", "serial_number": "SN-P-05", "status": "Available", "category": "Peripheral", "description": "Dock USB-C", "price": 200, "image": "dell_dock.jpg" }
+> {% client.global.set("eq15", response.body.id); %}
+
+###
+# @name eq16
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Routeur Cisco", "serial_number": "SN-N-01", "status": "Available", "category": "NetworkDevice", "description": "Routeur étage 1", "price": 800, "image": "cisco_router.jpg" }
+> {% client.global.set("eq16", response.body.id); %}
+
+###
+# @name eq17
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Switch Netgear 24p", "serial_number": "SN-N-02", "status": "Available", "category": "NetworkDevice", "description": "Switch réseau", "price": 300, "image": "netgear_switch.jpg" }
+> {% client.global.set("eq17", response.body.id); %}
+
+###
+# @name eq18
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Borne WiFi Ubiquiti", "serial_number": "SN-N-03", "status": "Available", "category": "NetworkDevice", "description": "Point d'accès", "price": 150, "image": "ubiquiti_ap.jpg" }
+> {% client.global.set("eq18", response.body.id); %}
+
+###
+# @name eq19
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Firewall Fortinet", "serial_number": "SN-N-04", "status": "Available", "category": "NetworkDevice", "description": "Pare-feu matériel", "price": 1500, "image": "fortinet_firewall.jpg" }
+> {% client.global.set("eq19", response.body.id); %}
+
+###
+# @name eq20
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Onduleur APC", "serial_number": "SN-N-05", "status": "Available", "category": "NetworkDevice", "description": "Batterie de secours", "price": 400, "image": "apc_ups.jpg" }
+> {% client.global.set("eq20", response.body.id); %}
+
+
+### =========================================================================
+### 3. CRÉATION DE 25 RÉSERVATIONS
+### =========================================================================
+
+### --- Phase A : 5 Réservations qui seront retournées (Historique) ---
+# @name r1_hist
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq1}}", "user_id": "9f975fe0-daf4-457a-bab1-bba6ebb209b5", "status": "Pending", "start_date": "2024-01-10T09:00:00Z" }
+> {% client.global.set("r1", response.body.id); %}
+
+### 
+POST {{host}}/api/reservation/{{r1}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name r2_hist
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq2}}", "user_id": "bd4ada38-60a2-4e0b-89b4-bd71f6a7c11c", "status": "Pending", "start_date": "2024-02-10T09:00:00Z" }
+> {% client.global.set("r2", response.body.id); %}
+
+### 
+POST {{host}}/api/reservation/{{r2}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name r3_hist
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq3}}", "user_id": "3fc82205-cc2d-485a-9ab3-029605dbfaf1", "status": "Pending", "start_date": "2024-03-10T09:00:00Z" }
+> {% client.global.set("r3", response.body.id); %}
+
+### 
+POST {{host}}/api/reservation/{{r3}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name r4_hist
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq4}}", "user_id": "1e3ba381-32a1-4b60-a556-4935fb78f123", "status": "Pending", "start_date": "2024-04-10T09:00:00Z" }
+> {% client.global.set("r4", response.body.id); %}
+
+### 
+POST {{host}}/api/reservation/{{r4}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name r5_hist
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq5}}", "user_id": "{{u1}}", "status": "Pending", "start_date": "2024-05-10T09:00:00Z" }
+> {% client.global.set("r5", response.body.id); %}
+
+### 
+POST {{host}}/api/reservation/{{r5}}/return
+Authorization: Bearer {{token}}
+
+### --- Phase B : 20 Réservations Actives (Sur les 20 Équipements) ---
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq1}}", "user_id": "{{u2}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq2}}", "user_id": "{{u3}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq3}}", "user_id": "{{u4}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq4}}", "user_id": "{{u5}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq5}}", "user_id": "{{u6}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq6}}", "user_id": "{{u7}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq7}}", "user_id": "{{u8}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq8}}", "user_id": "{{u9}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq9}}", "user_id": "{{u10}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq10}}", "user_id": "{{u11}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq11}}", "user_id": "9f975fe0-daf4-457a-bab1-bba6ebb209b5", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq12}}", "user_id": "bd4ada38-60a2-4e0b-89b4-bd71f6a7c11c", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq13}}", "user_id": "3fc82205-cc2d-485a-9ab3-029605dbfaf1", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq14}}", "user_id": "1e3ba381-32a1-4b60-a556-4935fb78f123", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq15}}", "user_id": "{{u1}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq16}}", "user_id": "{{u2}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq17}}", "user_id": "{{u3}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq18}}", "user_id": "{{u4}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq19}}", "user_id": "{{u5}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }
+
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "equipment_id": "{{eq20}}", "user_id": "{{u6}}", "status": "Active", "start_date": "2026-06-10T09:00:00Z" }

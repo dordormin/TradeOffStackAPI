@@ -1,0 +1,345 @@
+################################################################################
+# JEU DE DONNÉES DE TEST — Insertions via POST (Create du CRUD)
+#
+# Objectif : insérer 10 éléments dans chaque table pour tester les endpoints POST.
+#
+# ORDRE D'EXÉCUTION OBLIGATOIRE (contraintes de clés étrangères + règles métier) :
+#   1. Departments   (aucune dépendance)
+#   2. Users         (FK -> Departments)
+#   3. Equipments    (aucune dépendance, tous créés "Available")
+#   4. Reservations  (FK -> Equipment + User ; exige Equipment.Status == Available,
+#                     puis le passe à "Reserved")
+#   5. Maintenance   (FK -> Equipment + User ; passe l'équipement à "OutForRepair")
+#
+# Astuce Rider/VS : "Run all requests in file" exécute de haut en bas.
+# Les GUID sont fixes pour permettre les références croisées.
+################################################################################
+
+@host = http://localhost:5053
+
+### ──────────────────────────────────────────────────────────────────────────
+### 1) DEPARTMENTS (10)
+### ──────────────────────────────────────────────────────────────────────────
+
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000001", "name": "Informatique", "description": "Service IT et infrastructure" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000002", "name": "Comptabilité", "description": "Finances et paie" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000003", "name": "Ressources Humaines", "description": "Gestion du personnel" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000004", "name": "Marketing", "description": "Communication et ventes" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000005", "name": "Direction", "description": "Direction générale" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000006", "name": "Logistique", "description": "Approvisionnement et stock" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000007", "name": "Recherche & Développement", "description": "Innovation produit" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000008", "name": "Support Client", "description": "Service après-vente" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000009", "name": "Juridique", "description": "Affaires légales et conformité" }
+
+###
+POST {{host}}/api/department
+Content-Type: application/json
+
+{ "id": "d1000000-0000-0000-0000-000000000010", "name": "Production", "description": "Atelier et fabrication" }
+
+
+### ──────────────────────────────────────────────────────────────────────────
+### 2) USERS (10) — role: Admin | Manager | Employee
+### ──────────────────────────────────────────────────────────────────────────
+
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000001", "first_name": "Alice", "last_name": "Tremblay", "email": "alice.tremblay@tradeoff.io", "phone_number": "514-555-0101", "role": "Admin", "department_id": "d1000000-0000-0000-0000-000000000001", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000002", "first_name": "Benoit", "last_name": "Gagnon", "email": "benoit.gagnon@tradeoff.io", "phone_number": "514-555-0102", "role": "Manager", "department_id": "d1000000-0000-0000-0000-000000000002", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000003", "first_name": "Chloé", "last_name": "Roy", "email": "chloe.roy@tradeoff.io", "phone_number": "514-555-0103", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000003", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000004", "first_name": "David", "last_name": "Bélanger", "email": "david.belanger@tradeoff.io", "phone_number": "514-555-0104", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000004", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000005", "first_name": "Emma", "last_name": "Côté", "email": "emma.cote@tradeoff.io", "phone_number": "514-555-0105", "role": "Manager", "department_id": "d1000000-0000-0000-0000-000000000005", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000006", "first_name": "Félix", "last_name": "Lavoie", "email": "felix.lavoie@tradeoff.io", "phone_number": "514-555-0106", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000006", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000007", "first_name": "Gabrielle", "last_name": "Fortin", "email": "gabrielle.fortin@tradeoff.io", "phone_number": "514-555-0107", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000007", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000008", "first_name": "Hugo", "last_name": "Bergeron", "email": "hugo.bergeron@tradeoff.io", "phone_number": "514-555-0108", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000008", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000009", "first_name": "Inès", "last_name": "Girard", "email": "ines.girard@tradeoff.io", "phone_number": "514-555-0109", "role": "Manager", "department_id": "d1000000-0000-0000-0000-000000000009", "is_active": true }
+
+###
+POST {{host}}/api/user
+Content-Type: application/json
+
+{ "id": "00000002-0000-0000-0000-000000000010", "first_name": "Jules", "last_name": "Morin", "email": "jules.morin@tradeoff.io", "phone_number": "514-555-0110", "role": "Employee", "department_id": "d1000000-0000-0000-0000-000000000010", "is_active": true }
+
+
+### ──────────────────────────────────────────────────────────────────────────
+### 3) EQUIPMENTS (10) — status: Available | category: Laptop|Monitor|Peripheral|NetworkDevice
+### ──────────────────────────────────────────────────────────────────────────
+
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000001", "name": "Dell XPS 15", "serial_number": "SN-LAP-0001", "status": "Available", "category": "Laptop", "description": "Ordinateur portable 15 pouces", "price": 1899.99, "image": "xps15.png", "image_url": "http://cdn.tradeoff.io/xps15.png", "image_url_https": "https://cdn.tradeoff.io/xps15.png", "purchase_date": "2025-01-15T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000002", "name": "MacBook Pro 14", "serial_number": "SN-LAP-0002", "status": "Available", "category": "Laptop", "description": "MacBook Pro M3 14 pouces", "price": 2499.00, "image": "mbp14.png", "image_url": "http://cdn.tradeoff.io/mbp14.png", "image_url_https": "https://cdn.tradeoff.io/mbp14.png", "purchase_date": "2025-02-20T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000003", "name": "Dell UltraSharp U2723QE", "serial_number": "SN-MON-0003", "status": "Available", "category": "Monitor", "description": "Écran 27 pouces 4K", "price": 649.50, "image": "u2723.png", "image_url": "http://cdn.tradeoff.io/u2723.png", "image_url_https": "https://cdn.tradeoff.io/u2723.png", "purchase_date": "2025-03-10T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000004", "name": "LG 34WN780", "serial_number": "SN-MON-0004", "status": "Available", "category": "Monitor", "description": "Écran ultrawide 34 pouces", "price": 799.00, "image": "lg34.png", "image_url": "http://cdn.tradeoff.io/lg34.png", "image_url_https": "https://cdn.tradeoff.io/lg34.png", "purchase_date": "2025-03-12T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000005", "name": "Logitech MX Master 3S", "serial_number": "SN-PER-0005", "status": "Available", "category": "Peripheral", "description": "Souris ergonomique sans fil", "price": 119.99, "image": "mxmaster.png", "image_url": "http://cdn.tradeoff.io/mxmaster.png", "image_url_https": "https://cdn.tradeoff.io/mxmaster.png", "purchase_date": "2025-04-01T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000006", "name": "Keychron K8 Pro", "serial_number": "SN-PER-0006", "status": "Available", "category": "Peripheral", "description": "Clavier mécanique sans fil", "price": 99.00, "image": "k8pro.png", "image_url": "http://cdn.tradeoff.io/k8pro.png", "image_url_https": "https://cdn.tradeoff.io/k8pro.png", "purchase_date": "2025-04-05T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000007", "name": "Cisco Catalyst 2960", "serial_number": "SN-NET-0007", "status": "Available", "category": "NetworkDevice", "description": "Commutateur réseau 48 ports", "price": 1250.00, "image": "cisco2960.png", "image_url": "http://cdn.tradeoff.io/cisco2960.png", "image_url_https": "https://cdn.tradeoff.io/cisco2960.png", "purchase_date": "2025-04-18T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000008", "name": "Ubiquiti UniFi AP", "serial_number": "SN-NET-0008", "status": "Available", "category": "NetworkDevice", "description": "Point d'accès WiFi 6", "price": 189.00, "image": "unifi.png", "image_url": "http://cdn.tradeoff.io/unifi.png", "image_url_https": "https://cdn.tradeoff.io/unifi.png", "purchase_date": "2025-05-02T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000009", "name": "Lenovo ThinkPad X1", "serial_number": "SN-LAP-0009", "status": "Available", "category": "Laptop", "description": "Ultrabook professionnel 14 pouces", "price": 1699.00, "image": "x1carbon.png", "image_url": "http://cdn.tradeoff.io/x1carbon.png", "image_url_https": "https://cdn.tradeoff.io/x1carbon.png", "purchase_date": "2025-05-15T00:00:00Z" }
+
+###
+POST {{host}}/api/equipment
+Content-Type: application/json
+
+{ "id": "00000003-0000-0000-0000-000000000010", "name": "Samsung Odyssey G7", "serial_number": "SN-MON-0010", "status": "Available", "category": "Monitor", "description": "Écran incurvé 32 pouces", "price": 729.00, "image": "g7.png", "image_url": "http://cdn.tradeoff.io/g7.png", "image_url_https": "https://cdn.tradeoff.io/g7.png", "purchase_date": "2025-05-20T00:00:00Z" }
+
+
+### ──────────────────────────────────────────────────────────────────────────
+### 4) RESERVATIONS (10) — chaque équipement (Available) -> Reserved
+###    status: Pending | Active | Returned | Cancelled
+### ──────────────────────────────────────────────────────────────────────────
+
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000001", "equipment_id": "00000003-0000-0000-0000-000000000001", "user_id": "00000002-0000-0000-0000-000000000001", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "end_date": "2026-06-30T17:00:00Z", "notes": "Affectation projet Alpha" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000002", "equipment_id": "00000003-0000-0000-0000-000000000002", "user_id": "00000002-0000-0000-0000-000000000002", "status": "Active", "start_date": "2026-06-02T09:00:00Z", "end_date": "2026-07-02T17:00:00Z", "notes": "Poste mobile direction" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000003", "equipment_id": "00000003-0000-0000-0000-000000000003", "user_id": "00000002-0000-0000-0000-000000000003", "status": "Pending", "start_date": "2026-06-10T09:00:00Z", "end_date": null, "notes": "En attente d'approbation RH" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000004", "equipment_id": "00000003-0000-0000-0000-000000000004", "user_id": "00000002-0000-0000-0000-000000000004", "status": "Active", "start_date": "2026-06-03T09:00:00Z", "end_date": "2026-06-20T17:00:00Z", "notes": "Écran secondaire bureau" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000005", "equipment_id": "00000003-0000-0000-0000-000000000005", "user_id": "00000002-0000-0000-0000-000000000005", "status": "Active", "start_date": "2026-06-04T09:00:00Z", "end_date": null, "notes": "Souris ergonomique" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000006", "equipment_id": "00000003-0000-0000-0000-000000000006", "user_id": "00000002-0000-0000-0000-000000000006", "status": "Pending", "start_date": "2026-06-15T09:00:00Z", "end_date": null, "notes": "Demande clavier" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000007", "equipment_id": "00000003-0000-0000-0000-000000000007", "user_id": "00000002-0000-0000-0000-000000000007", "status": "Active", "start_date": "2026-06-05T09:00:00Z", "end_date": "2026-12-31T17:00:00Z", "notes": "Déploiement réseau étage 3" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000008", "equipment_id": "00000003-0000-0000-0000-000000000008", "user_id": "00000002-0000-0000-0000-000000000008", "status": "Active", "start_date": "2026-06-06T09:00:00Z", "end_date": null, "notes": "Borne WiFi salle de réunion" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000009", "equipment_id": "00000003-0000-0000-0000-000000000009", "user_id": "00000002-0000-0000-0000-000000000009", "status": "Active", "start_date": "2026-06-07T09:00:00Z", "end_date": "2026-09-07T17:00:00Z", "notes": "Portable juridique" }
+
+###
+POST {{host}}/api/reservation
+Content-Type: application/json
+
+{ "id": "00000004-0000-0000-0000-000000000010", "equipment_id": "00000003-0000-0000-0000-000000000010", "user_id": "00000002-0000-0000-0000-000000000010", "status": "Pending", "start_date": "2026-06-20T09:00:00Z", "end_date": null, "notes": "Écran poste production" }
+
+
+### ──────────────────────────────────────────────────────────────────────────
+### 5) MAINTENANCE REQUESTS (10) — passe l'équipement à OutForRepair
+###    status: Pending | InProgress | Completed | Cancelled
+###    priority: Low | Medium | High | Critical
+###
+###    NOTE : exécuter APRÈS les réservations. Chaque demande passe l'équipement
+###    à "OutForRepair" (une seule demande ouverte autorisée par équipement).
+### ──────────────────────────────────────────────────────────────────────────
+
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000001", "equipment_id": "00000003-0000-0000-0000-000000000001", "requested_by_id": "00000002-0000-0000-0000-000000000001", "status": "Pending", "priority": "High", "description": "Écran qui scintille par intermittence", "scheduled_date": "2026-06-12T10:00:00Z" }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000002", "equipment_id": "00000003-0000-0000-0000-000000000002", "requested_by_id": "00000002-0000-0000-0000-000000000002", "status": "InProgress", "priority": "Critical", "description": "Batterie ne tient plus la charge", "scheduled_date": "2026-06-08T10:00:00Z" }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000003", "equipment_id": "00000003-0000-0000-0000-000000000003", "requested_by_id": "00000002-0000-0000-0000-000000000003", "status": "Pending", "priority": "Medium", "description": "Pixels morts en haut à gauche", "scheduled_date": null }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000004", "equipment_id": "00000003-0000-0000-0000-000000000004", "requested_by_id": "00000002-0000-0000-0000-000000000004", "status": "Pending", "priority": "Low", "description": "Pied de l'écran instable", "scheduled_date": null }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000005", "equipment_id": "00000003-0000-0000-0000-000000000005", "requested_by_id": "00000002-0000-0000-0000-000000000005", "status": "InProgress", "priority": "Low", "description": "Molette de défilement défectueuse", "scheduled_date": "2026-06-09T14:00:00Z" }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000006", "equipment_id": "00000003-0000-0000-0000-000000000006", "requested_by_id": "00000002-0000-0000-0000-000000000006", "status": "Pending", "priority": "Medium", "description": "Touches qui ne répondent plus", "scheduled_date": null }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000007", "equipment_id": "00000003-0000-0000-0000-000000000007", "requested_by_id": "00000002-0000-0000-0000-000000000007", "status": "Pending", "priority": "Critical", "description": "Plusieurs ports ne fonctionnent plus", "scheduled_date": "2026-06-11T08:00:00Z" }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000008", "equipment_id": "00000003-0000-0000-0000-000000000008", "requested_by_id": "00000002-0000-0000-0000-000000000008", "status": "InProgress", "priority": "High", "description": "Couverture WiFi faible et déconnexions", "scheduled_date": "2026-06-10T13:00:00Z" }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000009", "equipment_id": "00000003-0000-0000-0000-000000000009", "requested_by_id": "00000002-0000-0000-0000-000000000009", "status": "Pending", "priority": "Medium", "description": "Surchauffe sous charge", "scheduled_date": null }
+
+###
+POST {{host}}/api/maintenancerequest
+Content-Type: application/json
+
+{ "id": "00000005-0000-0000-0000-000000000010", "equipment_id": "00000003-0000-0000-0000-000000000010", "requested_by_id": "00000002-0000-0000-0000-000000000010", "status": "Pending", "priority": "High", "description": "Bandes verticales à l'écran", "scheduled_date": "2026-06-14T09:00:00Z" }
+
+###

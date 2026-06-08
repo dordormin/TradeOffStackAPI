@@ -1,0 +1,456 @@
+###
+# SCRIPT DE PEUPLEMENT RÉALISTE
+# Simule l'état d'une entreprise avec des actifs ayant un cycle de vie complet.
+#
+# ORDRE D'EXÉCUTION :
+# 0. Créer l'Admin initial et récupérer son token.
+# 1. Créer les Départements.
+# 2. Créer les autres Utilisateurs et les assigner.
+# 3. Créer tous les Équipements.
+# 4. Créer les Réservations et Demandes de Maintenance pour simuler l'activité.
+###
+
+@host = http://localhost:5053
+
+### =========================================================================
+### 0. CRÉATION & CONNEXION DE L'ADMINISTRATEUR INITIAL
+### =========================================================================
+# @name createAndLoginAdmin
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Super",
+  "lastName": "Admin",
+  "email": "super.admin@trade.io",
+  "password": "Password123!"
+}
+> {% client.global.set("token", response.body.token); %}
+
+
+### =========================================================================
+### 1. DÉPARTEMENTS (4)
+### =========================================================================
+# @name createDeptIT
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Technologie de l'Information", "description": "Support, Infrastructure et Développement" }
+> {% client.global.set("deptIT_id", response.body.id); %}
+
+###
+# @name createDeptSales
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Ventes & Marketing", "description": "Acquisition client et communication" }
+> {% client.global.set("deptSales_id", response.body.id); %}
+
+###
+# @name createDeptHR
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Ressources Humaines", "description": "Gestion du personnel et recrutement" }
+> {% client.global.set("deptHR_id", response.body.id); %}
+
+###
+# @name createDeptExec
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Direction", "description": "Comité exécutif" }
+> {% client.global.set("deptExec_id", response.body.id); %}
+
+
+### =========================================================================
+### 2. UTILISATEURS (14 de plus)
+### =========================================================================
+
+# --- Nouveaux Utilisateurs ---
+# @name u2
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Bob", "last_name": "Durand", "email": "bob.durand@trade.io", "role": "Admin", "department_id": "{{deptExec_id}}", "is_active": true, "profile_image": "bob_durand.jpg" }
+> {% client.global.set("u2_id", response.body.id); %}
+###
+# @name u3
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Carla", "last_name": "Vega", "email": "carla.vega@trade.io", "role": "Employee", "department_id": "{{deptSales_id}}", "is_active": true, "profile_image": "carla_vega.jpg" }
+> {% client.global.set("u3_id", response.body.id); %}
+###
+# @name u4
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "David", "last_name": "Chen", "email": "david.chen@trade.io", "role": "Employee", "department_id": "{{deptIT_id}}", "is_active": true, "profile_image": "david_chen.jpg" }
+> {% client.global.set("u4_id", response.body.id); %}
+###
+# @name u5
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Eva", "last_name": "ManagerIT", "email": "eva.manager@trade.io", "role": "Manager", "department_id": "{{deptIT_id}}", "is_active": true, "profile_image": "eva_manager.jpg" }
+> {% client.global.set("u5_id", response.body.id); %}
+###
+# @name u6
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Frank", "last_name": "Dev", "email": "frank.dev@trade.io", "role": "Employee", "department_id": "{{deptIT_id}}", "is_active": true, "profile_image": "frank_dev.jpg" }
+> {% client.global.set("u6_id", response.body.id); %}
+###
+# @name u7
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Grace", "last_name": "Support", "email": "grace.support@trade.io", "role": "Employee", "department_id": "{{deptIT_id}}", "is_active": true, "profile_image": "grace_support.jpg" }
+> {% client.global.set("u7_id", response.body.id); %}
+###
+# @name u8
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Hugo", "last_name": "ManagerVentes", "email": "hugo.ventes@trade.io", "role": "Manager", "department_id": "{{deptSales_id}}", "is_active": true, "profile_image": "hugo_ventes.jpg" }
+> {% client.global.set("u8_id", response.body.id); %}
+###
+# @name u9
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Ivy", "last_name": "Commercial", "email": "ivy.commercial@trade.io", "role": "Employee", "department_id": "{{deptSales_id}}", "is_active": true, "profile_image": "ivy_commercial.jpg" }
+> {% client.global.set("u9_id", response.body.id); %}
+###
+# @name u10
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Jack", "last_name": "Marketing", "email": "jack.marketing@trade.io", "role": "Employee", "department_id": "{{deptSales_id}}", "is_active": true, "profile_image": "jack_marketing.jpg" }
+> {% client.global.set("u10_id", response.body.id); %}
+###
+# @name u11
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Kate", "last_name": "ManagerRH", "email": "kate.rh@trade.io", "role": "Manager", "department_id": "{{deptHR_id}}", "is_active": true, "profile_image": "kate_rh.jpg" }
+> {% client.global.set("u11_id", response.body.id); %}
+###
+# @name u12
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Leo", "last_name": "Recruteur", "email": "leo.recruteur@trade.io", "role": "Employee", "department_id": "{{deptHR_id}}", "is_active": true, "profile_image": "leo_recruteur.jpg" }
+> {% client.global.set("u12_id", response.body.id); %}
+###
+# @name u13
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Mia", "last_name": "Paie", "email": "mia.paie@trade.io", "role": "Employee", "department_id": "{{deptHR_id}}", "is_active": true, "profile_image": "mia_paie.jpg" }
+> {% client.global.set("u13_id", response.body.id); %}
+###
+# @name u14
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Noah", "last_name": "CEO", "email": "noah.ceo@trade.io", "role": "Admin", "department_id": "{{deptExec_id}}", "is_active": true, "profile_image": "noah_ceo.jpg" }
+> {% client.global.set("u14_id", response.body.id); %}
+###
+# @name u15
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "first_name": "Olivia", "last_name": "CTO", "email": "olivia.cto@trade.io", "role": "Admin", "department_id": "{{deptExec_id}}", "is_active": true, "profile_image": "olivia_cto.jpg" }
+> {% client.global.set("u15_id", response.body.id); %}
+
+
+### =========================================================================
+### 3. ÉQUIPEMENTS (20)
+### =========================================================================
+# @name eq1
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Laptop Dev 01 (Dell XPS)", "serial_number": "SN-L-001", "status": "Available", "category": "Laptop", "price": 1800, "image": "laptop_dell_xps.jpg" }
+> {% client.global.set("eq1_id", response.body.id); %}
+###
+# @name eq2
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Laptop Dev 02 (MacBook Pro)", "serial_number": "SN-L-002", "status": "Available", "category": "Laptop", "price": 2200, "image": "laptop_macbook_pro.jpg" }
+> {% client.global.set("eq2_id", response.body.id); %}
+###
+# @name eq3
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Laptop Vente 01 (HP Spectre)", "serial_number": "SN-L-003", "status": "Available", "category": "Laptop", "price": 1400, "image": "laptop_hp_spectre.jpg" }
+> {% client.global.set("eq3_id", response.body.id); %}
+###
+# @name eq4
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Laptop Vente 02 (Surface Laptop)", "serial_number": "SN-L-004", "status": "Available", "category": "Laptop", "price": 1300, "image": "laptop_surface.jpg" }
+> {% client.global.set("eq4_id", response.body.id); %}
+###
+# @name eq5
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Laptop RH 01 (Lenovo Yoga)", "serial_number": "SN-L-005", "status": "Available", "category": "Laptop", "price": 1100, "image": "laptop_lenovo_yoga.jpg" }
+> {% client.global.set("eq5_id", response.body.id); %}
+###
+# @name eq6
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Écran 4K Dev 01", "serial_number": "SN-M-001", "status": "Available", "category": "Monitor", "price": 450, "image": "monitor_dell_4k.jpg" }
+> {% client.global.set("eq6_id", response.body.id); %}
+###
+# @name eq7
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Écran 4K Dev 02", "serial_number": "SN-M-002", "status": "Available", "category": "Monitor", "price": 450, "image": "monitor_dell_4k.jpg" }
+> {% client.global.set("eq7_id", response.body.id); %}
+###
+# @name eq8
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Écran Vente 01", "serial_number": "SN-M-003", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg" }
+> {% client.global.set("eq8_id", response.body.id); %}
+###
+# @name eq9
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Écran Vente 02", "serial_number": "SN-M-004", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg" }
+> {% client.global.set("eq9_id", response.body.id); %}
+###
+# @name eq10
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Écran RH 01", "serial_number": "SN-M-005", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg" }
+> {% client.global.set("eq10_id", response.body.id); %}
+###
+# @name eq11
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Clavier Mécanique Dev 01", "serial_number": "SN-P-001", "status": "Available", "category": "Peripheral", "price": 120, "image": "keyboard_mechanical.jpg" }
+> {% client.global.set("eq11_id", response.body.id); %}
+###
+# @name eq12
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Clavier Mécanique Dev 02", "serial_number": "SN-P-002", "status": "Available", "category": "Peripheral", "price": 120, "image": "keyboard_mechanical.jpg" }
+> {% client.global.set("eq12_id", response.body.id); %}
+###
+# @name eq13
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Souris Ergonomique 01", "serial_number": "SN-P-003", "status": "Available", "category": "Peripheral", "price": 80, "image": "mouse_ergonomic.jpg" }
+> {% client.global.set("eq13_id", response.body.id); %}
+###
+# @name eq14
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Souris Ergonomique 02", "serial_number": "SN-P-004", "status": "Available", "category": "Peripheral", "price": 80, "image": "mouse_ergonomic.jpg" }
+> {% client.global.set("eq14_id", response.body.id); %}
+###
+# @name eq15
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Casque Pro 01", "serial_number": "SN-P-005", "status": "Available", "category": "Peripheral", "price": 150, "image": "headset_pro.jpg" }
+> {% client.global.set("eq15_id", response.body.id); %}
+###
+# @name eq16
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Casque Pro 02", "serial_number": "SN-P-006", "status": "Available", "category": "Peripheral", "price": 150, "image": "headset_pro.jpg" }
+> {% client.global.set("eq16_id", response.body.id); %}
+###
+# @name eq17
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Projecteur Salle Conférence", "serial_number": "SN-P-007", "status": "Available", "category": "Peripheral", "price": 600, "image": "projector.jpg" }
+> {% client.global.set("eq17_id", response.body.id); %}
+###
+# @name eq18
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Imprimante Multifonction", "serial_number": "SN-P-008", "status": "Available", "category": "Peripheral", "price": 400, "image": "printer.jpg" }
+> {% client.global.set("eq18_id", response.body.id); %}
+###
+# @name eq19
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "Serveur de Test 01", "serial_number": "SN-N-001", "status": "Available", "category": "NetworkDevice", "price": 2500, "image": "server.jpg" }
+> {% client.global.set("eq19_id", response.body.id); %}
+###
+# @name eq20
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "name": "NAS Synology", "serial_number": "SN-N-002", "status": "Available", "category": "NetworkDevice", "price": 800, "image": "nas.jpg" }
+> {% client.global.set("eq20_id", response.body.id); %}
+
+
+### =========================================================================
+### 4. RÉSERVATIONS ACTIVES (10)
+### =========================================================================
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq1_id}}", "user_id": "{{u6_id}}", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Laptop pour le dev Frank" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq2_id}}", "user_id": "{{u4_id}}", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Laptop pour le dev David" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq3_id}}", "user_id": "{{u9_id}}", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Laptop pour la commerciale Ivy" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq4_id}}", "user_id": "{{u3_id}}", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Laptop pour la commerciale Carla" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq5_id}}", "user_id": "{{u12_id}}", "status": "Active", "start_date": "2026-06-05T09:00:00Z", "notes": "Poste pour le recrutement" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq6_id}}", "user_id": "{{u6_id}}", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Double écran pour Frank" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq7_id}}", "user_id": "{{u4_id}}", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Double écran pour David" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq13_id}}", "user_id": "{{u9_id}}", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Souris pour Ivy" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq15_id}}", "user_id": "{{u8_id}}", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Casque pour le manager des ventes" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq19_id}}", "user_id": "{{u5_id}}", "status": "Active", "start_date": "2026-01-01T09:00:00Z", "notes": "Serveur de test pour l'équipe IT" }
+
+
+### =========================================================================
+### 5. DEMANDES DE MAINTENANCE (5)
+### =========================================================================
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq8_id}}", "requested_by_id": "{{u9_id}}", "description": "L'écran scintille, impossible de travailler.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq11_id}}", "requested_by_id": "{{u6_id}}", "description": "La touche 'A' du clavier ne fonctionne plus.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq16_id}}", "requested_by_id": "{{u7_id}}", "description": "Le casque ne s'allume plus.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq18_id}}", "requested_by_id": "{{u13_id}}", "description": "Bourrage papier constant.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq20_id}}", "requested_by_id": "{{u2_id}}", "description": "Le NAS ne répond plus sur le réseau.", "priority": "Critical" }
+
+
+### =========================================================================
+### 6. HISTORIQUE DE RÉSERVATIONS (5)
+### =========================================================================
+# @name hist1
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq9_id}}", "user_id": "{{u10_id}}", "status": "Active", "start_date": "2024-03-01T09:00:00Z", "end_date": "2024-03-15T17:00:00Z" }
+> {% client.global.set("hist1_id", response.body.id); %}
+###
+POST {{host}}/api/reservation/{{hist1_id}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name hist2
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq10_id}}", "user_id": "{{u13_id}}", "status": "Active", "start_date": "2024-04-01T09:00:00Z", "end_date": "2024-04-30T17:00:00Z" }
+> {% client.global.set("hist2_id", response.body.id); %}
+###
+POST {{host}}/api/reservation/{{hist2_id}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name hist3
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq12_id}}", "user_id": "{{u7_id}}", "status": "Active", "start_date": "2024-05-01T09:00:00Z", "end_date": "2024-05-10T17:00:00Z" }
+> {% client.global.set("hist3_id", response.body.id); %}
+###
+POST {{host}}/api/reservation/{{hist3_id}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name hist4
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq14_id}}", "user_id": "{{u3_id}}", "status": "Active", "start_date": "2024-02-15T09:00:00Z", "end_date": "2024-02-20T17:00:00Z" }
+> {% client.global.set("hist4_id", response.body.id); %}
+###
+POST {{host}}/api/reservation/{{hist4_id}}/return
+Authorization: Bearer {{token}}
+
+###
+# @name hist5
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "{{eq17_id}}", "user_id": "{{u2_id}}", "status": "Active", "start_date": "2024-01-01T09:00:00Z", "end_date": "2024-01-31T17:00:00Z" }
+> {% client.global.set("hist5_id", response.body.id); %}
+###
+POST {{host}}/api/reservation/{{hist5_id}}/return
+Authorization: Bearer {{token}}

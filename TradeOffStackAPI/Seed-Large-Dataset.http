@@ -1,0 +1,506 @@
+###
+# SCRIPT DE PEUPLEMENT MASSIF (Version 100% Explicite)
+# Génère un grand volume de données interconnectées sans aucune boucle.
+###
+
+@host = http://localhost:5053
+
+### =========================================================================
+### 0. CRÉATION & CONNEXION DE L'ADMINISTRATEUR INITIAL
+### =========================================================================
+# @name createAndLoginAdmin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "super.admin@trade.io", "password": "Password123!" }
+> {% client.global.set("token", response.body.token); %}
+
+
+### =========================================================================
+### 1. DÉPARTEMENTS
+### =========================================================================
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d001", "name": "Technologie" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d002", "name": "Ventes" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d003", "name": "Ressources Humaines" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d004", "name": "Direction" }
+
+
+### =========================================================================
+### 2. UTILISATEURS (20)
+### =========================================================================
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u001", "first_name": "Noah", "last_name": "CEO", "email": "noah.ceo.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u002", "first_name": "Olivia", "last_name": "CTO", "email": "olivia.cto.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u003", "first_name": "Eva", "last_name": "ManagerIT", "email": "eva.manager@trade.io", "role": "Manager", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u004", "first_name": "Hugo", "last_name": "ManagerVentes", "email": "hugo.ventes@trade.io", "role": "Manager", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u005", "first_name": "Kate", "last_name": "ManagerRH", "email": "kate.rh@trade.io", "role": "Manager", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u006", "first_name": "Frank", "last_name": "Dev", "email": "frank.dev@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u007", "first_name": "Grace", "last_name": "DevOps", "email": "grace.devops@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u008", "first_name": "Ivy", "last_name": "Commercial", "email": "ivy.commercial@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u009", "first_name": "Jack", "last_name": "Marketing", "email": "jack.marketing@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u010", "first_name": "Leo", "last_name": "Recruteur", "email": "leo.recruteur@trade.io", "role": "Employee", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u011", "first_name": "Mia", "last_name": "Paie", "email": "mia.paie@trade.io", "role": "Employee", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u012", "first_name": "David", "last_name": "Support", "email": "david.support@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u013", "first_name": "Zoe", "last_name": "Designer", "email": "zoe.designer@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u014", "first_name": "Tom", "last_name": "Stagiaire", "email": "tom.stagiaire@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u015", "first_name": "Sam", "last_name": "Stagiaire", "email": "sam.stagiaire@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u016", "first_name": "Bob", "last_name": "AdminSys", "email": "bob.adminsys.admin@trade.io", "role": "Admin", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u017", "first_name": "Carla", "last_name": "Data", "email": "carla.data@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u018", "first_name": "Paul", "last_name": "Data", "email": "paul.data@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u019", "first_name": "Laura", "last_name": "Securite", "email": "laura.securite@trade.io", "role": "Manager", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u020", "first_name": "Chris", "last_name": "Securite", "email": "chris.securite@trade.io", "role": "Employee", "department_id": "d001" }
+
+
+### =========================================================================
+### 3. ÉQUIPEMENTS (40)
+### =========================================================================
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e001", "name": "Laptop Model-1", "serial_number": "SN-L-0001", "status": "Available", "category": "Monitor", "price": 220, "description": "Équipement de test #1.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e002", "name": "Laptop Model-2", "serial_number": "SN-P-0002", "status": "Available", "category": "Peripheral", "price": 240, "description": "Équipement de test #2.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e003", "name": "Laptop Model-3", "serial_number": "SN-N-0003", "status": "Available", "category": "NetworkDevice", "price": 260, "description": "Équipement de test #3.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e004", "name": "Laptop Model-4", "serial_number": "SN-L-0004", "status": "Available", "category": "Laptop", "price": 280, "description": "Équipement de test #4.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e005", "name": "Laptop Model-5", "serial_number": "SN-M-0005", "status": "Available", "category": "Monitor", "price": 300, "description": "Équipement de test #5.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e006", "name": "Laptop Model-6", "serial_number": "SN-P-0006", "status": "Available", "category": "Peripheral", "price": 320, "description": "Équipement de test #6.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e007", "name": "Laptop Model-7", "serial_number": "SN-N-0007", "status": "Available", "category": "NetworkDevice", "price": 340, "description": "Équipement de test #7.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e008", "name": "Laptop Model-8", "serial_number": "SN-L-0008", "status": "Available", "category": "Laptop", "price": 360, "description": "Équipement de test #8.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e009", "name": "Laptop Model-9", "serial_number": "SN-M-0009", "status": "Available", "category": "Monitor", "price": 380, "description": "Équipement de test #9.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e010", "name": "Laptop Model-10", "serial_number": "SN-P-0010", "status": "Available", "category": "Peripheral", "price": 400, "description": "Équipement de test #10.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e011", "name": "Laptop Model-11", "serial_number": "SN-N-0011", "status": "Available", "category": "NetworkDevice", "price": 420, "description": "Équipement de test #11.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e012", "name": "Laptop Model-12", "serial_number": "SN-L-0012", "status": "Available", "category": "Laptop", "price": 440, "description": "Équipement de test #12.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e013", "name": "Laptop Model-13", "serial_number": "SN-M-0013", "status": "Available", "category": "Monitor", "price": 460, "description": "Équipement de test #13.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e014", "name": "Laptop Model-14", "serial_number": "SN-P-0014", "status": "Available", "category": "Peripheral", "price": 480, "description": "Équipement de test #14.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e015", "name": "Laptop Model-15", "serial_number": "SN-N-0015", "status": "Available", "category": "NetworkDevice", "price": 500, "description": "Équipement de test #15.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e016", "name": "Laptop Model-16", "serial_number": "SN-L-0016", "status": "Available", "category": "Laptop", "price": 520, "description": "Équipement de test #16.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e017", "name": "Laptop Model-17", "serial_number": "SN-M-0017", "status": "Available", "category": "Monitor", "price": 540, "description": "Équipement de test #17.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e018", "name": "Laptop Model-18", "serial_number": "SN-P-0018", "status": "Available", "category": "Peripheral", "price": 560, "description": "Équipement de test #18.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e019", "name": "Laptop Model-19", "serial_number": "SN-N-0019", "status": "Available", "category": "NetworkDevice", "price": 580, "description": "Équipement de test #19.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e020", "name": "Laptop Model-20", "serial_number": "SN-L-0020", "status": "Available", "category": "Laptop", "price": 600, "description": "Équipement de test #20.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e021", "name": "Laptop Model-21", "serial_number": "SN-M-0021", "status": "Available", "category": "Monitor", "price": 620, "description": "Équipement de test #21.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e022", "name": "Laptop Model-22", "serial_number": "SN-P-0022", "status": "Available", "category": "Peripheral", "price": 640, "description": "Équipement de test #22.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e023", "name": "Laptop Model-23", "serial_number": "SN-N-0023", "status": "Available", "category": "NetworkDevice", "price": 660, "description": "Équipement de test #23.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e024", "name": "Laptop Model-24", "serial_number": "SN-L-0024", "status": "Available", "category": "Laptop", "price": 680, "description": "Équipement de test #24.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e025", "name": "Laptop Model-25", "serial_number": "SN-M-0025", "status": "Available", "category": "Monitor", "price": 700, "description": "Équipement de test #25.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e026", "name": "Laptop Model-26", "serial_number": "SN-P-0026", "status": "Available", "category": "Peripheral", "price": 720, "description": "Équipement de test #26.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e027", "name": "Laptop Model-27", "serial_number": "SN-N-0027", "status": "Available", "category": "NetworkDevice", "price": 740, "description": "Équipement de test #27.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e028", "name": "Laptop Model-28", "serial_number": "SN-L-0028", "status": "Available", "category": "Laptop", "price": 760, "description": "Équipement de test #28.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e029", "name": "Laptop Model-29", "serial_number": "SN-M-0029", "status": "Available", "category": "Monitor", "price": 780, "description": "Équipement de test #29.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e030", "name": "Laptop Model-30", "serial_number": "SN-P-0030", "status": "Available", "category": "Peripheral", "price": 800, "description": "Équipement de test #30.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e031", "name": "Laptop Model-31", "serial_number": "SN-N-0031", "status": "Available", "category": "NetworkDevice", "price": 820, "description": "Équipement de test #31.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e032", "name": "Laptop Model-32", "serial_number": "SN-L-0032", "status": "Available", "category": "Laptop", "price": 840, "description": "Équipement de test #32.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e033", "name": "Laptop Model-33", "serial_number": "SN-M-0033", "status": "Available", "category": "Monitor", "price": 860, "description": "Équipement de test #33.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e034", "name": "Laptop Model-34", "serial_number": "SN-P-0034", "status": "Available", "category": "Peripheral", "price": 880, "description": "Équipement de test #34.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e035", "name": "Laptop Model-35", "serial_number": "SN-N-0035", "status": "Available", "category": "NetworkDevice", "price": 900, "description": "Équipement de test #35.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e036", "name": "Laptop Model-36", "serial_number": "SN-L-0036", "status": "Available", "category": "Laptop", "price": 920, "description": "Équipement de test #36.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e037", "name": "Laptop Model-37", "serial_number": "SN-M-0037", "status": "Available", "category": "Monitor", "price": 940, "description": "Équipement de test #37.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e038", "name": "Laptop Model-38", "serial_number": "SN-P-0038", "status": "Available", "category": "Peripheral", "price": 960, "description": "Équipement de test #38.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e039", "name": "Laptop Model-39", "serial_number": "SN-N-0039", "status": "Available", "category": "NetworkDevice", "price": 980, "description": "Équipement de test #39.", "image": "default.jpg" }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e040", "name": "Laptop Model-40", "serial_number": "SN-L-0040", "status": "Available", "category": "Laptop", "price": 1000, "description": "Équipement de test #40.", "image": "default.jpg" }
+
+
+### =========================================================================
+### 4. RÉSERVATIONS (50)
+### =========================================================================
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e001", "user_id": "u006", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e002", "user_id": "u007", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e003", "user_id": "u008", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e004", "user_id": "u009", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e005", "user_id": "u010", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e006", "user_id": "u011", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e007", "user_id": "u012", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e008", "user_id": "u013", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e009", "user_id": "u014", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e010", "user_id": "u015", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e011", "user_id": "u016", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e012", "user_id": "u017", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e013", "user_id": "u018", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e014", "user_id": "u019", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e015", "user_id": "u020", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+
+
+### =========================================================================
+### 5. DEMANDES DE MAINTENANCE (15)
+### =========================================================================
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e020", "requested_by_id": "u006", "description": "Ne s'allume plus.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e021", "requested_by_id": "u007", "description": "Écran fissuré.", "priority": "Critical" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e022", "requested_by_id": "u008", "description": "Clavier ne répond pas.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e023", "requested_by_id": "u009", "description": "Port Ethernet défectueux.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e024", "requested_by_id": "u010", "description": "Batterie ne charge plus.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e025", "requested_by_id": "u011", "description": "Pixels morts au centre.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e026", "requested_by_id": "u012", "description": "Trackpad ne clique plus.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e027", "requested_by_id": "u013", "description": "Ne se connecte pas au WiFi.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e028", "requested_by_id": "u014", "description": "Surchauffe et s'éteint.", "priority": "Critical" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e029", "requested_by_id": "u015", "description": "Lignes verticales sur l'écran.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e030", "requested_by_id": "u016", "description": "Souris ne se connecte pas.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e031", "requested_by_id": "u017", "description": "Switch ne distribue pas les IP.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "m001", "equipment_id": "e032", "requested_by_id": "u018", "description": "Ventilateur bruyant.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "m002", "equipment_id": "e033", "requested_by_id": "u019", "description": "Problème de couleur.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "m003", "equipment_id": "e034", "requested_by_id": "u020", "description": "Ne fonctionne plus.", "priority": "High" }

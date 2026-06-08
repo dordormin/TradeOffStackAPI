@@ -1,0 +1,322 @@
+###
+# SCRIPT DE PEUPLEMENT DE SCÉNARIO RÉALISTE (Version Simplifiée)
+#
+# INSTRUCTIONS :
+# 1. Si votre base est vide, exécutez d'abord "# name registerAdmin".
+# 2. Copiez le "token" de la réponse.
+# 3. Collez ce token dans la variable token ci-dessous.
+# 4. Exécutez toutes les autres requêtes ("Run all requests in file").
+###
+
+@host = http://localhost:5053
+@token = VOTRE_TOKEN_ICI
+
+### =========================================================================
+### 0. CONNEXION OU INSCRIPTION DE L'ADMINISTRATEUR
+### =========================================================================
+
+# @name registerAdmin
+# À exécuter si la base de données est vide.
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{ "firstName": "Super", "lastName": "Admin", "email": "super.admin@trade.io", "password": "Password123!" }
+
+###
+
+# @name loginAdmin
+# Si l'admin existe déjà, exécutez cette requête et copiez le token.
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "super.admin@trade.io", "password": "Password123!" }
+
+
+### =========================================================================
+### 1. DÉPARTEMENTS
+### =========================================================================
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d001", "name": "Technologie" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d002", "name": "Ventes" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d003", "name": "Ressources Humaines" }
+###
+POST {{host}}/api/department
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "d004", "name": "Direction" }
+
+
+### =========================================================================
+### 2. UTILISATEURS (15)
+### =========================================================================
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u001", "first_name": "Eva", "last_name": "ManagerIT", "email": "eva.manager@trade.io", "role": "Manager", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u002", "first_name": "Frank", "last_name": "Dev", "email": "frank.dev@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u003", "first_name": "Grace", "last_name": "DevOps", "email": "grace.devops@trade.io", "role": "Employee", "department_id": "d001" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u004", "first_name": "Hugo", "last_name": "ManagerVentes", "email": "hugo.ventes@trade.io", "role": "Manager", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u005", "first_name": "Ivy", "last_name": "Commercial", "email": "ivy.commercial@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u006", "first_name": "Jack", "last_name": "Marketing", "email": "jack.marketing@trade.io", "role": "Employee", "department_id": "d002" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u007", "first_name": "Kate", "last_name": "ManagerRH", "email": "kate.rh@trade.io", "role": "Manager", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u008", "first_name": "Leo", "last_name": "Recruteur", "email": "leo.recruteur@trade.io", "role": "Employee", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u009", "first_name": "Mia", "last_name": "Paie", "email": "mia.paie@trade.io", "role": "Employee", "department_id": "d003" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u010", "first_name": "Noah", "last_name": "CEO", "email": "noah.ceo.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u011", "first_name": "Olivia", "last_name": "CTO", "email": "olivia.cto.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u012", "first_name": "Peter", "last_name": "CFO", "email": "peter.cfo.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u013", "first_name": "Quinn", "last_name": "COO", "email": "quinn.coo.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u014", "first_name": "Rachel", "last_name": "CHRO", "email": "rachel.chro.admin@trade.io", "role": "Admin", "department_id": "d004" }
+###
+POST {{host}}/api/user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "u015", "first_name": "David", "last_name": "Support", "email": "david.support@trade.io", "role": "Employee", "department_id": "d001" }
+
+
+### =========================================================================
+### 3. ÉQUIPEMENTS (20)
+### =========================================================================
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e001", "name": "Laptop Dev 01 (Dell XPS)", "serial_number": "SN-L-001", "status": "Available", "category": "Laptop", "price": 1800, "image": "laptop_dell_xps.jpg", "description": "Laptop puissant pour le développement." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e002", "name": "Laptop Dev 02 (MacBook Pro)", "serial_number": "SN-L-002", "status": "Available", "category": "Laptop", "price": 2200, "image": "laptop_macbook_pro.jpg", "description": "MacBook Pro M3 pour le développement iOS." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e003", "name": "Laptop Vente 01 (HP Spectre)", "serial_number": "SN-L-003", "status": "Available", "category": "Laptop", "price": 1400, "image": "laptop_hp_spectre.jpg", "description": "Laptop léger pour les commerciaux." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e004", "name": "Laptop Vente 02 (Surface Laptop)", "serial_number": "SN-L-004", "status": "Available", "category": "Laptop", "price": 1300, "image": "laptop_surface.jpg", "description": "Surface Laptop pour les présentations client." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e005", "name": "Laptop RH 01 (Lenovo Yoga)", "serial_number": "SN-L-005", "status": "Available", "category": "Laptop", "price": 1100, "image": "laptop_lenovo_yoga.jpg", "description": "Laptop polyvalent pour les RH." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e006", "name": "Écran 4K Dev 01", "serial_number": "SN-M-001", "status": "Available", "category": "Monitor", "price": 450, "image": "monitor_dell_4k.jpg", "description": "Moniteur 27 pouces 4K pour le code." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e007", "name": "Écran 4K Dev 02", "serial_number": "SN-M-002", "status": "Available", "category": "Monitor", "price": 450, "image": "monitor_dell_4k.jpg", "description": "Moniteur 27 pouces 4K pour le code." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e008", "name": "Écran Vente 01", "serial_number": "SN-M-003", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg", "description": "Moniteur 24 pouces standard." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e009", "name": "Écran Vente 02", "serial_number": "SN-M-004", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg", "description": "Moniteur 24 pouces standard." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e010", "name": "Écran RH 01", "serial_number": "SN-M-005", "status": "Available", "category": "Monitor", "price": 250, "image": "monitor_standard.jpg", "description": "Moniteur 24 pouces standard." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e011", "name": "Clavier Mécanique Dev 01", "serial_number": "SN-P-001", "status": "Available", "category": "Peripheral", "price": 120, "image": "keyboard_mechanical.jpg", "description": "Clavier mécanique pour le confort de frappe." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e012", "name": "Clavier Mécanique Dev 02", "serial_number": "SN-P-002", "status": "Available", "category": "Peripheral", "price": 120, "image": "keyboard_mechanical.jpg", "description": "Clavier mécanique pour le confort de frappe." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e013", "name": "Souris Ergonomique 01", "serial_number": "SN-P-003", "status": "Available", "category": "Peripheral", "price": 80, "image": "mouse_ergonomic.jpg", "description": "Souris verticale pour prévenir les TMS." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e014", "name": "Souris Ergonomique 02", "serial_number": "SN-P-004", "status": "Available", "category": "Peripheral", "price": 80, "image": "mouse_ergonomic.jpg", "description": "Souris verticale pour prévenir les TMS." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e015", "name": "Casque Pro 01", "serial_number": "SN-P-005", "status": "Available", "category": "Peripheral", "price": 150, "image": "headset_pro.jpg", "description": "Casque à réduction de bruit pour la concentration." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e016", "name": "Casque Pro 02", "serial_number": "SN-P-006", "status": "Available", "category": "Peripheral", "price": 150, "image": "headset_pro.jpg", "description": "Casque à réduction de bruit pour la concentration." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e017", "name": "Projecteur Salle Conférence", "serial_number": "SN-P-007", "status": "Available", "category": "Peripheral", "price": 600, "image": "projector.jpg", "description": "Projecteur 4K pour la salle de réunion principale." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e018", "name": "Imprimante Multifonction", "serial_number": "SN-P-008", "status": "Available", "category": "Peripheral", "price": 400, "image": "printer.jpg", "description": "Imprimante laser couleur partagée." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e019", "name": "Serveur de Test 01", "serial_number": "SN-N-001", "status": "Available", "category": "NetworkDevice", "price": 2500, "image": "server.jpg", "description": "Serveur Dell PowerEdge pour les tests de charge." }
+###
+POST {{host}}/api/equipment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "id": "e020", "name": "NAS Synology", "serial_number": "SN-N-002", "status": "Available", "category": "NetworkDevice", "price": 800, "image": "nas.jpg", "description": "Stockage réseau pour les sauvegardes." }
+
+
+### =========================================================================
+### 4. RÉSERVATIONS ACTIVES (10)
+### =========================================================================
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e001", "user_id": "u006", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Laptop pour le dev Frank" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e002", "user_id": "u007", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Laptop pour le devops Grace" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e003", "user_id": "u008", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Laptop pour la commerciale Ivy" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e004", "user_id": "u009", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Laptop pour le marketing Jack" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e005", "user_id": "u010", "status": "Active", "start_date": "2026-06-05T09:00:00Z", "notes": "Poste pour le recrutement" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e006", "user_id": "u006", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Double écran pour Frank" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e007", "user_id": "u007", "status": "Active", "start_date": "2026-06-01T09:00:00Z", "notes": "Double écran pour Grace" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e013", "user_id": "u008", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Souris pour Ivy" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e015", "user_id": "u004", "status": "Active", "start_date": "2026-05-20T09:00:00Z", "notes": "Casque pour le manager des ventes" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e019", "user_id": "u003", "status": "Active", "start_date": "2026-01-01T09:00:00Z", "notes": "Serveur de test pour l'équipe IT" }
+
+
+### =========================================================================
+### 5. DEMANDES DE MAINTENANCE (5)
+### =========================================================================
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e008", "requested_by_id": "u008", "description": "L'écran scintille, impossible de travailler.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e011", "requested_by_id": "u006", "description": "La touche 'A' du clavier ne fonctionne plus.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e016", "requested_by_id": "u007", "description": "Le casque ne s'allume plus.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e018", "requested_by_id": "u009", "description": "Bourrage papier constant.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e020", "requested_by_id": "u001", "description": "Le NAS ne répond plus sur le réseau.", "priority": "Critical" }

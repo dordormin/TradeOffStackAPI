@@ -1,0 +1,32 @@
+# ============================================================================
+# TradeOffStackAPI — Docker Compose (Production-Ready PostgreSQL)
+# ============================================================================
+# Usage:
+#   Développement : docker compose up -d
+#   Production    : Déployer ce fichier sur le VPS/Cloud avec les variables
+#                   d'environnement POSTGRES_USER et POSTGRES_PASSWORD définies
+#                   dans le fichier .env ou dans le système d'orchestration.
+# ============================================================================
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Variable POSTGRES_PASSWORD requise}
+      POSTGRES_DB: ${POSTGRES_DB:-tradeoffstack}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-tradeoffstack}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
+    driver: local

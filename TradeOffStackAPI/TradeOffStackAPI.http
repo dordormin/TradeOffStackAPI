@@ -1,0 +1,92 @@
+@host = http://localhost:5053
+
+### ==========================================
+### TEST DE LA LOGIQUE METIER (RESERVATION)
+### ==========================================
+
+### 1. Inscription du compte Admin 
+# @name registerAdmin
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Super",
+  "lastName": "Admin",
+  "email": "super.admin@trade.io",
+  "password": "Password123!",
+  "phoneNumber": null,
+  "departmentId": null
+}
+
+### 2. Connexion Admin
+# @name loginAdmin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "super.admin@trade.io",
+  "password": "Password123!" 
+}
+
+> {%
+    client.global.set("token_admin", response.body.token);
+%}
+
+### 3. Créer un NOUVEL équipement qui est 100% "Available"
+# @name createAvailableEquipment
+POST {{host}}/api/equipment
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "name": "Écran de test",
+  "serial_number": "SN-TEST-002",
+  "status": "Available",
+  "category": "Monitor",
+  "description": "Un écran disponible pour tester les réservations",
+  "price": 200,
+  "image": "test.jpg",
+  "image_url": "http://test.com/test.jpg",
+  "image_url_https": "https://test.com/test.jpg",
+  "purchase_date": "2024-05-15T09:00:00Z"
+}
+
+### 4. Lister les équipements pour copier le VRAI GUID généré
+# @name getEquipments
+GET {{host}}/api/equipment
+Authorization: Bearer {{token_admin}}
+
+### 5. Lister les utilisateurs pour copier le VRAI GUID de l'utilisateur
+# @name getUsers
+GET {{host}}/api/user
+Authorization: Bearer {{token_admin}}
+
+### 6. CRÉER LA RÉSERVATION (Doit réussir !)
+# @name createReservation
+POST {{host}}/api/reservation
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "equipment_id": "REMPLACEZ-PAR-ID-ETAPE-4",
+  "user_id": "REMPLACEZ-PAR-ID-ETAPE-5",
+  "status": "Pending",
+  "start_date": "2026-06-10T09:00:00Z",
+  "end_date": "2026-06-15T17:00:00Z",
+  "notes": "Test de réservation"
+}
+
+### 7. TENTER DE RÉSERVER LE MÊME ÉQUIPEMENT (Doit échouer avec 409 Conflict)
+# @name createReservationDouble
+POST {{host}}/api/reservation
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "equipment_id": "REMPLACEZ-PAR-ID-ETAPE-4",
+  "user_id": "REMPLACEZ-PAR-ID-ETAPE-5",
+  "status": "Pending",
+  "start_date": "2026-07-10T09:00:00Z",
+  "end_date": "2026-07-15T17:00:00Z",
+  "notes": "Deuxième tentative"
+}

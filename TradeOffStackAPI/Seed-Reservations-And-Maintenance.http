@@ -1,0 +1,224 @@
+###
+# SCRIPT DE PEUPLEMENT - Réservations et Maintenance
+# Prérequis : Les utilisateurs (u001-u020) et équipements (e001-e040) doivent déjà exister.
+###
+
+@host = http://localhost:5053
+
+### =========================================================================
+### 0. CONNEXION DE L'ADMINISTRATEUR
+### =========================================================================
+# @name loginAdmin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "super.admin@trade.io", "password": "Password123!" }
+> {% client.global.set("token", response.body.token); %}
+
+
+### =========================================================================
+### 1. RÉSERVATIONS (25)
+### =========================================================================
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e001", "user_id": "u006", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e002", "user_id": "u007", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e003", "user_id": "u008", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e004", "user_id": "u009", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e005", "user_id": "u010", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e006", "user_id": "u011", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e007", "user_id": "u012", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e008", "user_id": "u013", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e009", "user_id": "u014", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e010", "user_id": "u015", "status": "Active", "start_date": "2026-06-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e011", "user_id": "u016", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e012", "user_id": "u017", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e013", "user_id": "u018", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e014", "user_id": "u019", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e015", "user_id": "u020", "status": "Pending", "start_date": "2026-07-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e016", "user_id": "u001", "status": "Active", "start_date": "2026-08-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e017", "user_id": "u002", "status": "Active", "start_date": "2026-08-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e018", "user_id": "u003", "status": "Active", "start_date": "2026-08-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e019", "user_id": "u004", "status": "Active", "start_date": "2026-08-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e020", "user_id": "u005", "status": "Active", "start_date": "2026-08-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e021", "user_id": "u006", "status": "Pending", "start_date": "2026-09-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e022", "user_id": "u007", "status": "Pending", "start_date": "2026-09-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e023", "user_id": "u008", "status": "Pending", "start_date": "2026-09-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e024", "user_id": "u009", "status": "Pending", "start_date": "2026-09-01T09:00:00Z" }
+###
+POST {{host}}/api/reservation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e025", "user_id": "u010", "status": "Pending", "start_date": "2026-09-01T09:00:00Z" }
+
+
+### =========================================================================
+### 2. DEMANDES DE MAINTENANCE (15)
+### =========================================================================
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e030", "requested_by_id": "u006", "description": "Ne s'allume plus.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e031", "requested_by_id": "u007", "description": "Écran fissuré.", "priority": "Critical" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e032", "requested_by_id": "u008", "description": "Clavier ne répond pas.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e033", "requested_by_id": "u009", "description": "Port Ethernet défectueux.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e034", "requested_by_id": "u010", "description": "Batterie ne charge plus.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e035", "requested_by_id": "u011", "description": "Pixels morts au centre.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e036", "requested_by_id": "u012", "description": "Trackpad ne clique plus.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e037", "requested_by_id": "u013", "description": "Ne se connecte pas au WiFi.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e038", "requested_by_id": "u014", "description": "Surchauffe et s'éteint.", "priority": "Critical" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e039", "requested_by_id": "u015", "description": "Lignes verticales sur l'écran.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e040", "requested_by_id": "u016", "description": "Souris ne se connecte pas.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e001", "requested_by_id": "u017", "description": "Switch ne distribue pas les IP.", "priority": "High" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e002", "requested_by_id": "u018", "description": "Ventilateur bruyant.", "priority": "Low" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e003", "requested_by_id": "u019", "description": "Problème de couleur.", "priority": "Medium" }
+###
+POST {{host}}/api/maintenancerequest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{ "equipment_id": "e004", "requested_by_id": "u020", "description": "Ne fonctionne plus.", "priority": "High" }
