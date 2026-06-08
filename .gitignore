@@ -80,3 +80,6 @@ coverage/
 # --- Agents / AI ---
 .claude/
 .junie/
+
+# --- Frontend (Separate Repo) ---
+frontend/
