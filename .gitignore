@@ -82,4 +82,4 @@ coverage/
 .junie/
 
 # --- Frontend (Separate Repo) ---
-frontend/
+# frontend/
