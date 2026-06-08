@@ -79,6 +79,6 @@ public class ReservationServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Contains("pas disponible", response.Message);
+        Assert.Contains("not available", response.Message);
     }
 }

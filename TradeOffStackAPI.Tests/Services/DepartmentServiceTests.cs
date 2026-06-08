@@ -45,7 +45,7 @@ public class DepartmentServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Département non trouvé.", response.Message);
+        Assert.Equal("Department not found.", response.Message);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class DepartmentServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Le nom du département est requis.", response.Message);
+        Assert.Equal("Department name is required.", response.Message);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class DepartmentServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Département non trouvé.", response.Message);
+        Assert.Equal("Department not found.", response.Message);
     }
 
     [Fact]
@@ -89,6 +89,6 @@ public class DepartmentServiceTests
 
         // Assert
         Assert.False(response.Success);
-        Assert.Equal("Département non trouvé ou échec de la suppression.", response.Message);
+        Assert.Equal("Department not found or failed to delete.", response.Message);
     }
 }
