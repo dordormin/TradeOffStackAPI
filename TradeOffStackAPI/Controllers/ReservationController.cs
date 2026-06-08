@@ -103,4 +103,11 @@ public class ReservationController : ControllerBase
         var response = await _service.CancelReservationAsync(id);
         return response.Success ? NoContent() : NotFound(new { message = response.Message });
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var response = await _service.DeleteReservationAsync(id);
+        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+    }
 }

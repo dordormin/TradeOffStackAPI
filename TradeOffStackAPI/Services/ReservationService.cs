@@ -281,4 +281,20 @@ public class ReservationService : IReservationService
         
         await _equipmentRepo.UpdateAsync(equipment);
     }
+
+    public async Task<ServiceResponse> DeleteReservationAsync(Guid id)
+    {
+        var reservation = await _repo.GetByIdAsync(id);
+        if (reservation == null)
+            return ServiceResponse.Fail("Reservation not found.");
+
+        var equipmentId = reservation.EquipmentId;
+        var success = await _repo.DeleteAsync(id);
+        if (success)
+        {
+            await UpdateEquipmentStatusAsync(equipmentId);
+            return ServiceResponse.Ok("Reservation successfully deleted.");
+        }
+        return ServiceResponse.Fail("Failed to delete reservation.");
+    }
 }

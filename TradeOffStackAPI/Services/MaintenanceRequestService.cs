@@ -262,4 +262,20 @@ public class MaintenanceRequestService : IMaintenanceRequestService
         
         await _equipmentRepo.UpdateAsync(equipment);
     }
+
+    public async Task<ServiceResponse> DeleteRequestAsync(Guid id)
+    {
+        var request = await _repo.GetByIdAsync(id);
+        if (request == null)
+            return ServiceResponse.Fail("Request not found.");
+
+        var equipmentId = request.EquipmentId;
+        var success = await _repo.DeleteAsync(id);
+        if (success)
+        {
+            await UpdateEquipmentStatusAsync(equipmentId);
+            return ServiceResponse.Ok("Request successfully deleted.");
+        }
+        return ServiceResponse.Fail("Failed to delete request.");
+    }
 }
