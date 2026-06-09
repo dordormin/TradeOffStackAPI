@@ -1,10 +1,10 @@
-name: .NET CI/CD Pipeline
+name: TradeOffStack CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/postman-tests" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "feature/postman-tests" ]
 
 jobs:
   build-and-test:
@@ -19,29 +19,81 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: 📦 Restore dependencies
+    - name: 📦 Restore backend dependencies
       run: dotnet restore TradeOffStackAPI.sln
 
     - name: 🔨 Build API
       run: dotnet build TradeOffStackAPI.sln --no-restore --configuration Release
 
-    - name: 🧪 Run Tests
+    - name: 🧪 Run C# Backend Tests
       run: dotnet test TradeOffStackAPI.sln --no-build --configuration Release --verbosity normal
 
-  # Décommentez ce bloc (deploy) lorsque vous aurez votre serveur VPS configuré
-  # deploy:
-  #   needs: build-and-test
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #   steps:
-  #   - name: 🚀 Deploy to VPS via SSH
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.VPS_HOST }}
-  #       username: ${{ secrets.VPS_USERNAME }}
-  #       key: ${{ secrets.VPS_SSH_KEY }}
-  #       script: |
-  #         cd /var/www/TradeOffStackAPI
-  #         git pull origin main
-  #         docker-compose down
-  #         docker-compose up -d --build
+    - name: 🚀 Start Services (API & Database) via Docker Compose
+      run: |
+        echo "POSTGRES_USER=tradeoff_admin" >> .env
+        echo "POSTGRES_PASSWORD=Tr@de0ff_Secure!2026_Db#X9" >> .env
+        echo "POSTGRES_DB=tradeoffstack" >> .env
+        echo "POSTGRES_PORT=5432" >> .env
+        echo "JWT_SECRET_KEY=Tr@de0ff_Super_Secret_Key_For_JWT_Auth_2026!" >> .env
+        docker compose up -d --build
+
+    - name: 🩺 Wait for API to be healthy
+      run: |
+        echo "Waiting for API to respond at http://localhost:5000/api/equipment..."
+        for i in {1..30}; do
+          if curl -s http://localhost:5000/api/equipment > /dev/null; then
+            echo "API is up and running!"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "API failed to start in time."
+        docker compose logs
+        exit 1
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: 📦 Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: 🎭 Install Playwright Browsers
+      run: |
+        cd frontend
+        npx playwright install --with-deps chromium
+
+    - name: ⚡ Start Frontend Vite Server
+      run: |
+        cd frontend
+        npm run dev &
+        echo "Waiting for Vite frontend to be responsive..."
+        for i in {1..15}; do
+          if curl -s http://localhost:5173 > /dev/null; then
+            echo "Vite is up!"
+            exit 0
+          fi
+          sleep 1
+        done
+
+    - name: 🧪 Run Playwright E2E UI Tests
+      run: |
+        cd frontend
+        node ui_test.js
+
+    - name: 🧪 Run Playwright E2E Global CRUD Lifecycle Tests
+      run: |
+        cd frontend
+        node ui_global_test.js
+
+    - name: 📤 Upload E2E Screenshots
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-screenshots
+        path: frontend/screenshots/

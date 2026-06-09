@@ -13,4 +13,5 @@ public interface IMaintenanceRequestService
     Task<ServiceResponse<MaintenanceRequest>> UpdateRequestAsync(Guid id, MaintenanceRequest request);
     Task<ServiceResponse> CompleteRequestAsync(Guid id, string? technicianNotes);
     Task<ServiceResponse> CancelRequestAsync(Guid id);
+    Task<ServiceResponse> DeleteRequestAsync(Guid id);
 }

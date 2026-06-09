@@ -83,9 +83,7 @@ public class MaintenanceRequestController : ControllerBase
     [Authorize(Roles = Roles.AdminOrManager)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        // Note: La logique métier de suppression n'est pas implémentée dans le service,
-        // car annuler est généralement préférable. On pourrait l'ajouter si nécessaire.
-        var response = await _service.CancelRequestAsync(id);
+        var response = await _service.DeleteRequestAsync(id);
         return response.Success ? NoContent() : NotFound(new { message = response.Message });
     }
 }

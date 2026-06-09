@@ -131,6 +131,28 @@ public static class ProgramExtensions
             {
                 logger.LogInformation("SQLite provider detected — migration skipped (EnsureCreated is used).");
             }
+            
+            // ==========================================
+            // SÉCURITÉ : Initialisation de l'Administrateur par défaut
+            // ==========================================
+            if (!await db.Users.AnyAsync())
+            {
+                logger.LogInformation("No users found. Creating default Administrator account...");
+                var adminUser = new TradeOffStackAPI.Models.User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "System",
+                    LastName = "Admin",
+                    Email = "admin@tradeoffstack.com",
+                    Role = TradeOffStackAPI.Models.UserRole.Admin,
+                    IsActive = true,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!Secure")
+                };
+                
+                await db.Users.AddAsync(adminUser);
+                await db.SaveChangesAsync();
+                logger.LogInformation("Default Administrator account created (admin@tradeoffstack.com / Admin123!Secure).");
+            }
         }
         catch (Exception ex)
         {

@@ -60,29 +60,42 @@ public class MaintenanceRequestService : IMaintenanceRequestService
 
     public async Task<ServiceResponse<MaintenanceRequest>> CreateRequestAsync(MaintenanceRequest request)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
         try
         {
-            var equipment = await _equipmentRepo.GetByIdAsync(request.EquipmentId);
-            if (equipment == null)
-                return ServiceResponse<MaintenanceRequest>.Fail("The specified equipment does not exist.");
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    var equipment = await _equipmentRepo.GetByIdAsync(request.EquipmentId);
+                    if (equipment == null)
+                        return ServiceResponse<MaintenanceRequest>.Fail("The specified equipment does not exist.");
 
-            if (await _repo.HasOpenRequestAsync(request.EquipmentId))
-                return ServiceResponse<MaintenanceRequest>.Fail("This equipment already has an open maintenance request.");
+                    if (await _repo.HasOpenRequestAsync(request.EquipmentId))
+                        return ServiceResponse<MaintenanceRequest>.Fail("This equipment already has an open maintenance request.");
 
-            equipment.Status = AssetStatus.OutForRepair;
-            await _equipmentRepo.UpdateAsync(equipment);
+                    var success = await _repo.AddAsync(request);
+                    if (!success)
+                    {
+                        await transaction.RollbackAsync();
+                        return ServiceResponse<MaintenanceRequest>.Fail("Failed to create the request.");
+                    }
 
-            var success = await _repo.AddAsync(request);
-            
-            await transaction.CommitAsync();
-            return success
-                ? ServiceResponse<MaintenanceRequest>.Ok(request, "Request created.")
-                : ServiceResponse<MaintenanceRequest>.Fail("Failed to create the request.");
+                    await UpdateEquipmentStatusAsync(request.EquipmentId);
+                    
+                    await transaction.CommitAsync();
+                    return ServiceResponse<MaintenanceRequest>.Ok(request, "Request created.");
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return ServiceResponse<MaintenanceRequest>.Fail($"Transaction error: {ex.Message}");
         }
     }
@@ -91,50 +104,91 @@ public class MaintenanceRequestService : IMaintenanceRequestService
 
     public async Task<ServiceResponse<MaintenanceRequest>> UpdateRequestAsync(Guid id, MaintenanceRequest request)
     {
-        var existing = await _repo.GetByIdAsync(id);
-        if (existing == null)
-            return ServiceResponse<MaintenanceRequest>.Fail("Request not found.");
+        try
+        {
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    var existing = await _repo.GetByIdAsync(id);
+                    if (existing == null)
+                        return ServiceResponse<MaintenanceRequest>.Fail("Request not found.");
 
-        existing.Status = request.Status;
-        existing.Priority = request.Priority;
-        existing.Description = request.Description;
-        existing.ScheduledDate = request.ScheduledDate;
+                    var oldEquipmentId = existing.EquipmentId;
+                    var newEquipmentId = request.EquipmentId;
 
-        var success = await _repo.UpdateAsync(existing);
-        return success
-            ? ServiceResponse<MaintenanceRequest>.Ok(existing, "Request updated.")
-            : ServiceResponse<MaintenanceRequest>.Fail("Failed to update.");
+                    existing.Status = request.Status;
+                    existing.Priority = request.Priority;
+                    existing.Description = request.Description;
+                    existing.ScheduledDate = request.ScheduledDate;
+                    existing.EquipmentId = request.EquipmentId;
+
+                    var success = await _repo.UpdateAsync(existing);
+                    if (!success)
+                    {
+                        await transaction.RollbackAsync();
+                        return ServiceResponse<MaintenanceRequest>.Fail("Failed to update request.");
+                    }
+
+                    await UpdateEquipmentStatusAsync(oldEquipmentId);
+                    if (oldEquipmentId != newEquipmentId)
+                    {
+                        await UpdateEquipmentStatusAsync(newEquipmentId);
+                    }
+
+                    await transaction.CommitAsync();
+                    return ServiceResponse<MaintenanceRequest>.Ok(existing, "Request updated.");
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            return ServiceResponse<MaintenanceRequest>.Fail($"An error occurred: {ex.Message}");
+        }
     }
 
     /// <inheritdoc />
 
     public async Task<ServiceResponse> CompleteRequestAsync(Guid id, string? technicianNotes)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
         try
         {
-            var request = await _repo.GetByIdAsync(id);
-            if (request == null)
-                return ServiceResponse.Fail("Request not found.");
-
-            request.Status = MaintenanceStatus.Completed;
-            request.CompletedDate = DateTime.UtcNow;
-            request.TechnicianNotes = technicianNotes;
-            await _repo.UpdateAsync(request);
-
-            var equipment = await _equipmentRepo.GetByIdAsync(request.EquipmentId);
-            if (equipment != null)
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                equipment.Status = AssetStatus.Available;
-                await _equipmentRepo.UpdateAsync(equipment);
-            }
+                await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    var request = await _repo.GetByIdAsync(id);
+                    if (request == null)
+                        return ServiceResponse.Fail("Request not found.");
 
-            await transaction.CommitAsync();
-            return ServiceResponse.Ok("Request completed.");
+                    request.Status = MaintenanceStatus.Completed;
+                    request.CompletedDate = DateTime.UtcNow;
+                    request.TechnicianNotes = technicianNotes;
+                    await _repo.UpdateAsync(request);
+
+                    await UpdateEquipmentStatusAsync(request.EquipmentId);
+
+                    await transaction.CommitAsync();
+                    return ServiceResponse.Ok("Request completed.");
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return ServiceResponse.Fail($"Transaction error: {ex.Message}");
         }
     }
@@ -143,30 +197,85 @@ public class MaintenanceRequestService : IMaintenanceRequestService
 
     public async Task<ServiceResponse> CancelRequestAsync(Guid id)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
         try
         {
-            var request = await _repo.GetByIdAsync(id);
-            if (request == null)
-                return ServiceResponse.Fail("Request not found.");
-
-            request.Status = MaintenanceStatus.Cancelled;
-            await _repo.UpdateAsync(request);
-
-            var equipment = await _equipmentRepo.GetByIdAsync(request.EquipmentId);
-            if (equipment != null && equipment.Status == AssetStatus.OutForRepair)
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
             {
-                equipment.Status = AssetStatus.Available;
-                await _equipmentRepo.UpdateAsync(equipment);
-            }
+                await using var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    var request = await _repo.GetByIdAsync(id);
+                    if (request == null)
+                        return ServiceResponse.Fail("Request not found.");
 
-            await transaction.CommitAsync();
-            return ServiceResponse.Ok("Request cancelled.");
+                    request.Status = MaintenanceStatus.Cancelled;
+                    await _repo.UpdateAsync(request);
+
+                    await UpdateEquipmentStatusAsync(request.EquipmentId);
+
+                    await transaction.CommitAsync();
+                    return ServiceResponse.Ok("Request cancelled.");
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return ServiceResponse.Fail($"Transaction error: {ex.Message}");
         }
+    }
+
+    private async Task UpdateEquipmentStatusAsync(Guid equipmentId)
+    {
+        var equipment = await _equipmentRepo.GetByIdAsync(equipmentId);
+        if (equipment == null) return;
+
+        // In app context context is injected
+        var hasOpenMaintenance = await _context.MaintenanceRequests
+            .AnyAsync(r => r.EquipmentId == equipmentId && 
+                           (r.Status == MaintenanceStatus.Pending || r.Status == MaintenanceStatus.InProgress));
+                           
+        if (hasOpenMaintenance)
+        {
+            equipment.Status = AssetStatus.OutForRepair;
+        }
+        else
+        {
+            var hasActiveReservation = await _context.Reservations
+                .AnyAsync(r => r.EquipmentId == equipmentId && 
+                               (r.Status == ReservationStatus.Active || r.Status == ReservationStatus.Pending));
+                               
+            if (hasActiveReservation)
+            {
+                equipment.Status = AssetStatus.Reserved;
+            }
+            else
+            {
+                equipment.Status = AssetStatus.Available;
+            }
+        }
+        
+        await _equipmentRepo.UpdateAsync(equipment);
+    }
+
+    public async Task<ServiceResponse> DeleteRequestAsync(Guid id)
+    {
+        var request = await _repo.GetByIdAsync(id);
+        if (request == null)
+            return ServiceResponse.Fail("Request not found.");
+
+        var equipmentId = request.EquipmentId;
+        var success = await _repo.DeleteAsync(id);
+        if (success)
+        {
+            await UpdateEquipmentStatusAsync(equipmentId);
+            return ServiceResponse.Ok("Request successfully deleted.");
+        }
+        return ServiceResponse.Fail("Failed to delete request.");
     }
 }

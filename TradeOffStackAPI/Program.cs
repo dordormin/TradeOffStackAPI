@@ -8,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 // --- Composition de la DI ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services
     .AddPersistence(builder.Configuration)
     .AddApplicationServices(builder.Configuration)
@@ -29,6 +39,7 @@ await app.ApplyDatabaseMigrationsAsync();
 // --- Pipeline HTTP ---
 app.UseForwardedHeaders();
 app.UseExceptionHandling();
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
