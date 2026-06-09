@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <!-- Mise à jour pour corriger la vulnérabilité de sécurité -->
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     
     <!-- Packages EF Core et Npgsql mis à jour pour corriger la vulnérabilité -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
