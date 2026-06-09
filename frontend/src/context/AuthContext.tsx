@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (id: string, token: string): Promise<User | null> => {
     try {
-      const response = await apiClient.get(`/users/${id}`, {
+      const response = await apiClient.get(`/user/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data;
