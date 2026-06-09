@@ -1,0 +1,16 @@
+# Configuration Caddy pour TradeOffStack Production
+# Remplacer ':80' par votre domaine (ex: tradeoffstack.com) pour activer le HTTPS Let's Encrypt automatique !
+:80 {
+    # Rediriger les requêtes API (/api/*) vers le conteneur backend
+    handle /api/* {
+        reverse_proxy api:8080
+    }
+
+    # Rediriger toutes les autres requêtes vers le conteneur frontend
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    # Compression des réponses pour économiser de la bande passante
+    encode gzip zstd
+}
