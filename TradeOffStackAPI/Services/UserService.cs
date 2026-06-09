@@ -158,5 +158,3 @@ public class UserService : IUserService
             : ServiceResponse<bool>.Fail("Failed to update the password.");
     }
 }
-
-}

@@ -22,6 +22,8 @@ import { Plus, CheckCircle, XCircle, Edit } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { useTableState } from '@/hooks/useTableState';
+import { DataTableControls, DataTablePagination, SortableHeader } from '@/components/DataTableControls';
 import { getAssetImageUrl } from '@/utils/assetImages';
 
 export const Maintenance: React.FC = () => {
@@ -47,6 +49,12 @@ export const Maintenance: React.FC = () => {
     status: 'Pending' as MaintenanceStatus,
     description: '',
     scheduled_date: ''
+  });
+
+  const table = useTableState<MaintenanceRequest>({
+    data: requests,
+    initialPageSize: 10,
+    searchableKeys: ['description', 'status', 'priority'],
   });
 
   const fetchRequests = async () => {
@@ -217,6 +225,13 @@ export const Maintenance: React.FC = () => {
         </Button>
       </div>
 
+      <DataTableControls
+        searchTerm={table.searchTerm}
+        onSearchChange={table.setSearchTerm}
+        searchPlaceholder={isFr ? 'Rechercher par description, statut, priorité...' : 'Search by description, status, priority...'}
+        isFr={isFr}
+      />
+
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-muted-foreground animate-pulse">
@@ -229,22 +244,28 @@ export const Maintenance: React.FC = () => {
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead>{isFr ? 'Nom de l\'équipement' : 'Asset Name'}</TableHead>
-                <TableHead>{isFr ? 'Priorité' : 'Priority'}</TableHead>
-                <TableHead>{isFr ? 'Statut' : 'Status'}</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Priorité' : 'Priority'} sortKey="priority" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Statut' : 'Status'} sortKey="status" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>{isFr ? 'Date programmée' : 'Scheduled Date'}</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Date programmée' : 'Scheduled Date'} sortKey="scheduled_date" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.length === 0 ? (
+              {table.paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     {isFr ? 'Aucune demande de maintenance trouvée.' : 'No maintenance requests found.'}
                   </TableCell>
                 </TableRow>
               ) : (
-                requests.map((req) => {
+                table.paginatedData.map((req) => {
                   const assetName = req.equipment?.name || equipments.find(e => e.id === req.equipment_id)?.name || (isFr ? 'Équipement inconnu' : 'Unknown Asset');
 
                   return (
@@ -310,6 +331,16 @@ export const Maintenance: React.FC = () => {
               )}
             </TableBody>
           </Table>
+
+          <DataTablePagination
+            currentPage={table.currentPage}
+            totalPages={table.totalPages}
+            totalFiltered={table.totalFiltered}
+            pageSize={table.pageSize}
+            onPageChange={table.setCurrentPage}
+            onPageSizeChange={table.setPageSize}
+            isFr={isFr}
+          />
         </div>
       )}
 
