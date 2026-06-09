@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: tradeoffstack-db-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tradeoff_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
+      POSTGRES_DB: tradeoffstack
+    volumes:
+      - pg_prod_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tradeoff_admin} -d tradeoffstack"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: ghcr.io/dordormin/tradeoffstack-api:latest
+    container_name: tradeoffstack-api-prod
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: Host=db;Database=tradeoffstack;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-Tr@de0ff_Super_Secret_Key_For_JWT_Auth_2026!}
+      ASPNETCORE_ENVIRONMENT: Production
+    restart: always
+
+  frontend:
+    image: ghcr.io/dordormin/tradeoffstack-frontend:latest
+    container_name: tradeoffstack-frontend-prod
+    restart: always
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: tradeoffstack-proxy-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+      - frontend
+    restart: always
+
+volumes:
+  pg_prod_data:
+  caddy_data:
+  caddy_config:

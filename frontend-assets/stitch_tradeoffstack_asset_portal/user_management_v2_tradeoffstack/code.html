@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeOffStack - User Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#d9773a",
+                "inverse-surface": "#f1dfd7",
+                "tertiary": "#f6adfc",
+                "status-available": "#10B981",
+                "error-container": "#93000a",
+                "surface-container-lowest": "#140c08",
+                "on-tertiary-fixed": "#35003f",
+                "on-tertiary-container": "#480c53",
+                "on-tertiary": "#50155a",
+                "on-secondary-fixed-variant": "#3f4755",
+                "on-primary-container": "#491c00",
+                "on-tertiary-fixed-variant": "#6a2e73",
+                "error": "#ffb4ab",
+                "background": "#1a120d",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#3d332d",
+                "on-primary-fixed-variant": "#773300",
+                "tertiary-fixed-dim": "#f6adfc",
+                "on-secondary-container": "#adb5c6",
+                "tertiary-fixed": "#ffd6fe",
+                "outline-variant": "#554339",
+                "status-repair": "#F59E0B",
+                "surface": "#1a120d",
+                "surface-dim": "#1a120d",
+                "surface-container": "#271e19",
+                "surface-container-high": "#322823",
+                "outline": "#a38c80",
+                "on-surface": "#f1dfd7",
+                "on-surface-variant": "#dbc1b5",
+                "on-error": "#690005",
+                "surface-charcoal": "#0F1115",
+                "on-secondary-fixed": "#141c28",
+                "tertiary-container": "#bc78c3",
+                "status-reserved": "#3B82F6",
+                "on-primary": "#542200",
+                "surface-container-low": "#231a15",
+                "status-critical": "#EF4444",
+                "surface-tint": "#ffb68e",
+                "secondary": "#bfc7d8",
+                "surface-bright": "#423731",
+                "surface-container-highest": "#3d332d",
+                "on-primary-fixed": "#331200",
+                "secondary-container": "#3f4755",
+                "primary-fixed": "#ffdbca",
+                "on-secondary": "#29313e",
+                "border-subtle": "#334155",
+                "primary-fixed-dim": "#ffb68e",
+                "inverse-on-surface": "#392e29",
+                "secondary-fixed": "#dbe3f4",
+                "secondary-fixed-dim": "#bfc7d8",
+                "inverse-primary": "#99460a",
+                "surface-slate": "#1E293B",
+                "primary": "#ffb68e",
+                "on-background": "#f1dfd7"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "header-height": "64px",
+                "container-max": "1440px",
+                "gutter": "1rem",
+                "stack-sm": "0.5rem",
+                "stack-lg": "1.5rem",
+                "stack-md": "1rem",
+                "sidebar-width": "260px"
+        },
+        "fontFamily": {
+                "headline-xl": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ],
+                "body-sm": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Manrope"
+                ],
+                "mono-sm": [
+                        "Courier Prime"
+                ],
+                "label-md": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "headline-xl": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "mono-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for data tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #140c08;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3d332d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #554339;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased h-screen flex overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-surface-container h-screen w-sidebar-width fixed left-0 top-0 flex flex-col py-stack-md px-gutter overflow-y-auto hidden md:flex z-20 border-r border-outline-variant">
+<div class="flex items-center gap-stack-sm mb-stack-lg px-stack-sm mt-stack-sm">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[20px]" data-icon="token" data-weight="fill">token</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary leading-none">TradeOffStack</h1>
+<p class="font-body-sm text-body-sm text-secondary mt-1 leading-none">IT Asset Management</p>
+</div>
+</div>
+<div class="flex-1 space-y-stack-sm mt-stack-md">
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_seat">event_seat</span>
+<span class="font-label-md text-label-md">Reservations</span>
+</a>
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm bg-primary-container text-on-primary-container rounded-lg transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group" data-weight="fill">group</span>
+<span class="font-label-md text-label-md font-bold">Users</span>
+</a>
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md text-label-md">Audit Logs</span>
+</a>
+</div>
+<div class="mt-auto pt-stack-md border-t border-outline-variant">
+<a class="flex items-center gap-stack-sm px-stack-md py-stack-sm rounded-lg text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface docked full-width top-0 sticky hidden md:flex justify-between items-center w-full px-gutter py-stack-sm ml-sidebar-width border-b border-outline-variant z-10 h-header-height">
+<!-- Search -->
+<div class="relative w-96 max-w-md">
+<span class="material-symbols-outlined absolute left-stack-sm top-1/2 -translate-y-1/2 text-secondary text-[20px]" data-icon="search">search</span>
+<input aria-label="Search resources" class="w-full pl-10 pr-stack-md py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Search resources..." type="text"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 text-secondary">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] font-mono-sm border border-outline-variant">⌘</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] font-mono-sm border border-outline-variant">K</span>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="flex items-center gap-stack-sm text-secondary">
+<button aria-label="Notifications" class="p-2 rounded-lg hover:bg-surface-container-high transition-all relative">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<button aria-expanded="false" aria-haspopup="menu" class="flex items-center gap-stack-sm group hover:bg-surface-container-high p-1.5 rounded-lg transition-colors">
+<img alt="Admin User Profile" class="w-7 h-7 rounded border border-outline-variant group-hover:border-primary transition-colors" src="https://lh3.googleusercontent.com/aida/AP1WRLssiEybiy2oeEUlWt_pY-kA40rZ0bqL9PYgsaqfZYjjq8BdoDC5Dr-CssZF1VWKMFYD5fH_Xf2AWUNtmyPkeVDhMcfEpZAKKnULA0Ueik_IHZQVx2dy0lVuojts64RaMMtPZfBCnXzZE2Uae2Q85TJQJuWSX92yNMl0TsCzGtnmgQ65eYsxoZNGaxUbh8b4oUEzYti7hqvxWRBQOKWiArxcIAjiEoPXTHf01Gz6PoyRa9xFUsNHjaovvxVR"/>
+<div class="flex flex-col items-start hidden lg:block">
+<span class="font-label-md text-label-md text-on-surface leading-none">Admin User</span>
+<span class="font-mono-sm text-[10px] text-secondary mt-0.5 leading-none">System Admin</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-sidebar-width mt-0 md:mt-header-height bg-background p-gutter md:p-stack-lg overflow-y-auto">
+<div class="max-w-container-max mx-auto space-y-stack-md">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-secondary mb-2">
+<a class="hover:text-primary transition-colors font-body-sm text-[12px]" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-body-sm text-[12px] text-on-surface">User Management</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-3">
+    Users
+    <span class="bg-surface-container-high text-secondary px-2 py-0.5 rounded-full font-label-md text-[12px] border border-outline-variant">142 Total</span>
+</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Manage platform access, roles, and directory information.</p>
+</div>
+<div class="flex items-center gap-stack-sm">
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-high transition-colors focus:ring-2 focus:ring-primary focus:outline-none">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload">upload</span>
+    Export CSV
+</button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-primary rounded-lg font-label-md text-label-md text-on-primary hover:bg-primary-container hover:text-on-primary-container transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:outline-none">
+<span class="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+    Invite User
+</button>
+</div>
+</div>
+<!-- Toolbar: Filters & Search -->
+<div class="bg-surface-container border border-outline-variant rounded-t-lg p-stack-md flex flex-col lg:flex-row lg:items-center justify-between gap-stack-md">
+<!-- Search -->
+<div class="relative w-full lg:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]" data-icon="search">search</span>
+<input aria-label="Search users" class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Search by name, email, or ID..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-stack-sm overflow-x-auto pb-2 lg:pb-0 hide-scrollbar w-full lg:w-auto">
+<div class="flex items-center gap-2 w-full lg:w-auto">
+<span class="material-symbols-outlined text-secondary text-[18px] mr-1 hidden sm:block" data-icon="filter_alt">filter_alt</span>
+<!-- Department Filter Dropdown -->
+<div class="relative inline-block text-left">
+<button aria-expanded="false" aria-haspopup="true" class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg font-label-md text-[13px] text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary">
+        Department
+        <span class="material-symbols-outlined text-[16px] text-secondary" data-icon="arrow_drop_down">arrow_drop_down</span>
+</button>
+</div>
+<!-- Role Filter Dropdown -->
+<div class="relative inline-block text-left">
+<button aria-expanded="false" aria-haspopup="true" class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-lg font-label-md text-[13px] text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary">
+        Role
+        <span class="material-symbols-outlined text-[16px] text-secondary" data-icon="arrow_drop_down">arrow_drop_down</span>
+</button>
+</div>
+<!-- Status Filter Dropdown (Active State) -->
+<button class="flex items-center gap-2 px-3 py-1.5 bg-secondary-container border border-outline-variant rounded-lg font-label-md text-[13px] text-on-secondary-container hover:bg-surface-container-high transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary">
+    Status: Active
+    <span class="material-symbols-outlined text-[14px] hover:text-error transition-colors" data-icon="close">close</span>
+</button>
+<button aria-label="Clear all filters" class="ml-auto lg:ml-2 text-secondary hover:text-on-surface font-body-sm text-[12px] underline transition-colors focus:outline-none">
+    Clear All
+</button>
+</div>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-container-lowest border-x border-b border-outline-variant rounded-b-lg overflow-hidden shadow-sm -mt-stack-md">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider w-12 text-center" scope="col">
+<input aria-label="Select all users" class="rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-background bg-surface-container-lowest w-4 h-4 cursor-pointer" type="checkbox"/>
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider group cursor-pointer hover:text-on-surface transition-colors" scope="col">
+    User
+    <span class="material-symbols-outlined text-[14px] inline-block align-middle opacity-0 group-hover:opacity-100 transition-opacity ml-1" data-icon="arrow_downward">arrow_downward</span>
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider hidden sm:table-cell" scope="col">
+    Contact Info
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider hidden lg:table-cell" scope="col">
+    Department
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider hidden md:table-cell" scope="col">
+    Role
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider" scope="col">
+    Status
+</th>
+<th class="px-stack-md py-3 font-label-md text-[11px] text-secondary uppercase tracking-wider text-right" scope="col">
+    Actions
+</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group focus-within:bg-surface-container-low">
+<td class="px-stack-md py-3 text-center">
+<input aria-label="Select John Smith" class="rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-background bg-surface-container-lowest w-4 h-4 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-stack-md py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-label-md text-[12px] font-bold shrink-0 border border-outline-variant">
+        JS
+    </div>
+<div>
+<div class="font-label-md text-[14px] text-on-surface font-semibold">John Smith</div>
+<div class="font-mono-sm text-[11px] text-secondary mt-0.5">ID: USR-8492</div>
+</div>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden sm:table-cell">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-body-sm">john.smith@example.com</span>
+<span class="text-secondary font-mono-sm text-[11px] mt-0.5">+1 (555) 123-4567</span>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden lg:table-cell text-on-surface-variant">Engineering</td>
+<td class="px-stack-md py-3 hidden md:table-cell">
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-on-surface-variant border border-outline-variant font-label-md text-[11px]">System Admin</span>
+</td>
+<td class="px-stack-md py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#062d1c] text-status-available border border-[#0d5938] rounded font-label-md text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span> Active
+</span>
+</td>
+<td class="px-stack-md py-3 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+<button aria-label="Edit John Smith" class="p-1.5 text-secondary hover:text-primary hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="Edit User">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Delete John Smith" class="p-1.5 text-secondary hover:text-error hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-error" title="Delete User">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+<div class="relative inline-block text-left">
+<button aria-expanded="false" aria-haspopup="true" aria-label="More actions for John Smith" class="p-1.5 text-secondary hover:text-on-surface hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="More Actions">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group focus-within:bg-surface-container-low">
+<td class="px-stack-md py-3 text-center">
+<input aria-label="Select Sarah Connor" class="rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-background bg-surface-container-lowest w-4 h-4 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-stack-md py-3">
+<div class="flex items-center gap-3">
+<img alt="" class="w-8 h-8 rounded shrink-0 border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuD-lDTzt_iMlaNH2d26N6Pa3KspEGMrPP5Lcf6e0QpBjqrIhtAMMWsOq3dbukZDhFTnE2FqgnyxIlt9rgCuacf1QtggPYvf8L-YfCJl3pezXSDDlvFN0ZYWDL9WWJDlHbzbhCtihnZNikl2324llV8NJNfxpZaI-rrvLsM069xkHIkNNG7yS-mPGi-Xlzqy52IR-gL_asW5DSibR0dlRlnk18uZHjdw8CLNQ4e4-3LzuhwTgbF2qiVZ46G"/>
+<div>
+<div class="font-label-md text-[14px] text-on-surface font-semibold">Sarah Connor</div>
+<div class="font-mono-sm text-[11px] text-secondary mt-0.5">ID: USR-8493</div>
+</div>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden sm:table-cell">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-body-sm">sarah.c@example.com</span>
+<span class="text-secondary font-mono-sm text-[11px] mt-0.5">+1 (555) 987-6543</span>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden lg:table-cell text-on-surface-variant">Sales</td>
+<td class="px-stack-md py-3 hidden md:table-cell">
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-on-surface-variant border border-outline-variant font-label-md text-[11px]">Manager</span>
+</td>
+<td class="px-stack-md py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#062d1c] text-status-available border border-[#0d5938] rounded font-label-md text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span> Active
+</span>
+</td>
+<td class="px-stack-md py-3 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+<button aria-label="Edit Sarah Connor" class="p-1.5 text-secondary hover:text-primary hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="Edit User">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Delete Sarah Connor" class="p-1.5 text-secondary hover:text-error hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-error" title="Delete User">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+<div class="relative inline-block text-left">
+<button aria-expanded="false" aria-haspopup="true" aria-label="More actions for Sarah Connor" class="p-1.5 text-secondary hover:text-on-surface hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="More Actions">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Deactivated) -->
+<tr class="hover:bg-surface-container-low transition-colors group focus-within:bg-surface-container-low bg-surface-container opacity-70">
+<td class="px-stack-md py-3 text-center">
+<input aria-label="Select Marcus Reed" class="rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-background bg-surface-container-lowest w-4 h-4 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-stack-md py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-highest text-secondary flex items-center justify-center font-label-md text-[12px] font-bold shrink-0 border border-outline-variant">
+        MR
+    </div>
+<div>
+<div class="font-label-md text-[14px] text-secondary font-semibold line-through">Marcus Reed</div>
+<div class="font-mono-sm text-[11px] text-secondary mt-0.5">ID: USR-8494</div>
+</div>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden sm:table-cell">
+<div class="flex flex-col">
+<span class="text-secondary font-body-sm line-through">m.reed@example.com</span>
+<span class="text-secondary font-mono-sm text-[11px] mt-0.5">N/A</span>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden lg:table-cell text-secondary">HR</td>
+<td class="px-stack-md py-3 hidden md:table-cell">
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-secondary border border-outline-variant font-label-md text-[11px]">Employee</span>
+</td>
+<td class="px-stack-md py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-container-high text-secondary border border-outline-variant rounded font-label-md text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Deactivated
+</span>
+</td>
+<td class="px-stack-md py-3 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+<button aria-label="Restore Marcus Reed" class="p-1.5 text-secondary hover:text-primary hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="Restore User">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+</button>
+<button aria-label="Permanently Delete Marcus Reed" class="p-1.5 text-secondary hover:text-error hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-error" title="Permanently Delete User">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete_forever">delete_forever</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group focus-within:bg-surface-container-low">
+<td class="px-stack-md py-3 text-center">
+<input aria-label="Select Elena Rostova" class="rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-background bg-surface-container-lowest w-4 h-4 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-stack-md py-3">
+<div class="flex items-center gap-3">
+<img alt="" class="w-8 h-8 rounded shrink-0 border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuBNr-OP_Rzp_2J_8V8LqIT0rJ8mOE2A6bDtwM64aRLdDG8vZl5ZfzVqL7iriYak0sBHvGZIfgM99z7gs0dDYhIR0Uag5TyXcdGiU6fXchz5fM91aPLpf-Buil2d73g1z433Ippm3Li04YTBSjYQuSPksX7NbdFcCJyoySo1VWA68P20R8oo-eLVflnyvRQIV0-XA4HxLYJEoaC1zOvX_e7yKnsjFmlVOrmtH9xKPLr5DFzFUJLE8Zi3srL"/>
+<div>
+<div class="font-label-md text-[14px] text-on-surface font-semibold">Elena Rostova</div>
+<div class="font-mono-sm text-[11px] text-secondary mt-0.5">ID: USR-8495</div>
+</div>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden sm:table-cell">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-body-sm">elena.r@example.com</span>
+<span class="text-secondary font-mono-sm text-[11px] mt-0.5">+44 20 7123 4567</span>
+</div>
+</td>
+<td class="px-stack-md py-3 hidden lg:table-cell text-on-surface-variant">IT</td>
+<td class="px-stack-md py-3 hidden md:table-cell">
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-on-surface-variant border border-outline-variant font-label-md text-[11px]">System Admin</span>
+</td>
+<td class="px-stack-md py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#062d1c] text-status-available border border-[#0d5938] rounded font-label-md text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span> Active
+</span>
+</td>
+<td class="px-stack-md py-3 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+<button aria-label="Edit Elena Rostova" class="p-1.5 text-secondary hover:text-primary hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="Edit User">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Delete Elena Rostova" class="p-1.5 text-secondary hover:text-error hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-error" title="Delete User">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+<div class="relative inline-block text-left">
+<button aria-expanded="false" aria-haspopup="true" aria-label="More actions for Elena Rostova" class="p-1.5 text-secondary hover:text-on-surface hover:bg-surface-container-high rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary" title="More Actions">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-stack-md py-3 border-t border-outline-variant bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-4 text-secondary">
+<span class="font-body-sm text-[13px]">Showing <span class="font-bold text-on-surface">1</span> to <span class="font-bold text-on-surface">4</span> of <span class="font-bold text-on-surface">142</span> entries</span>
+<div class="flex items-center gap-1">
+<button aria-label="Previous page" class="p-1.5 rounded hover:bg-surface-container-high transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-1 font-label-md text-[13px]">
+<button aria-current="page" class="w-7 h-7 rounded bg-primary text-on-primary flex items-center justify-center font-bold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background">1</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary">2</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary">3</button>
+<span class="px-1 text-secondary">...</span>
+<button class="w-7 h-7 rounded hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary">36</button>
+</div>
+<button aria-label="Next page" class="p-1.5 rounded hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

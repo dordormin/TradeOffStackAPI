@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeOffStack - Inventory</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for clean high-density look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "status-reserved": "#3B82F6",
+                "on-secondary-fixed": "#141c28",
+                "on-primary": "#542200",
+                "inverse-surface": "#f1dfd7",
+                "secondary": "#bfc7d8",
+                "background": "#1a120d",
+                "surface-container-low": "#231a15",
+                "surface-dim": "#1a120d",
+                "primary": "#ffb68e",
+                "on-secondary-container": "#adb5c6",
+                "status-critical": "#EF4444",
+                "outline": "#a38c80",
+                "surface-tint": "#ffb68e",
+                "surface-container-highest": "#3d332d",
+                "on-primary-container": "#491c00",
+                "on-error-container": "#ffdad6",
+                "inverse-on-surface": "#392e29",
+                "tertiary-fixed": "#ffd6fe",
+                "surface-variant": "#3d332d",
+                "surface-bright": "#423731",
+                "secondary-fixed-dim": "#bfc7d8",
+                "on-tertiary-fixed": "#35003f",
+                "inverse-primary": "#99460a",
+                "on-tertiary-fixed-variant": "#6a2e73",
+                "on-primary-fixed-variant": "#773300",
+                "on-secondary-fixed-variant": "#3f4755",
+                "on-error": "#690005",
+                "on-tertiary": "#50155a",
+                "border-subtle": "#334155",
+                "surface-container-high": "#322823",
+                "surface": "#1a120d",
+                "surface-container": "#271e19",
+                "surface-slate": "#1E293B",
+                "primary-fixed": "#ffdbca",
+                "on-tertiary-container": "#480c53",
+                "primary-container": "#d9773a",
+                "error-container": "#93000a",
+                "primary-fixed-dim": "#ffb68e",
+                "on-background": "#f1dfd7",
+                "on-secondary": "#29313e",
+                "tertiary": "#f6adfc",
+                "tertiary-container": "#bc78c3",
+                "status-repair": "#F59E0B",
+                "on-primary-fixed": "#331200",
+                "error": "#ffb4ab",
+                "on-surface": "#f1dfd7",
+                "tertiary-fixed-dim": "#f6adfc",
+                "on-surface-variant": "#dbc1b5",
+                "secondary-fixed": "#dbe3f4",
+                "surface-container-lowest": "#140c08",
+                "status-available": "#10B981",
+                "secondary-container": "#3f4755",
+                "surface-charcoal": "#0F1115",
+                "outline-variant": "#554339"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "stack-lg": "1.5rem",
+                "header-height": "64px",
+                "container-max": "1440px",
+                "gutter": "1rem",
+                "stack-sm": "0.5rem",
+                "sidebar-width": "260px",
+                "stack-md": "1rem"
+        },
+        "fontFamily": {
+                "body-lg": [
+                        "Manrope"
+                ],
+                "headline-xl": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "mono-sm": [
+                        "Courier Prime"
+                ],
+                "body-sm": [
+                        "Manrope"
+                ],
+                "label-md": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "mono-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="bg-surface-container dark:bg-surface-charcoal w-[260px] h-screen fixed left-0 top-0 border-r border-outline-variant flex flex-col py-6 z-50">
+<!-- Header -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary icon-fill">layers</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TradeOffStack</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mt-0.5">Enterprise ITAM</p>
+</div>
+</div>
+<!-- Main Nav Tabs -->
+<ul class="flex flex-col gap-1 px-3 flex-grow">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-primary font-bold bg-primary/10 border-r-2 border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined icon-fill">inventory_2</span>
+                    Inventory
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                    Reservations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">build</span>
+                    Maintenance
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">group</span>
+                    Users
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+                    Audit Logs
+                </a>
+</li>
+</ul>
+<!-- Footer Tabs -->
+<ul class="flex flex-col gap-1 px-3 mt-auto pt-4 border-t border-outline-variant/30">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                    Support
+                </a>
+</li>
+</ul>
+</nav>
+<!-- TopNavBar & Main Content Wrapper -->
+<div class="ml-[260px] flex-1 flex flex-col min-h-screen relative w-[calc(100%-260px)]">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-md dark:bg-surface-charcoal/80 h-header-height sticky top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-gutter">
+<!-- Left: Context/Search -->
+<div class="flex items-center gap-6">
+<!-- Navigation Links -->
+<nav class="flex gap-4 font-label-md text-label-md hidden md:flex">
+<a class="text-primary border-b-2 border-primary pb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm" href="#">Inventory</a>
+<a class="text-on-surface-variant hover:text-primary transition-all pb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm" href="#">Requests</a>
+</nav>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-variant focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-variant focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-surface-variant focus-within:ring-2 focus-within:ring-primary cursor-pointer" tabindex="0">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of an IT manager in a modern office, cool lighting, corporate attire." src="https://lh3.googleusercontent.com/aida/AP1WRLsxtKph43tAbQD8knJ-oBBQOI2fTkDQn1QHeXeDXOj6ngKTNaXVfWdtd0cZYZf6WzDjwZ1HMvMNEadylTotDsZ7yOSCSnrSSnzHEmtdi43ILRwohZsGh-Z7CNMhOZyDhYDvh1ONT2HaSMB-i25rrM0NICN9x4JhjEU6B37j67IW3wVVYSliIrSkb4mlARfC3Y8naKDBXlF90Z6jcNzE2z6QonyXiP8XHJtBt7lpPKxP68uZO_eR6UoI__L9"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-gutter pt-6 flex flex-col gap-6 relative">
+<!-- Page Header Area -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-1">Asset Inventory</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manage and track IT hardware across the organization.</p>
+</div>
+<div class="flex gap-3">
+<button class="h-9 px-4 rounded-lg bg-surface-slate border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export CSV
+                    </button>
+<button class="h-9 px-4 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-primary-container transition-colors flex items-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Add Asset
+                    </button>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex gap-2 items-center">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="h-9 pl-9 pr-4 rounded-lg bg-surface-slate border border-outline-variant text-body-sm focus:border-primary focus:ring-2 focus:ring-primary w-64 text-on-background placeholder-on-surface-variant transition-colors outline-none" placeholder="Search by name, SN..." type="text"/>
+</div>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<button class="h-9 px-3 rounded-full bg-primary/10 border border-primary/20 text-primary font-label-md text-label-md flex items-center gap-1 hover:bg-primary/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">
+                    All Categories
+                    <span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</button>
+<button class="h-9 px-3 rounded-full bg-surface-slate border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-variant font-label-md text-label-md flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">
+                    All Statuses
+                    <span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</button>
+</div>
+<!-- High-Density DataTable -->
+<div class="bg-surface-slate border border-outline-variant rounded-xl overflow-hidden flex-1 flex flex-col relative focus-within:ring-2 focus-within:ring-primary">
+<div class="overflow-x-auto no-scrollbar flex-1">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead class="bg-surface-charcoal/50 border-b border-outline-variant sticky top-0 z-10 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+<tr>
+<th class="px-4 py-3 font-semibold">Name</th>
+<th class="px-4 py-3 font-semibold">Serial Number</th>
+<th class="px-4 py-3 font-semibold">Category</th>
+<th class="px-4 py-3 font-semibold">Status</th>
+<th class="px-4 py-3 font-semibold text-right">Price</th>
+<th class="px-4 py-3 font-semibold">Purchase Date</th>
+<th class="px-4 py-3 font-semibold text-center w-16">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-background divide-y divide-outline-variant/50">
+<!-- Selected Row (MacBook Pro) -->
+<tr class="h-10 hover:bg-surface-variant/80 bg-primary/10 cursor-pointer transition-colors group focus-within:bg-surface-variant/80 outline-none" tabindex="0">
+<td class="px-4 font-medium flex items-center gap-2 h-10 text-primary">
+<span class="material-symbols-outlined text-[16px]">laptop_mac</span>
+                                    MacBook Pro 16"
+                                </td>
+<td class="px-4 font-mono-sm text-mono-sm text-on-surface-variant">SN-7782910</td>
+<td class="px-4 text-on-surface-variant">Laptop</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-status-reserved/10 text-status-reserved font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-reserved"></span>
+                                        Assigned
+                                    </span>
+</td>
+<td class="px-4 text-right font-mono-sm text-mono-sm">$2,499.00</td>
+<td class="px-4 text-on-surface-variant">Oct 12, 2023</td>
+<td class="px-4 text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Standard Row -->
+<tr class="h-10 hover:bg-surface-variant/80 cursor-pointer transition-colors group focus-within:bg-surface-variant/80 outline-none" tabindex="0">
+<td class="px-4 font-medium flex items-center gap-2 h-10">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">monitor</span>
+                                    Dell UltraSharp 27"
+                                </td>
+<td class="px-4 font-mono-sm text-mono-sm text-on-surface-variant">DEL-U2723QE-01</td>
+<td class="px-4 text-on-surface-variant">Monitor</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-status-available/10 text-status-available font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span>
+                                        Available
+                                    </span>
+</td>
+<td class="px-4 text-right font-mono-sm text-mono-sm">$649.00</td>
+<td class="px-4 text-on-surface-variant">Nov 05, 2023</td>
+<td class="px-4 text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="h-10 hover:bg-surface-variant/80 cursor-pointer transition-colors group focus-within:bg-surface-variant/80 outline-none" tabindex="0">
+<td class="px-4 font-medium flex items-center gap-2 h-10">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">keyboard</span>
+                                    Logitech MX Keys
+                                </td>
+<td class="px-4 font-mono-sm text-mono-sm text-on-surface-variant">LOG-MXK-092</td>
+<td class="px-4 text-on-surface-variant">Peripheral</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-status-repair/10 text-status-repair font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-repair"></span>
+                                        In Repair
+                                    </span>
+</td>
+<td class="px-4 text-right font-mono-sm text-mono-sm">$119.00</td>
+<td class="px-4 text-on-surface-variant">Jan 15, 2023</td>
+<td class="px-4 text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="h-10 hover:bg-surface-variant/80 cursor-pointer transition-colors group focus-within:bg-surface-variant/80 outline-none" tabindex="0">
+<td class="px-4 font-medium flex items-center gap-2 h-10">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">smartphone</span>
+                                    iPhone 13 Pro
+                                </td>
+<td class="px-4 font-mono-sm text-mono-sm text-on-surface-variant">IPH-13P-441</td>
+<td class="px-4 text-on-surface-variant">Mobile</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-status-critical/10 text-status-critical font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-critical"></span>
+                                        Retired
+                                    </span>
+</td>
+<td class="px-4 text-right font-mono-sm text-mono-sm">$999.00</td>
+<td class="px-4 text-on-surface-variant">Sep 20, 2021</td>
+<td class="px-4 text-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary rounded">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination Placeholder -->
+<div class="h-12 border-t border-outline-variant bg-surface-charcoal/30 flex items-center justify-between px-4 text-on-surface-variant font-body-sm">
+<span>Showing 1-4 of 1,204 assets</span>
+<div class="flex gap-2">
+<button class="p-1 rounded hover:bg-surface-variant hover:text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+<button class="p-1 rounded hover:bg-surface-variant hover:text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Slide-over Sheet (Asset Details) -->
+<div class="absolute inset-y-0 right-0 w-[40%] min-w-[400px] bg-surface-charcoal/95 backdrop-blur-xl border-l border-outline-variant shadow-2xl z-50 transform translate-x-0 transition-transform duration-300 flex flex-col">
+<!-- Sheet Header -->
+<div class="p-6 border-b border-outline-variant flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-slate border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px] text-on-surface">laptop_mac</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-background">MacBook Pro 16"</h3>
+<p class="font-mono-sm text-mono-sm text-on-surface-variant mt-1">SN-7782910</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded hover:bg-surface-variant focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Sheet Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
+<!-- Quick Actions -->
+<div class="flex gap-3">
+<button class="flex-1 h-9 rounded-lg bg-surface-slate border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal">Edit Asset</button>
+<button class="flex-1 h-9 rounded-lg bg-surface-slate border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-charcoal">Reassign</button>
+</div>
+<!-- Assignment Info Widget -->
+<div class="bg-surface-slate rounded-xl p-4 border border-outline-variant hover:border-primary/50 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary cursor-pointer" tabindex="0">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">Current Assignment</h4>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant">
+<img alt="Jane Doe" class="w-full h-full object-cover" data-alt="A professional headshot of a female employee in a modern tech office setting, bright lighting." src="https://lh3.googleusercontent.com/aida/AP1WRLsw9uS4fOy3nOgbXFslPYSeljLg9VVPhespduTJlS8dlXxH3ihdQ_NX8AmvbRdsxr_KGl7ltyOs1JbTtXbaNMvg0WMJVXS9QjNoIeeZFlL76oc0ysFjBLhY9hPUA5DIjrZEKSm8Hjx2EJOaUmtPWmQmCiRrYTzbuO5yNthg1xYnhmoZkmNrEK_5Y0wMNz8uHJVt9iCp8-nT8dAxK4qbwTTIi8swJxPiTotjqvEFXqc9M_NT3nhE_L55Teri"/>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md font-medium text-on-background">Jane Doe</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Senior Frontend Engineer</p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-status-reserved/10 text-status-reserved font-label-md text-label-md border border-status-reserved/20">
+                                Assigned
+                            </span>
+</div>
+</div>
+<!-- Hardware Specs Grid -->
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">Specifications</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-slate p-3 rounded-lg border border-outline-variant/50 hover:border-primary/30 transition-colors cursor-default">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Processor</p>
+<p class="font-body-sm text-body-sm text-on-background">Apple M2 Max</p>
+</div>
+<div class="bg-surface-slate p-3 rounded-lg border border-outline-variant/50 hover:border-primary/30 transition-colors cursor-default">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Memory</p>
+<p class="font-body-sm text-body-sm text-on-background">64GB Unified</p>
+</div>
+<div class="bg-surface-slate p-3 rounded-lg border border-outline-variant/50 hover:border-primary/30 transition-colors cursor-default">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Storage</p>
+<p class="font-body-sm text-body-sm text-on-background">2TB SSD</p>
+</div>
+<div class="bg-surface-slate p-3 rounded-lg border border-outline-variant/50 hover:border-primary/30 transition-colors cursor-default">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Purchase Info</p>
+<p class="font-body-sm text-body-sm text-on-background">$2,499 • Apple Inc.</p>
+</div>
+</div>
+</div>
+<!-- Maintenance Log -->
+<div>
+<div class="flex justify-between items-center mb-3">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Maintenance Log</h4>
+<button class="text-primary font-label-md text-label-md hover:underline hover:text-primary-container focus:outline-none focus:ring-2 focus:ring-primary rounded px-1">View All</button>
+</div>
+<div class="relative pl-4 border-l-2 border-surface-slate space-y-6">
+<div class="relative group cursor-pointer">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-status-available border-2 border-surface-charcoal group-hover:scale-125 transition-transform"></div>
+<p class="font-body-sm text-body-sm text-on-background mb-0.5 group-hover:text-primary transition-colors">Routine Checkup - Passed</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Dec 01, 2023 • IT Dept</p>
+</div>
+<div class="relative group cursor-pointer">
+<div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-status-repair border-2 border-surface-charcoal group-hover:scale-125 transition-transform"></div>
+<p class="font-body-sm text-body-sm text-on-background mb-0.5 group-hover:text-primary transition-colors">Keyboard Replacement</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-status-repair/80">Nov 15, 2023 • Sent to Apple Care</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

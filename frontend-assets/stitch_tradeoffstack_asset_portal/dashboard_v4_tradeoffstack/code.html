@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Overview | TradeOffStack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Hanken+Grotesk:wght@500;600;800&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#201e27",
+                      "secondary-fixed-dim": "#5ddac9",
+                      "inverse-on-surface": "#312f38",
+                      "secondary-fixed": "#7cf7e5",
+                      "surface-dim": "#14121a",
+                      "primary-fixed-dim": "#cbbeff",
+                      "surface": "#14121a",
+                      "on-background": "#e6e0ec",
+                      "primary": "#cbbeff",
+                      "inverse-primary": "#6344ce",
+                      "on-surface": "#e6e0ec",
+                      "surface-container-high": "#2b2931",
+                      "outline": "#938e9f",
+                      "tertiary-fixed-dim": "#ffaedd",
+                      "on-secondary-container": "#00302a",
+                      "on-primary-fixed-variant": "#4b26b5",
+                      "surface-variant": "#36333c",
+                      "on-secondary": "#003731",
+                      "tertiary-fixed": "#ffd8ec",
+                      "outline-variant": "#484554",
+                      "surface-tint": "#cbbeff",
+                      "secondary": "#5ddac9",
+                      "on-tertiary": "#60004a",
+                      "surface-container-lowest": "#0f0d15",
+                      "on-tertiary-container": "#fffbff",
+                      "on-tertiary-fixed": "#3b002d",
+                      "surface-container-low": "#1c1a23",
+                      "error-container": "#93000a",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed": "#e7deff",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed": "#1e0061",
+                      "secondary-container": "#00a393",
+                      "background": "#14121a",
+                      "surface-container-highest": "#36333c",
+                      "on-tertiary-fixed-variant": "#831366",
+                      "on-primary-container": "#fffcff",
+                      "surface-bright": "#3a3841",
+                      "on-secondary-fixed-variant": "#005048",
+                      "on-secondary-fixed": "#00201c",
+                      "inverse-surface": "#e6e0ec",
+                      "primary-container": "#7a5de6",
+                      "on-surface-variant": "#cac4d6",
+                      "on-error": "#690005",
+                      "on-primary": "#340098",
+                      "tertiary-container": "#bc4898",
+                      "tertiary": "#ffaedd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin": "24px",
+                      "gutter": "16px",
+                      "lg": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "xl": "48px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "headline-md": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "headline-sm": ["Hanken Grotesk"],
+                      "label-md": ["Geist"],
+                      "mono-sm": ["Geist"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "mono-sm": ["12px", {"lineHeight": "1.5", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(32, 30, 39, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(72, 69, 84, 0.4);
+        }
+        
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #14121a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #36333c; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484554; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row antialiased">
+<!-- TopNavBar (Mobile Only) -->
+<nav class="md:hidden flex items-center justify-between px-lg h-16 w-full fixed top-0 z-40 bg-surface-dim/70 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">TradeOffStack</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-variant/50 transition-colors rounded-full p-2 text-on-surface-variant">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-variant/50 transition-colors rounded-full p-2 text-on-surface-variant">settings</span>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close up portrait of a professional individual with a modern haircut, lit with dramatic rim lighting against a dark studio background. The style is sharp, corporate, and polished, matching a high-end enterprise software aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLuN5rcsHHJYz0kYOqjBYkz8Lpr9RbcmZu432uOGdHvR62TWnjZ3i_TCZ3eG14hZsDfmSkJqVE33fX041-OKmdDPm2LhdloTX0Igyt_xu1eDdiJ79xpwAif6Qb_wCxYyCWjhijluHAQooTwB_7VxJeqbQTVwfC3pSJTRpDEOS6LyG9yA2TY5FMU-ERBAua6loXuQGjb1Ck_nBnOOagrHUeV1ylfoW4AXDZ2JVoIwbUMmIE1iuEJF5ntb0Fhc"/>
+</div>
+</nav>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col py-lg gap-sm fixed left-0 top-0 h-screen w-64 bg-surface-container-low border-r border-outline-variant z-40">
+<div class="px-lg pb-md mb-sm flex flex-col">
+<div class="flex items-center gap-sm mb-xs">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined fill">hub</span>
+</div>
+<span class="font-headline-md text-headline-md font-extrabold text-primary">TradeOffStack</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Enterprise ITAM</span>
+</div>
+<div class="px-md mb-md">
+<button class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary-container py-2 px-4 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity active:scale-95 shadow-[0_0_15px_rgba(122,93,230,0.3)]">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Quick Add
+            </button>
+</div>
+<nav class="flex-1 flex flex-col gap-1 px-sm overflow-y-auto">
+<!-- Active Tab -->
+<a class="flex items-center gap-md px-md py-3 rounded-lg bg-primary-container/10 text-primary border-r-2 border-primary transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                Reservations
+            </a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">build</span>
+                Maintenance
+            </a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">group</span>
+                Users
+            </a>
+<a class="flex items-center gap-md px-md py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">assignment</span>
+                Audit Logs
+            </a>
+</nav>
+<div class="px-md mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="Close up portrait of a professional individual with a modern haircut, lit with dramatic rim lighting against a dark studio background. The style is sharp, corporate, and polished, matching a high-end enterprise software aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLtgZpvVepfdg-Qo73HT24qrqWPpFyd2xmp4_RkdPDzHgPmDDond16vMT7C9Q8Sxw_qZcAWgCAa4Oqjk5vwR0gmZeV8faLoAQiFK04FOi8sYV9CriCQfCeLQxlzppelMnRmsTcGi-kvBfi071IchPz60cnVobOAS103z-O9INihy3HTWHJCSXZuKrwv4kBvAhZ3r6CMKQ2bvyBDtPtu0DLBFlFUWcg6b6UwKXp64IkhTgGe59bjvcmcS9tF4"/>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium text-on-surface">System Admin</span>
+<span class="font-label-md text-label-md text-on-surface-variant">admin@tradeoff.stack</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full md:ml-64 pt-16 md:pt-0 p-lg md:p-xl flex flex-col gap-xl max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Dashboard Overview</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time telemetry and asset utilization across global facilities.</p>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs bg-surface-container border border-outline-variant text-on-surface py-2 px-4 rounded-lg font-label-md text-label-md hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+                    Report Issue
+                </button>
+<button class="flex items-center gap-xs bg-primary-container text-on-primary-container py-2 px-4 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-[0_0_10px_rgba(122,93,230,0.2)]">
+<span class="material-symbols-outlined text-[16px]">add_shopping_cart</span>
+                    Request Asset
+                </button>
+</div>
+</header>
+<!-- KPI Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+<!-- Card 1: Total Assets -->
+<div class="glass-panel p-md rounded-xl flex flex-col gap-sm relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Assets</span>
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+</div>
+<div class="flex items-baseline gap-sm mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">14,285</span>
+<span class="font-label-md text-label-md text-secondary">+12%</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full"></div>
+</div>
+</div>
+<!-- Card 2: Available Gear -->
+<div class="glass-panel p-md rounded-xl flex flex-col gap-sm relative overflow-hidden group hover:border-secondary/50 transition-colors">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-secondary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Available Gear</span>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</div>
+<div class="flex items-baseline gap-sm mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">8,402</span>
+<span class="font-label-md text-label-md text-secondary">+5%</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-secondary w-1/2 rounded-full"></div>
+</div>
+</div>
+<!-- Card 3: Active Reservations -->
+<div class="glass-panel p-md rounded-xl flex flex-col gap-sm relative overflow-hidden group hover:border-tertiary/50 transition-colors">
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-tertiary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Reservations</span>
+<span class="material-symbols-outlined text-tertiary">event_available</span>
+</div>
+<div class="flex items-baseline gap-sm mt-auto">
+<span class="font-headline-lg text-headline-lg text-on-surface">1,245</span>
+<span class="font-label-md text-label-md text-on-surface-variant">curr. cycle</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-tertiary w-2/3 rounded-full"></div>
+</div>
+</div>
+<!-- Card 4: Critical Maintenance -->
+<div class="glass-panel p-md rounded-xl flex flex-col gap-sm relative overflow-hidden group border-error-container/50 bg-error-container/5 hover:border-error/50 transition-colors">
+<div class="absolute top-0 right-0 w-32 h-32 bg-error/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-error/20 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-error uppercase tracking-wider">Critical Maint.</span>
+<span class="material-symbols-outlined text-error fill animate-pulse">warning</span>
+</div>
+<div class="flex items-baseline gap-sm mt-auto">
+<span class="font-headline-lg text-headline-lg text-error">42</span>
+<span class="font-label-md text-label-md text-error bg-error/10 px-2 py-1 rounded">-3</span>
+</div>
+<div class="w-full h-1 bg-error-container rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-error w-[15%] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Main Content Area: Charts & Logs -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Chart Area Placeholder (Takes up 2 cols) -->
+<div class="lg:col-span-2 glass-panel rounded-xl p-md flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center mb-md pb-sm border-b border-outline-variant">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Asset Utilization Trend</h2>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-surface-variant rounded text-label-md font-label-md cursor-pointer hover:bg-surface-bright">7D</span>
+<span class="px-2 py-1 bg-primary/20 text-primary rounded text-label-md font-label-md cursor-pointer border border-primary/30">30D</span>
+<span class="px-2 py-1 bg-surface-variant rounded text-label-md font-label-md cursor-pointer hover:bg-surface-bright">1Y</span>
+</div>
+</div>
+<!-- Decorative Graphic representing a chart -->
+<div class="flex-1 relative w-full h-full rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-lowest/50 flex items-center justify-center">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background"></div>
+<div class="absolute bottom-0 w-full h-[60%] flex items-end justify-around px-4 opacity-70">
+<!-- Simulated Bar Chart -->
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[30%]"></div>
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[50%]"></div>
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[40%]"></div>
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[70%]"></div>
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[60%]"></div>
+<div class="w-8 bg-gradient-to-t from-secondary/20 to-secondary/80 rounded-t-sm h-[85%]"></div>
+<div class="w-8 bg-gradient-to-t from-secondary/20 to-secondary/80 rounded-t-sm h-[75%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-bright px-2 py-1 rounded text-mono-sm font-mono-sm text-on-surface border border-outline-variant whitespace-nowrap">Peak: 8.2k</div>
+</div>
+<div class="w-8 bg-gradient-to-t from-primary/20 to-primary/80 rounded-t-sm h-[65%]"></div>
+</div>
+<!-- Simulated Line Chart Overlay -->
+<svg class="absolute inset-0 w-full h-full opacity-50" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="text-tertiary" d="M0,80 Q10,70 20,75 T40,50 T60,60 T80,30 T100,40" fill="none" stroke="currentColor" stroke-width="0.5"></path>
+</svg>
+</div>
+</div>
+<!-- Recent Audit Log Feed -->
+<div class="glass-panel rounded-xl p-md flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-md pb-sm border-b border-outline-variant">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Audit Logs</h2>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors text-[20px]">open_in_new</span>
+</div>
+<div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-sm">
+<!-- Log Item 1 -->
+<div class="flex gap-sm p-sm rounded bg-surface-container-low border border-outline-variant/50 hover:border-primary/30 transition-colors">
+<div class="mt-1">
+<span class="material-symbols-outlined text-primary text-[18px]">add_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate">New MacBook Pro 16" assigned</p>
+<div class="flex justify-between items-center mt-1">
+<span class="font-label-md text-label-md text-on-surface-variant">To: Sarah Jenkins</span>
+<span class="font-mono-sm text-mono-sm text-outline">2m ago</span>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="flex gap-sm p-sm rounded bg-surface-container-low border border-outline-variant/50 hover:border-error/30 transition-colors">
+<div class="mt-1">
+<span class="material-symbols-outlined text-error text-[18px]">build</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate">Server R4-Rack2 flagged offline</p>
+<div class="flex justify-between items-center mt-1">
+<span class="font-label-md text-label-md text-error bg-error/10 px-1 rounded">CRITICAL</span>
+<span class="font-mono-sm text-mono-sm text-outline">15m ago</span>
+</div>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="flex gap-sm p-sm rounded bg-surface-container-low border border-outline-variant/50 hover:border-secondary/30 transition-colors">
+<div class="mt-1">
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate">Software License Renewed</p>
+<div class="flex justify-between items-center mt-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Adobe Creative Cloud</span>
+<span class="font-mono-sm text-mono-sm text-outline">1h ago</span>
+</div>
+</div>
+</div>
+<!-- Log Item 4 -->
+<div class="flex gap-sm p-sm rounded bg-surface-container-low border border-outline-variant/50 hover:border-tertiary/30 transition-colors">
+<div class="mt-1">
+<span class="material-symbols-outlined text-tertiary text-[18px]">swap_horiz</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate">Location Transfer Initiated</p>
+<div class="flex justify-between items-center mt-1">
+<span class="font-label-md text-label-md text-on-surface-variant">NY Office → LON Office</span>
+<span class="font-mono-sm text-mono-sm text-outline">3h ago</span>
+</div>
+</div>
+</div>
+<!-- Log Item 5 -->
+<div class="flex gap-sm p-sm rounded bg-surface-container-low border border-outline-variant/50 hover:border-primary/30 transition-colors">
+<div class="mt-1">
+<span class="material-symbols-outlined text-outline text-[18px]">archive</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface-variant line-through truncate opacity-70">Dell Monitor U2720Q retired</p>
+<div class="flex justify-between items-center mt-1">
+<span class="font-label-md text-label-md text-on-surface-variant">EoL Reached</span>
+<span class="font-mono-sm text-mono-sm text-outline">5h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

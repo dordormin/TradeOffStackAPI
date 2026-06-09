@@ -40,6 +40,7 @@ await app.ApplyDatabaseMigrationsAsync();
 app.UseForwardedHeaders();
 app.UseExceptionHandling();
 app.UseCors("AllowAll");
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {

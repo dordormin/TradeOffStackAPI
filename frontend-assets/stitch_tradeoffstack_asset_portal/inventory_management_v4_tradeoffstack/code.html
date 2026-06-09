@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeOffStack - Inventory Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@500;600;800&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#201e27",
+                      "secondary-fixed-dim": "#5ddac9",
+                      "inverse-on-surface": "#312f38",
+                      "secondary-fixed": "#7cf7e5",
+                      "surface-dim": "#14121a",
+                      "primary-fixed-dim": "#cbbeff",
+                      "surface": "#14121a",
+                      "on-background": "#e6e0ec",
+                      "primary": "#cbbeff",
+                      "inverse-primary": "#6344ce",
+                      "on-surface": "#e6e0ec",
+                      "surface-container-high": "#2b2931",
+                      "outline": "#938e9f",
+                      "tertiary-fixed-dim": "#ffaedd",
+                      "on-secondary-container": "#00302a",
+                      "on-primary-fixed-variant": "#4b26b5",
+                      "surface-variant": "#36333c",
+                      "on-secondary": "#003731",
+                      "tertiary-fixed": "#ffd8ec",
+                      "outline-variant": "#484554",
+                      "surface-tint": "#cbbeff",
+                      "secondary": "#5ddac9",
+                      "on-tertiary": "#60004a",
+                      "surface-container-lowest": "#0f0d15",
+                      "on-tertiary-container": "#fffbff",
+                      "on-tertiary-fixed": "#3b002d",
+                      "surface-container-low": "#1c1a23",
+                      "error-container": "#93000a",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed": "#e7deff",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed": "#1e0061",
+                      "secondary-container": "#00a393",
+                      "background": "#14121a",
+                      "surface-container-highest": "#36333c",
+                      "on-tertiary-fixed-variant": "#831366",
+                      "on-primary-container": "#fffcff",
+                      "surface-bright": "#3a3841",
+                      "on-secondary-fixed-variant": "#005048",
+                      "on-secondary-fixed": "#00201c",
+                      "inverse-surface": "#e6e0ec",
+                      "primary-container": "#7a5de6",
+                      "on-surface-variant": "#cac4d6",
+                      "on-error": "#690005",
+                      "on-primary": "#340098",
+                      "tertiary-container": "#bc4898",
+                      "tertiary": "#ffaedd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin": "24px",
+                      "gutter": "16px",
+                      "lg": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "xl": "48px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-md": [
+                              "Geist"
+                      ],
+                      "mono-sm": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "mono-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Scrollbar for dense tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #14121a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #36333c; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484554; 
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen flex flex-col md:flex-row antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden flex items-center justify-between px-lg h-16 w-full ml-0 bg-surface-dim/70 backdrop-blur-md fixed top-0 z-40 border-b border-outline-variant">
+<div class="flex items-center gap-sm cursor-pointer active:opacity-80">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">TradeOffStack</span>
+</div>
+<div class="flex items-center gap-md">
+<button aria-label="Search" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-sm rounded-lg">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="notifications" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-sm rounded-lg">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="settings" class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-sm rounded-lg">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col py-lg gap-sm bg-surface-container-low fixed left-0 top-0 h-screen w-64 border-r border-outline-variant z-40">
+<div class="px-lg pb-md mb-md border-b border-outline-variant/30">
+<h1 class="font-headline-md text-headline-md font-extrabold text-primary tracking-tight">TradeOffStack</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mt-unit">Enterprise ITAM</p>
+</div>
+<div class="flex-1 overflow-y-auto px-md flex flex-col gap-unit">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-primary-container/10 text-primary border-r-2 border-primary hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined fill" data-icon="inventory_2" data-weight="fill">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-label-md text-label-md">Reservations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-md text-label-md">Audit Logs</span>
+</a>
+</div>
+<div class="px-md mt-auto pt-md border-t border-outline-variant/30">
+<button class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary-container px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                Quick Add
+            </button>
+<div class="mt-md flex items-center gap-sm px-md cursor-pointer hover:bg-surface-variant/50 p-sm rounded-lg transition-colors">
+<img alt="TradeOffStack Logo" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a person looking confidently at the camera, used as a placeholder user avatar in an enterprise dashboard. The lighting is studio-quality and even." src="https://lh3.googleusercontent.com/aida/AP1WRLsZfD6Ka0L7h4tw5y3LGzKgl_9TPwPLbWGeOHbc-ApXnPkFIRMtWIlJz_IAkunpOUFhDsJqRJkylQNHeSiMzBNCKs5gZqA-9qThuAC3alSqe7peMb44mE4SsUygz-IMdoPVSHK6VRKOj1MZ_tz7weybzLOO4Lnjm99Ibz9va6yLzFw3J2btwfnIIY0WtuYZ5vYiO9iA1ERNpQdriTuwWXPeLUUHPXj0CmRdpEw4a7GW9NjKvl0c8WYWjaOB"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant text-[10px]">admin@tradeoff.app</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 pt-16 md:pt-0 p-lg md:p-xl flex flex-col gap-lg min-w-0">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Inventory</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Manage and track all enterprise assets across locations.</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center justify-center gap-xs bg-surface text-on-surface border border-outline-variant px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                    Export
+                </button>
+<button class="flex items-center justify-center gap-xs bg-primary-container text-on-primary-container px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(122,93,230,0.3)]">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    Add Asset
+                </button>
+</div>
+</div>
+<!-- Filters & Search -->
+<div class="bg-surface-container border border-outline-variant/50 rounded-xl p-sm flex flex-col md:flex-row items-center justify-between gap-md shadow-sm">
+<div class="flex-1 w-full relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+<input class="w-full bg-surface-lowest border border-outline-variant rounded-lg pl-xl pr-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50 h-10" placeholder="Search by asset name, serial, or user..." type="text"/>
+</div>
+<div class="flex items-center gap-sm w-full md:w-auto overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+<button class="flex-shrink-0 bg-secondary/10 text-secondary border border-secondary/20 px-sm py-xs rounded-full font-label-md text-label-md flex items-center gap-xs whitespace-nowrap">
+                    All Categories
+                </button>
+<button class="flex-shrink-0 bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 px-sm py-xs rounded-full font-label-md text-label-md whitespace-nowrap transition-colors">
+                    Laptops
+                </button>
+<button class="flex-shrink-0 bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 px-sm py-xs rounded-full font-label-md text-label-md whitespace-nowrap transition-colors">
+                    Monitors
+                </button>
+<button class="flex-shrink-0 bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 px-sm py-xs rounded-full font-label-md text-label-md whitespace-nowrap transition-colors">
+                    Peripherals
+                </button>
+<button class="flex-shrink-0 bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 px-sm py-xs rounded-full font-label-md text-label-md flex items-center gap-xs whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-[14px]" data-icon="filter_list">filter_list</span>
+                    More Filters
+                </button>
+</div>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden flex flex-col flex-1 min-h-[500px]">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high sticky top-0 z-10 border-b border-outline-variant shadow-sm">
+<tr>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap w-10">
+<input class="rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-offset-surface-container w-4 h-4 cursor-pointer" type="checkbox"/>
+</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap">Asset Name</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap">Serial Number</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap">Category</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap">Status</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap">Location</th>
+<th class="p-sm px-md font-label-md text-label-md text-on-surface-variant font-medium whitespace-nowrap text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 font-body-md text-body-md text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-variant/30 transition-colors group">
+<td class="p-sm px-md">
+<input class="rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-offset-surface-container w-4 h-4 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-sm px-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center flex-shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="laptop_mac">laptop_mac</span>
+</div>
+<div>
+<div class="font-medium text-on-surface">MacBook Pro 16" M3 Max</div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mt-0.5">Assigned: Jane Doe</div>
+</div>
+</div>
+</td>
+<td class="p-sm px-md font-mono-sm text-mono-sm text-on-surface-variant">C02JG8X9Q6L4</td>
+<td class="p-sm px-md text-on-surface-variant">Laptops</td>
+<td class="p-sm px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-md text-[11px] border border-secondary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    In Use
+                                </span>
+</td>
+<td class="p-sm px-md text-on-surface-variant">SF-HQ-Fl3</td>
+<td class="p-sm px-md text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Reassign">
+<span class="material-symbols-outlined text-[18px]" data-icon="move_up">move_up</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors" title="Retire">
+<span class="material-symbols-outlined text-[18px]" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-variant/30 transition-colors group">
+<td class="p-sm px-md">
+<input class="rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-offset-surface-container w-4 h-4 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-sm px-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center flex-shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="monitor">monitor</span>
+</div>
+<div>
+<div class="font-medium text-on-surface">Dell UltraSharp 32" 4K</div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mt-0.5">Unassigned</div>
+</div>
+</div>
+</td>
+<td class="p-sm px-md font-mono-sm text-mono-sm text-on-surface-variant">CN-0W90KW-74261-123-456L</td>
+<td class="p-sm px-md text-on-surface-variant">Monitors</td>
+<td class="p-sm px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-md text-[11px] border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                    Available
+                                </span>
+</td>
+<td class="p-sm px-md text-on-surface-variant">NY-Stockroom-A</td>
+<td class="p-sm px-md text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Reassign">
+<span class="material-symbols-outlined text-[18px]" data-icon="move_up">move_up</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors" title="Retire">
+<span class="material-symbols-outlined text-[18px]" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Retired state) -->
+<tr class="hover:bg-surface-variant/30 transition-colors group opacity-60">
+<td class="p-sm px-md">
+<input class="rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-offset-surface-container w-4 h-4 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity" disabled="" type="checkbox"/>
+</td>
+<td class="p-sm px-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center flex-shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="keyboard">keyboard</span>
+</div>
+<div>
+<div class="font-medium text-on-surface line-through decoration-outline-variant">Keychron K2 V2</div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mt-0.5">Hardware Failure</div>
+</div>
+</div>
+</td>
+<td class="p-sm px-md font-mono-sm text-mono-sm text-on-surface-variant">K2V2-2021-00192</td>
+<td class="p-sm px-md text-on-surface-variant">Peripherals</td>
+<td class="p-sm px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-outline-variant/30 text-on-surface-variant font-label-md text-[11px] border border-outline-variant/50">
+<span class="material-symbols-outlined text-[12px]" data-icon="archive">archive</span>
+                                    Retired
+                                </span>
+</td>
+<td class="p-sm px-md text-on-surface-variant">E-Waste Bin B</td>
+<td class="p-sm px-md text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 (Warning State) -->
+<tr class="hover:bg-surface-variant/30 transition-colors group">
+<td class="p-sm px-md">
+<input class="rounded border-outline-variant bg-surface text-primary focus:ring-primary focus:ring-offset-surface-container w-4 h-4 cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-sm px-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center flex-shrink-0 text-error">
+<span class="material-symbols-outlined text-[18px]" data-icon="router">router</span>
+</div>
+<div>
+<div class="font-medium text-on-surface">Cisco Meraki MR46</div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mt-0.5">Assigned: IT Ops</div>
+</div>
+</div>
+</td>
+<td class="p-sm px-md font-mono-sm text-mono-sm text-on-surface-variant">Q2FD-XX99-4A1B</td>
+<td class="p-sm px-md text-on-surface-variant">Networking</td>
+<td class="p-sm px-md">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#bc4898]/10 text-[#bc4898] font-label-md text-[11px] border border-[#bc4898]/20">
+<span class="material-symbols-outlined text-[12px]" data-icon="warning">warning</span>
+                                    Maintenance Due
+                                </span>
+</td>
+<td class="p-sm px-md text-on-surface-variant">LDN-ServerRm-1</td>
+<td class="p-sm px-md text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors" title="Reassign">
+<span class="material-symbols-outlined text-[18px]" data-icon="move_up">move_up</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors" title="Retire">
+<span class="material-symbols-outlined text-[18px]" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="bg-surface-container-high border-t border-outline-variant p-sm px-md flex items-center justify-between text-on-surface-variant font-label-md text-label-md">
+<span>Showing 1-4 of 1,248 assets</span>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded hover:bg-surface-variant transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<span class="px-2">Page 1 of 312</span>
+<button class="p-1 rounded hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<style>
+        /* Hide scrollbar utility for filter pills */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

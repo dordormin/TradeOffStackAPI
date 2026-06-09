@@ -34,9 +34,17 @@ public class EquipmentService : IEquipmentService
     {
         if (!string.IsNullOrEmpty(equipment.Image))
         {
-            var url = $"{_r2BaseUrl}/Equipments/{equipment.Image}";
-            equipment.ImageUrl = url;
-            equipment.ImageUrlHttps = url;
+            if (equipment.Image.StartsWith("http://") || equipment.Image.StartsWith("https://"))
+            {
+                equipment.ImageUrl = equipment.Image;
+                equipment.ImageUrlHttps = equipment.Image;
+            }
+            else
+            {
+                var url = $"{_r2BaseUrl}/Equipments/{equipment.Image}";
+                equipment.ImageUrl = url;
+                equipment.ImageUrlHttps = url;
+            }
         }
     }
 

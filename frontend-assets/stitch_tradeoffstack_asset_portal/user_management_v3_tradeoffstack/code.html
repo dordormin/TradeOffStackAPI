@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Management - TradeOffStack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#201e27",
+                        "secondary-fixed-dim": "#5ddac9",
+                        "inverse-on-surface": "#312f38",
+                        "secondary-fixed": "#7cf7e5",
+                        "surface-dim": "#14121a",
+                        "primary-fixed-dim": "#cbbeff",
+                        "surface": "#14121a",
+                        "on-background": "#e6e0ec",
+                        "primary": "#cbbeff",
+                        "inverse-primary": "#6344ce",
+                        "on-surface": "#e6e0ec",
+                        "surface-container-high": "#2b2931",
+                        "outline": "#938e9f",
+                        "tertiary-fixed-dim": "#ffaedd",
+                        "on-secondary-container": "#00302a",
+                        "on-primary-fixed-variant": "#4b26b5",
+                        "surface-variant": "#36333c",
+                        "on-secondary": "#003731",
+                        "tertiary-fixed": "#ffd8ec",
+                        "outline-variant": "#484554",
+                        "surface-tint": "#cbbeff",
+                        "secondary": "#5ddac9",
+                        "on-tertiary": "#60004a",
+                        "surface-container-lowest": "#0f0d15",
+                        "on-tertiary-container": "#fffbff",
+                        "on-tertiary-fixed": "#3b002d",
+                        "surface-container-low": "#1c1a23",
+                        "error-container": "#93000a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#e7deff",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed": "#1e0061",
+                        "secondary-container": "#00a393",
+                        "background": "#14121a",
+                        "surface-container-highest": "#36333c",
+                        "on-tertiary-fixed-variant": "#831366",
+                        "on-primary-container": "#fffcff",
+                        "surface-bright": "#3a3841",
+                        "on-secondary-fixed-variant": "#005048",
+                        "on-secondary-fixed": "#00201c",
+                        "inverse-surface": "#e6e0ec",
+                        "primary-container": "#7a5de6",
+                        "on-surface-variant": "#cac4d6",
+                        "on-error": "#690005",
+                        "on-primary": "#340098",
+                        "tertiary-container": "#bc4898",
+                        "tertiary": "#ffaedd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin": "24px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "label-md": ["Geist"],
+                        "mono-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "mono-sm": ["12px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0f1117;
+            color: #e6e0ec;
+        }
+        /* Level 1 Surface */
+        .level-1 {
+            background-color: #1a1d26;
+            border: 1px solid #2d313d;
+        }
+        /* Level 2 Surface (Modals) */
+        .level-2 {
+            background-color: #1c1a23;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low text-primary font-label-md text-label-md fixed left-0 top-0 h-screen w-64 flex flex-col py-lg gap-sm z-50">
+<!-- Brand Header -->
+<div class="px-lg pb-md mb-md border-b border-surface-variant flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-extrabold text-primary tracking-tight">TradeOffStack</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mt-xs">Enterprise ITAM</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-xs px-md flex-1">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">event_available</span>
+                Reservations
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">build</span>
+                Maintenance
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-primary-container/10 text-primary border-r-2 border-primary active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">group</span>
+                Users
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">assignment</span>
+                Audit Logs
+            </a>
+</div>
+<!-- Quick Add CTA -->
+<div class="px-md mt-auto pt-lg">
+<button class="w-full flex items-center justify-center gap-sm bg-primary-container text-on-primary-container py-sm px-md rounded-lg hover:bg-primary-container/90 transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Quick Add
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 p-xl flex flex-col gap-xl">
+<!-- Header Section -->
+<header class="flex items-end justify-between">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-xs">User Management</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage enterprise roles, department access, and account states.</p>
+</div>
+<div class="flex gap-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+<input class="bg-surface text-on-surface border border-outline-variant rounded-lg py-sm pl-xl pr-md w-64 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-body-md placeholder-outline" placeholder="Search users by name or email..." type="text"/>
+</div>
+<button class="flex items-center gap-sm bg-primary-container text-on-primary-container px-md py-sm rounded-lg hover:bg-primary-container/90 transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add User
+                </button>
+</div>
+</header>
+<!-- Stats Bento Grid (Optional context) -->
+<div class="grid grid-cols-4 gap-md">
+<div class="level-1 rounded-xl p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Total Active Users</span>
+<span class="font-headline-md text-headline-md text-on-surface">1,248</span>
+</div>
+<div class="level-1 rounded-xl p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Admins</span>
+<span class="font-headline-md text-headline-md text-primary">12</span>
+</div>
+<div class="level-1 rounded-xl p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">IT Support</span>
+<span class="font-headline-md text-headline-md text-secondary">45</span>
+</div>
+<div class="level-1 rounded-xl p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Pending Approvals</span>
+<span class="font-headline-md text-headline-md text-tertiary">8</span>
+</div>
+</div>
+<!-- Users Table Container -->
+<div class="level-1 rounded-xl overflow-hidden flex flex-col">
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-md px-md py-sm border-b border-surface-variant bg-surface-container-high font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+<div class="col-span-3">User</div>
+<div class="col-span-2">Role</div>
+<div class="col-span-3">Department</div>
+<div class="col-span-2">Status</div>
+<div class="col-span-2 text-right">Actions</div>
+</div>
+<!-- Table Body -->
+<div class="flex flex-col">
+<!-- User Row 1 (Admin) -->
+<div class="grid grid-cols-12 gap-md px-md py-md border-b border-surface-variant hover:bg-surface-variant/30 transition-colors items-center group">
+<div class="col-span-3 flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-headline-sm text-headline-sm shrink-0">ER</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Elena Rodriguez</span>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">elena.r@tradeoffstack.com</span>
+</div>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-primary/10 text-primary font-label-md text-label-md border border-primary/20">Admin</span>
+</div>
+<div class="col-span-3 text-on-surface-variant">Global IT Operations</div>
+<div class="col-span-2 flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-on-surface">Active</span>
+</div>
+<div class="col-span-2 flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit Roles">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors" title="Deactivate">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</div>
+<!-- User Row 2 (IT Support) -->
+<div class="grid grid-cols-12 gap-md px-md py-md border-b border-surface-variant hover:bg-surface-variant/30 transition-colors items-center group">
+<div class="col-span-3 flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-headline-sm text-headline-sm shrink-0">MJ</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Marcus Johnson</span>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">mjohnson@tradeoffstack.com</span>
+</div>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-secondary/10 text-secondary font-label-md text-label-md border border-secondary/20">IT Support</span>
+</div>
+<div class="col-span-3 text-on-surface-variant">Helpdesk Tier 2</div>
+<div class="col-span-2 flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-on-surface">Active</span>
+</div>
+<div class="col-span-2 flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit Roles">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors" title="Deactivate">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</div>
+<!-- User Row 3 (Employee) -->
+<div class="grid grid-cols-12 gap-md px-md py-md border-b border-surface-variant hover:bg-surface-variant/30 transition-colors items-center group">
+<div class="col-span-3 flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-headline-sm text-headline-sm shrink-0">SL</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Sarah Lin</span>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">slin@tradeoffstack.com</span>
+</div>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md border border-outline-variant">Employee</span>
+</div>
+<div class="col-span-3 text-on-surface-variant">Marketing</div>
+<div class="col-span-2 flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-on-surface">Active</span>
+</div>
+<div class="col-span-2 flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit Roles">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors" title="Deactivate">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</div>
+<!-- User Row 4 (Deactivated) -->
+<div class="grid grid-cols-12 gap-md px-md py-md hover:bg-surface-variant/30 transition-colors items-center group opacity-50">
+<div class="col-span-3 flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-headline-sm text-headline-sm shrink-0">DP</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium line-through">David Patel</span>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">dpatel@tradeoffstack.com</span>
+</div>
+</div>
+<div class="col-span-2">
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md border border-outline-variant">Employee</span>
+</div>
+<div class="col-span-3 text-on-surface-variant">Finance</div>
+<div class="col-span-2 flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<span class="text-on-surface-variant">Deactivated</span>
+</div>
+<div class="col-span-2 flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-secondary hover:bg-secondary/10 rounded transition-colors flex items-center gap-xs" title="Reactivate">
+<span class="material-symbols-outlined text-[18px]">settings_backup_restore</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Pagination Footer -->
+<div class="px-md py-sm border-t border-surface-variant flex justify-between items-center bg-surface-container-high/50">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 4 of 1,248 entries</span>
+<div class="flex gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary/10 text-primary font-label-md text-label-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors font-label-md text-label-md">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors font-label-md text-label-md">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

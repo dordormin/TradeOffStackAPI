@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security Audit Logs - TradeOffStack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#d9773a",
+                "inverse-surface": "#f1dfd7",
+                "tertiary": "#f6adfc",
+                "status-available": "#10B981",
+                "error-container": "#93000a",
+                "surface-container-lowest": "#140c08",
+                "on-tertiary-fixed": "#35003f",
+                "on-tertiary-container": "#480c53",
+                "on-tertiary": "#50155a",
+                "on-secondary-fixed-variant": "#3f4755",
+                "on-primary-container": "#491c00",
+                "on-tertiary-fixed-variant": "#6a2e73",
+                "error": "#ffb4ab",
+                "background": "#1a120d",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#3d332d",
+                "on-primary-fixed-variant": "#773300",
+                "tertiary-fixed-dim": "#f6adfc",
+                "on-secondary-container": "#adb5c6",
+                "tertiary-fixed": "#ffd6fe",
+                "outline-variant": "#554339",
+                "status-repair": "#F59E0B",
+                "surface": "#1a120d",
+                "surface-dim": "#1a120d",
+                "surface-container": "#271e19",
+                "surface-container-high": "#322823",
+                "outline": "#a38c80",
+                "on-surface": "#f1dfd7",
+                "on-surface-variant": "#dbc1b5",
+                "on-error": "#690005",
+                "surface-charcoal": "#0F1115",
+                "on-secondary-fixed": "#141c28",
+                "tertiary-container": "#bc78c3",
+                "status-reserved": "#3B82F6",
+                "on-primary": "#542200",
+                "surface-container-low": "#231a15",
+                "status-critical": "#EF4444",
+                "surface-tint": "#ffb68e",
+                "secondary": "#bfc7d8",
+                "surface-bright": "#423731",
+                "surface-container-highest": "#3d332d",
+                "on-primary-fixed": "#331200",
+                "secondary-container": "#3f4755",
+                "primary-fixed": "#ffdbca",
+                "on-secondary": "#29313e",
+                "border-subtle": "#334155",
+                "primary-fixed-dim": "#ffb68e",
+                "inverse-on-surface": "#392e29",
+                "secondary-fixed": "#dbe3f4",
+                "secondary-fixed-dim": "#bfc7d8",
+                "inverse-primary": "#99460a",
+                "surface-slate": "#1E293B",
+                "primary": "#ffb68e",
+                "on-background": "#f1dfd7"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "header-height": "64px",
+                "container-max": "1440px",
+                "gutter": "1rem",
+                "stack-sm": "0.5rem",
+                "stack-lg": "1.5rem",
+                "stack-md": "1rem",
+                "sidebar-width": "260px"
+        },
+        "fontFamily": {
+                "headline-xl": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ],
+                "body-sm": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Manrope"
+                ],
+                "mono-sm": [
+                        "Courier Prime"
+                ],
+                "label-md": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "headline-xl": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "mono-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: #1a120d; }
+        .card-surface { background-color: #271e19; border: 1px solid #554339; }
+        .focus-outline:focus-within { outline: 2px solid #ffb68e; outline-offset: 1px; border-color: transparent; }
+        .input-border { border: 1px solid #554339; }
+        
+        /* Custom Scrollbar for the table */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #554339; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-[260px] fixed left-0 top-0 bg-surface-container py-stack-lg px-gutter overflow-y-auto border-r border-outline-variant z-20">
+<div class="flex items-center gap-stack-sm mb-stack-lg">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">TradeOffStack</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">IT Asset Management</p>
+</div>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_seat">event_seat</span>
+<span class="font-label-md text-label-md">Reservations</span>
+</a>
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-stack-md px-gutter py-stack-sm rounded-lg bg-secondary-container text-on-secondary-container font-label-md text-label-md transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-primary" data-icon="receipt_long">receipt_long</span>
+<span class="text-primary font-bold">Audit Logs</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-[260px] flex flex-col min-h-screen w-full bg-background">
+<!-- TopNavBar -->
+<header class="hidden md:flex justify-between items-center w-full px-gutter py-stack-sm bg-surface-container border-b border-outline-variant sticky top-0 z-10 h-header-height">
+<div class="flex-1">
+<!-- Search placeholder if needed -->
+</div>
+<div class="flex items-center gap-stack-lg">
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="contrast">contrast</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant overflow-hidden cursor-pointer">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Professional headshot of a smiling corporate user in a modern office setting. High-key lighting, bright and approachable mood, conveying a reliable B2B SaaS persona. Subtle corporate blues and whites in the background. Clear, crisp details." src="https://lh3.googleusercontent.com/aida/AP1WRLuB8rn8IgahvysHnmPnYvelCoaN7ZOyoNulX9XHz_JSWxUnfjDjeRPRwOLYetz_JQ7mQ7LK56yGLdgcEkWq00lVChsma8bDYbc1WkO3yGIwTUNMBr-mzqR2L_fEO55CJUNRNTojBLAhWCF6sfdC62OTmZT9kF3r_cyF3iUSfcqwNYtNa2os4CRx29fLJevdJj3ArLy--KIBjyLrJB_lfVOUgZ0i-z87X9A5eokrTH2RYKMswyl_BL7evaI"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-gutter max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-md mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Security Audit Logs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Comprehensive trail of system events and administrative actions.</p>
+</div>
+<div class="flex gap-stack-sm w-full md:w-auto">
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-surface-container border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        Manual Entry
+                    </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-surface-container border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export CSV
+                    </button>
+</div>
+</div>
+<!-- Bento/Glassmorphism Filter Section -->
+<section class="card-surface rounded-xl p-gutter mb-stack-lg flex flex-col md:flex-row gap-stack-lg items-end">
+<div class="flex-1 w-full relative focus-outline rounded-lg">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Search Events</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface rounded-lg input-border text-on-surface font-body-md text-body-md focus:ring-0 placeholder:text-on-surface-variant/50" placeholder="Search by user, IP, or entity SN..." type="text"/>
+</div>
+</div>
+<div class="w-full md:w-64 relative focus-outline rounded-lg">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="calendar_today">calendar_today</span>
+<select class="w-full pl-10 pr-10 py-2 bg-surface rounded-lg input-border text-on-surface font-body-md text-body-md appearance-none focus:ring-0">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>Custom Range...</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="w-full md:w-64 relative focus-outline rounded-lg">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Event Type</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="filter_list">filter_list</span>
+<select class="w-full pl-10 pr-10 py-2 bg-surface rounded-lg input-border text-on-surface font-body-md text-body-md appearance-none focus:ring-0">
+<option>All Events</option>
+<option>Authentication</option>
+<option>Asset Management</option>
+<option>User Administration</option>
+<option>System Configuration</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary/90 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary">
+                    Apply Filters
+                </button>
+</section>
+<!-- Data Table Card -->
+<div class="card-surface rounded-xl overflow-hidden flex flex-col">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant font-label-md text-label-md text-on-surface-variant">
+<th class="py-stack-md px-gutter w-48">Timestamp</th>
+<th class="py-stack-md px-gutter w-64">User / Actor</th>
+<th class="py-stack-md px-gutter">Action / Details</th>
+<th class="py-stack-md px-gutter w-48">Entity Affected</th>
+<th class="py-stack-md px-gutter w-40">IP Address</th>
+<th class="py-stack-md px-gutter w-24 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant">
+<!-- Row 1: Auth Warning -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-stack-md px-gutter text-on-surface-variant whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">Oct 24, 2023</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant mt-1">14:32:01 UTC</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-center gap-stack-sm">
+<div class="w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center font-label-md">JD</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">j.doe@tradeoff.com</span>
+<span class="font-body-sm text-on-surface-variant text-[11px]">User</span>
+</div>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-start gap-stack-sm flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[18px]" data-icon="warning">warning</span>
+<span class="font-label-md text-error">Failed Login Attempt</span>
+</div>
+<span class="font-body-sm text-on-surface-variant text-[12px]">Invalid password provided for account. 3rd attempt.</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter text-on-surface-variant font-body-sm">-</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface-variant">192.168.1.105</td>
+<td class="py-stack-md px-gutter text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="Flag Event">
+<span class="material-symbols-outlined text-[20px]" data-icon="flag">flag</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Asset Created -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-stack-md px-gutter text-on-surface-variant whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">Oct 24, 2023</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant mt-1">11:15:44 UTC</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-center gap-stack-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md">AS</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">a.smith@tradeoff.com</span>
+<span class="font-body-sm text-on-surface-variant text-[11px]">IT Staff</span>
+</div>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-start gap-stack-sm flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-available text-[18px]" data-icon="add_box">add_box</span>
+<span class="font-label-md text-status-available">Asset Created</span>
+</div>
+<span class="font-body-sm text-on-surface-variant text-[12px]">MacBook Pro 16" added to inventory.</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface">SN-MAC-9921</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface-variant">10.0.0.42</td>
+<td class="py-stack-md px-gutter text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Role Updated -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-stack-md px-gutter text-on-surface-variant whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">Oct 24, 2023</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant mt-1">09:05:12 UTC</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-center gap-stack-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md">AD</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface font-bold">admin@tradeoff.com</span>
+<span class="font-body-sm text-on-surface-variant text-[11px]">Super Admin</span>
+</div>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-start gap-stack-sm flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-reserved text-[18px]" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-label-md text-status-reserved">User Role Updated</span>
+</div>
+<span class="font-body-sm text-on-surface-variant text-[12px]">Changed role from 'User' to 'Admin'.</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter font-body-sm text-on-surface">m.jones@tradeoff.com</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface-variant">203.0.113.55</td>
+<td class="py-stack-md px-gutter text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="Flag Event">
+<span class="material-symbols-outlined text-[20px]" data-icon="flag">flag</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Reservation Cancelled -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-stack-md px-gutter text-on-surface-variant whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface">Oct 23, 2023</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant mt-1">16:45:00 UTC</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-center gap-stack-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface flex items-center justify-center font-label-md">SYS</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-on-surface italic">System Auto-Task</span>
+<span class="font-body-sm text-on-surface-variant text-[11px]">Automated</span>
+</div>
+</div>
+</td>
+<td class="py-stack-md px-gutter">
+<div class="flex items-start gap-stack-sm flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="event_busy">event_busy</span>
+<span class="font-label-md text-on-surface-variant">Reservation Expired</span>
+</div>
+<span class="font-body-sm text-on-surface-variant text-[12px]">Auto-cancelled due to non-pickup within 48h.</span>
+</div>
+</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface">RES-40992</td>
+<td class="py-stack-md px-gutter font-mono-sm text-mono-sm text-on-surface-variant italic">Internal</td>
+<td class="py-stack-md px-gutter text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded hover:bg-surface-container transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface-container-low border-t border-outline-variant p-gutter flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 4 of 1,240 entries</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface disabled:opacity-50 transition-colors" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md transition-colors">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-on-surface-variant font-label-md">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

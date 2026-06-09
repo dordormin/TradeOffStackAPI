@@ -9,6 +9,10 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - name: 📥 Checkout repository
@@ -97,3 +101,63 @@ jobs:
       with:
         name: playwright-screenshots
         path: frontend/screenshots/
+
+    # ==========================================
+    # DOCKER PUBLISH TO GHCR (Only on push to main or feature/postman-tests)
+    # ==========================================
+    - name: 🔐 Log in to GitHub Container Registry
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🐳 Build and Push Docker Images to GHCR
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      run: |
+        OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+        
+        echo "Building and Pushing API Image..."
+        docker build -t ghcr.io/$OWNER_LC/tradeoffstack-api:latest -f Dockerfile .
+        docker push ghcr.io/$OWNER_LC/tradeoffstack-api:latest
+        
+        echo "Building and Pushing Frontend Image..."
+        docker build -t ghcr.io/$OWNER_LC/tradeoffstack-frontend:latest -f frontend/Dockerfile frontend/
+        docker push ghcr.io/$OWNER_LC/tradeoffstack-frontend:latest
+
+    # ==========================================
+    # 🚀 CONTINUOUS DEPLOYMENT (CD) TO HOSTINGER VPS
+    # ==========================================
+    - name: 📤 Copy Configuration Files to VPS
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "Caddyfile,docker-compose.prod.yml"
+        target: "/app/tradeoffstack"
+
+    - name: 🚀 Deploy to VPS via SSH
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /app/tradeoffstack
+          
+          # Inject production environment variables safely
+          echo "POSTGRES_USER=tradeoff_admin" > .env
+          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          
+          # Pull latest images and update containers
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d --remove-orphans
+          
+          # Cleanup unused images to keep disk space free
+          docker image prune -f
+

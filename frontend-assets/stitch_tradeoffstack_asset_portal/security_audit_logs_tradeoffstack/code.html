@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security Audit Logs - TradeOffStack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#004b73",
+                    "on-primary-fixed-variant": "#802a00",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "on-tertiary-fixed": "#001d31",
+                    "inverse-primary": "#ffb59a",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#dae2fd",
+                    "secondary-fixed": "#dae2fd",
+                    "on-surface-variant": "#5a4138",
+                    "tertiary-fixed": "#cce5ff",
+                    "on-surface": "#0b1c30",
+                    "tertiary-fixed-dim": "#93ccff",
+                    "outline-variant": "#e3bfb2",
+                    "primary-fixed": "#ffdbcf",
+                    "on-tertiary-container": "#fdfcff",
+                    "surface-container": "#e5eeff",
+                    "surface": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#ffb59a",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#131b2e",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#cd4700",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#fffbff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-error-container": "#93000a",
+                    "outline": "#8f7066",
+                    "surface-tint": "#a83900",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary-container": "#5c647a",
+                    "primary": "#a43700",
+                    "on-primary-fixed": "#380d00",
+                    "surface-dim": "#cbdbf5",
+                    "secondary": "#565e74",
+                    "tertiary": "#006194",
+                    "background": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "tertiary-container": "#007bb9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "xl": "40px",
+                    "md": "16px",
+                    "gutter": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "body-sm": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "title-lg": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "display-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: #F1F5F9; }
+        .card-surface { background-color: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 4px 4px rgba(0,0,0,0.02); }
+        .focus-outline:focus-within { outline: 2px solid #E65100; outline-offset: 1px; border-color: transparent; }
+        .input-border { border: 1px solid #CBD5E1; }
+        
+        /* Tonal Layers based on Style Guidance */
+        .bg-level-0 { background-color: #F1F5F9; }
+        .bg-level-1 { background-color: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        
+        /* Custom Scrollbar for the table */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-level-0 text-on-surface font-body-md antialiased flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container py-lg px-md overflow-y-auto border-r border-outline-variant z-20">
+<div class="flex items-center gap-sm mb-xl">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TradeOffStack</h1>
+<p class="font-label-sm text-label-sm text-secondary">IT Asset Management</p>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_seat">event_seat</span>
+<span class="font-label-md text-label-md">Reservations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-secondary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-full text-primary font-bold bg-secondary-container transition-transform duration-150 transform scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-md text-label-md">Audit Logs</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-64 flex flex-col min-h-screen w-full">
+<!-- TopNavBar -->
+<header class="hidden md:flex justify-between items-center w-full px-margin-desktop py-md bg-surface border-b border-outline-variant sticky top-0 z-10 h-16">
+<div class="flex-1">
+<!-- Search placeholder if needed -->
+</div>
+<div class="flex items-center gap-lg">
+<button class="text-secondary hover:bg-surface-container-low p-2 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-secondary hover:bg-surface-container-low p-2 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="contrast">contrast</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant overflow-hidden cursor-pointer">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Professional headshot of a smiling corporate user in a modern office setting. High-key lighting, bright and approachable mood, conveying a reliable B2B SaaS persona. Subtle corporate blues and whites in the background. Clear, crisp details." src="https://lh3.googleusercontent.com/aida/AP1WRLuB8rn8IgahvysHnmPnYvelCoaN7ZOyoNulX9XHz_JSWxUnfjDjeRPRwOLYetz_JQ7mQ7LK56yGLdgcEkWq00lVChsma8bDYbc1WkO3yGIwTUNMBr-mzqR2L_fEO55CJUNRNTojBLAhWCF6sfdC62OTmZT9kF3r_cyF3iUSfcqwNYtNa2os4CRx29fLJevdJj3ArLy--KIBjyLrJB_lfVOUgZ0i-z87X9A5eokrTH2RYKMswyl_BL7evaI"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Security Audit Logs</h2>
+<p class="font-body-md text-body-md text-secondary mt-xs">Comprehensive trail of system events and administrative actions.</p>
+</div>
+<div class="flex gap-sm w-full md:w-auto">
+<button class="flex items-center justify-center gap-xs px-md py-sm bg-surface-container border border-slate-700 text-slate-700 font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export CSV
+                    </button>
+</div>
+</div>
+<!-- Bento/Glassmorphism Filter Section -->
+<section class="bg-level-1 rounded-xl p-md md:p-lg mb-lg flex flex-col md:flex-row gap-lg items-end">
+<div class="flex-1 w-full relative focus-outline rounded-lg">
+<label class="block font-label-sm text-label-sm text-slate-700 mb-xs">Search Events</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary" data-icon="search">search</span>
+<input class="w-full pl-10 pr-md py-sm bg-surface rounded-lg input-border text-on-surface font-body-sm text-body-sm focus:ring-0" placeholder="Search by user, IP, or entity SN..." type="text"/>
+</div>
+</div>
+<div class="w-full md:w-64 relative focus-outline rounded-lg">
+<label class="block font-label-sm text-label-sm text-slate-700 mb-xs">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary" data-icon="calendar_today">calendar_today</span>
+<select class="w-full pl-10 pr-md py-sm bg-surface rounded-lg input-border text-on-surface font-body-sm text-body-sm appearance-none focus:ring-0">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>Custom Range...</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="w-full md:w-64 relative focus-outline rounded-lg">
+<label class="block font-label-sm text-label-sm text-slate-700 mb-xs">Event Type</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary" data-icon="filter_list">filter_list</span>
+<select class="w-full pl-10 pr-md py-sm bg-surface rounded-lg input-border text-on-surface font-body-sm text-body-sm appearance-none focus:ring-0">
+<option>All Events</option>
+<option>Authentication</option>
+<option>Asset Management</option>
+<option>User Administration</option>
+<option>System Configuration</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-lg py-sm bg-[#E65100] text-white font-label-md text-label-md rounded-lg hover:bg-primary-container transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#E65100]">
+                    Apply Filters
+                </button>
+</section>
+<!-- Data Table Card -->
+<div class="bg-level-1 rounded-xl overflow-hidden flex flex-col">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface border-b border-outline-variant font-label-sm text-label-sm text-slate-700">
+<th class="py-md px-lg w-48">Timestamp</th>
+<th class="py-md px-lg w-48">User</th>
+<th class="py-md px-lg">Action</th>
+<th class="py-md px-lg w-48">Entity</th>
+<th class="py-md px-lg w-40">IP Address</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-outline-variant">
+<!-- Row 1: Auth Warning -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-md px-lg text-secondary whitespace-nowrap">
+<div class="flex flex-col">
+<span>Oct 24, 2023</span>
+<span class="text-xs">14:32:01 UTC</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<div class="w-6 h-6 rounded-full bg-error-container text-on-error-container flex items-center justify-center text-[12px] font-bold">JD</div>
+<span>j.doe@tradeoff.com</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[#E65100]" data-icon="warning">warning</span>
+<span class="font-medium">Failed Login Attempt</span>
+</div>
+</td>
+<td class="py-md px-lg text-secondary">-</td>
+<td class="py-md px-lg font-mono text-xs">192.168.1.105</td>
+</tr>
+<!-- Row 2: Asset Created -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-md px-lg text-secondary whitespace-nowrap">
+<div class="flex flex-col">
+<span>Oct 24, 2023</span>
+<span class="text-xs">11:15:44 UTC</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center text-[12px] font-bold">AS</div>
+<span>a.smith@tradeoff.com</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[#15803D]" data-icon="add_box">add_box</span>
+<span class="font-medium">Asset Created</span>
+</div>
+</td>
+<td class="py-md px-lg font-mono text-xs">SN-MAC-9921</td>
+<td class="py-md px-lg font-mono text-xs">10.0.0.42</td>
+</tr>
+<!-- Row 3: Role Updated -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-md px-lg text-secondary whitespace-nowrap">
+<div class="flex flex-col">
+<span>Oct 24, 2023</span>
+<span class="text-xs">09:05:12 UTC</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-[12px] font-bold">AD</div>
+<span class="font-bold">admin@tradeoff.com</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[#0284C7]" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-medium">User Role Updated</span>
+</div>
+</td>
+<td class="py-md px-lg">m.jones@tradeoff.com (To: Admin)</td>
+<td class="py-md px-lg font-mono text-xs">203.0.113.55</td>
+</tr>
+<!-- Row 4: Reservation Cancelled -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-md px-lg text-secondary whitespace-nowrap">
+<div class="flex flex-col">
+<span>Oct 23, 2023</span>
+<span class="text-xs">16:45:00 UTC</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<div class="w-6 h-6 rounded-full bg-surface-variant text-on-surface flex items-center justify-center text-[12px] font-bold">SYS</div>
+<span class="italic text-secondary">System Auto-Task</span>
+</div>
+</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="event_busy">event_busy</span>
+<span class="font-medium">Reservation Expired/Cancelled</span>
+</div>
+</td>
+<td class="py-md px-lg font-mono text-xs">RES-40992</td>
+<td class="py-md px-lg font-mono text-xs text-secondary">Internal</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface border-t border-outline-variant p-md flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Showing 1 to 4 of 1,240 entries</span>
+<div class="flex gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-secondary hover:bg-surface-container-low disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-[#E65100] text-white font-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-secondary hover:bg-surface-container-low font-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-secondary hover:bg-surface-container-low font-label-sm">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-secondary font-label-sm">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-secondary hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
