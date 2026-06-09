@@ -12,7 +12,7 @@ import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
 import { Settings } from '@/pages/Settings';
 import { apiClient } from '@/api/apiClient';
-import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, LayoutGrid } from 'lucide-react';
+import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
 import { Logo } from './components/Logo';
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
   const { isAuthenticated, role, isLoading } = useAuth();
