@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { UserRole } from '@/types';
+import type { UserRole, User } from '@/types';
+import { apiClient } from '@/api/apiClient';
 
 interface AuthState {
   isAuthenticated: boolean;
   role: UserRole | null;
   token: string | null;
   userId: string | null;
+  user: User | null;
   isLoading: boolean;
 }
 
 interface AuthContextType extends AuthState {
   login: (token: string, role: UserRole, userId: string) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,8 +25,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     role: null,
     token: null,
     userId: null,
+    user: null,
     isLoading: true,
   });
+
+  const fetchUserProfile = async (id: string, token: string): Promise<User | null> => {
+    try {
+      const response = await apiClient.get(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user profile', error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     // Check local storage on mount
@@ -87,8 +103,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthState({ isAuthenticated: false, role: null, token: null, userId: null, isLoading: false, user: null });
   };
 
+  const refreshUser = async () => {
+    if (authState.userId && authState.token) {
+      const userDetails = await fetchUserProfile(authState.userId, authState.token);
+      setAuthState(prev => ({ ...prev, user: userDetails }));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout }}>
+    <AuthContext.Provider value={{ ...authState, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
