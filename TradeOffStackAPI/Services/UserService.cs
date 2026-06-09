@@ -159,9 +159,4 @@ public class UserService : IUserService
     }
 }
 
-// Classe pour mapper la configuration de Cloudflare R2
-public class CloudflareR2Settings
-{
-    public const string SectionName = "CloudflareR2";
-    public string PublicUrl { get; set; } = string.Empty;
 }

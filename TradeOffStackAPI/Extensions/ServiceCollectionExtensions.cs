@@ -59,6 +59,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<CloudflareR2Settings>(configuration.GetSection(CloudflareR2Settings.SectionName));
+        services.AddScoped<IR2UploadService, R2UploadService>();
 
         services.AddScoped<IEquipmentRepository, EquipmentRepository>();
         services.AddScoped<IEquipmentService, EquipmentService>();
