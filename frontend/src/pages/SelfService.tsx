@@ -207,7 +207,7 @@ export const SelfService: React.FC = () => {
                   
                   {/* Mock Ticket Card */}
                   {index === 0 && (
-                    <Card className="border-border bg-card shadow-sm cursor-pointer hover:border-primary/50 transition-colors">
+                    <Card className="border-border bg-card shadow-sm cursor-pointer hover:border-primary/55 transition-colors">
                       <CardContent className="p-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <Badge className="bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 border-rose-500/20">

@@ -31,6 +31,9 @@ import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { getAssetImageUrl } from '@/utils/assetImages';
+import { SortableHeader, DataTablePagination } from '@/components/DataTableControls';
+import type { SortConfig } from '@/hooks/useTableState';
+import { ImageUpload } from '@/components/ImageUpload';
 
 export const Inventory: React.FC = () => {
   const { role } = useAuth();
@@ -61,59 +64,6 @@ export const Inventory: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [imageSourceType, setImageSourceType] = useState<'upload' | 'url'>('upload');
-  const [isUploading, setIsUploading] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      await uploadFile(file);
-    }
-  };
-
-  const uploadFile = async (file: File) => {
-    setIsUploading(true);
-    const uploadData = new FormData();
-    uploadData.append('file', file);
-    uploadData.append('folder', 'Equipments');
-
-    try {
-      const response = await apiClient.post<{ image_url: string; filename: string }>('/upload', uploadData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      setFormData(prev => ({
-        ...prev,
-        image_url: response.data.image_url,
-        image_url_https: response.data.image_url,
-        image: response.data.filename
-      }));
-    } catch (err: any) {
-      console.error('Upload failed', err);
-      alert(isFr ? 'Le téléchargement de l\'image a échoué.' : 'Image upload failed.');
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      await uploadFile(file);
-    }
-  };
 
   const fetchInventory = async () => {
     setIsLoading(true);
@@ -248,6 +198,46 @@ export const Inventory: React.FC = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  // Sorting
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: null });
+  const handleSort = (key: string) => {
+    setSortConfig(prev => {
+      if (prev.key === key) {
+        if (prev.direction === 'asc') return { key, direction: 'desc' };
+        if (prev.direction === 'desc') return { key: '', direction: null };
+      }
+      return { key, direction: 'asc' };
+    });
+    setCurrentPage(1);
+  };
+
+  const sortedData = [...filteredData].sort((a, b) => {
+    if (!sortConfig.key || !sortConfig.direction) return 0;
+    const aVal = (a as any)[sortConfig.key];
+    const bVal = (b as any)[sortConfig.key];
+    if (aVal == null && bVal == null) return 0;
+    if (aVal == null) return 1;
+    if (bVal == null) return -1;
+    const aNum = Number(aVal);
+    const bNum = Number(bVal);
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+    }
+    const aStr = String(aVal).toLowerCase();
+    const bStr = String(bVal).toLowerCase();
+    if (aStr < bStr) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aStr > bStr) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedData = sortedData.slice((safeCurrentPage - 1) * pageSize, safeCurrentPage * pageSize);
+  const handlePageSizeChange = (n: number) => { setPageSize(n); setCurrentPage(1); };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -337,22 +327,32 @@ export const Inventory: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="w-[300px]">{isFr ? 'Nom de l\'équipement' : 'Asset Name'}</TableHead>
-                <TableHead>{isFr ? 'Numéro de série' : 'Serial Number'}</TableHead>
-                <TableHead>{isFr ? 'Catégorie' : 'Category'}</TableHead>
-                <TableHead>{isFr ? 'Statut' : 'Status'}</TableHead>
-                <TableHead className="text-right">{isFr ? 'Prix' : 'Price'}</TableHead>
+                <TableHead className="w-[300px]">
+                  <SortableHeader label={isFr ? 'Nom de l\'équipement' : 'Asset Name'} sortKey="name" sortConfig={sortConfig} onSort={handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Numéro de série' : 'Serial Number'} sortKey="serial_number" sortConfig={sortConfig} onSort={handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Catégorie' : 'Category'} sortKey="category" sortConfig={sortConfig} onSort={handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Statut' : 'Status'} sortKey="status" sortConfig={sortConfig} onSort={handleSort} />
+                </TableHead>
+                <TableHead className="text-right">
+                  <SortableHeader label={isFr ? 'Prix' : 'Price'} sortKey="price" sortConfig={sortConfig} onSort={handleSort} className="justify-end" />
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredData.length === 0 ? (
+              {paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     {isFr ? 'Aucun équipement trouvé.' : 'No assets found.'}
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredData.map((asset) => (
+                paginatedData.map((asset) => (
                   <TableRow 
                     key={asset.id} 
                     className="cursor-pointer border-border hover:bg-secondary/50 transition-colors"
@@ -381,6 +381,16 @@ export const Inventory: React.FC = () => {
               )}
             </TableBody>
           </Table>
+
+          <DataTablePagination
+            currentPage={safeCurrentPage}
+            totalPages={totalPages}
+            totalFiltered={sortedData.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={handlePageSizeChange}
+            isFr={isFr}
+          />
         </div>
       ) : (
         filteredData.length === 0 ? (
@@ -640,52 +650,12 @@ export const Inventory: React.FC = () => {
                 </div>
 
                 {imageSourceType === 'upload' ? (
-                  <div className="space-y-3">
-                    <div 
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => document.getElementById('file-upload-input')?.click()}
-                      className={`relative border border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-3 transition-all cursor-pointer ${
-                        isDragging 
-                          ? 'border-primary bg-primary/5 scale-[0.99]' 
-                          : 'border-border bg-secondary/10 hover:bg-secondary/20 hover:border-primary/40'
-                      }`}
-                    >
-                      <input 
-                        id="file-upload-input"
-                        type="file" 
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                      
-                      <div className="p-3 rounded-full bg-primary/10 text-primary">
-                        <UploadCloud className="w-6 h-6 animate-pulse" />
-                      </div>
-                      
-                      <div className="text-center">
-                        <p className="text-sm font-semibold text-foreground">
-                          {isFr ? 'Glissez-déposez votre image ici' : 'Drag & drop your image here'}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {isFr ? 'ou cliquez pour parcourir vos fichiers' : 'or click to browse your files'}
-                        </p>
-                      </div>
-                      
-                      {isUploading && (
-                        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-xl">
-                          <span className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        </div>
-                      )}
-                    </div>
-                    
-                    {formData.image_url && (
-                      <div className="relative w-20 h-20 rounded border border-border overflow-hidden bg-secondary">
-                        <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                  </div>
+                  <ImageUpload 
+                    folder="Equipments"
+                    defaultImage={formData.image_url}
+                    onUploadSuccess={(url) => setFormData({ ...formData, image_url: url, image_url_https: url, image: url })}
+                    onUploadError={(error) => setErrorMessage(error)}
+                  />
                 ) : (
                   <input 
                     type="text" 

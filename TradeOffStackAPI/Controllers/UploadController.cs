@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TradeOffStackAPI.Services.Interfaces;
 
 namespace TradeOffStackAPI.Controllers;
 
@@ -8,11 +9,11 @@ namespace TradeOffStackAPI.Controllers;
 [Authorize]
 public class UploadController : ControllerBase
 {
-    private readonly IWebHostEnvironment _environment;
+    private readonly IR2UploadService _uploadService;
 
-    public UploadController(IWebHostEnvironment environment)
+    public UploadController(IR2UploadService uploadService)
     {
-        _environment = environment;
+        _uploadService = uploadService;
     }
 
     [HttpPost]
@@ -33,31 +34,12 @@ public class UploadController : ControllerBase
 
         try
         {
-            // Create uploads directory in wwwroot
-            var webRootPath = _environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            var uploadsFolder = Path.Combine(webRootPath, "uploads", folder);
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            // Generate unique filename
-            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
-
-            // Construct URL
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            var fileUrl = $"{baseUrl}/uploads/{folder}/{uniqueFileName}";
+            var fileUrl = await _uploadService.UploadImageAsync(file, folder);
 
             return Ok(new
             {
                 image_url = fileUrl,
-                filename = uniqueFileName
+                filename = file.FileName
             });
         }
         catch (Exception ex)

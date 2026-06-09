@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
-import { LanguageProvider } from '@/context/LanguageContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Inventory } from '@/pages/Inventory';
@@ -11,7 +10,6 @@ import { Maintenance } from '@/pages/Maintenance';
 import { Departments } from '@/pages/Departments';
 import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
-import { Settings } from '@/pages/Settings';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, LayoutGrid } from 'lucide-react';
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
@@ -25,10 +23,13 @@ const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode
 };
 
 const LoginForm = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+  console.log('LoginForm render. isAuthenticated =', isAuthenticated);
   
-  // Tab State: 'signin' | 'signup'
+  if (isAuthenticated) {
+    console.log('LoginForm: Navigating to /dashboard because isAuthenticated is true');
+    return <Navigate to="/dashboard" replace />;
+  }// Tab State: 'signin' | 'signup'
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   
   // Shared States
@@ -56,8 +57,9 @@ const LoginForm = () => {
       const role = data.role || data.Role;
       const userId = data.userId || data.UserId || data.user_id;
       if (token && role && userId) {
-        login(token, role, userId);
-        navigate('/dashboard');
+        console.log('handleSignInSubmit: about to await login(...)');
+        await login(token, role, userId);
+        console.log('handleSignInSubmit: login(...) finished');
       } else {
         setError('Invalid server response.');
       }
@@ -93,10 +95,9 @@ const LoginForm = () => {
       
       setSuccess('Account created successfully! Logging you in...');
       
-      setTimeout(() => {
+      setTimeout(async () => {
         if (token && role && userId) {
-          login(token, role, userId);
-          navigate('/dashboard');
+          await login(token, role, userId);
         } else {
           setActiveTab('signin');
           setSuccess('');
@@ -387,62 +388,46 @@ const LoginForm = () => {
 };
 
 function App() {
-  React.useEffect(() => {
-    const savedTheme = localStorage.getItem('system_theme') || 'dark';
-    const root = document.documentElement;
-    root.className = '';
-    if (savedTheme === 'dark') {
-      root.classList.add('dark');
-    } else if (savedTheme === 'cyberpunk') {
-      root.classList.add('dark', 'theme-cyberpunk');
-    }
-  }, []);
-
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginForm />} />
-            
-            <Route element={<ProtectedRoute />}>
-              <Route element={<DashboardLayout />}>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/inventory" element={
-                  <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
-                    <Inventory />
-                  </ProtectedRoute>
-                } />
-                <Route path="/my-gear" element={
-                  <ProtectedRoute allowedRoles={['Employee']}>
-                    <SelfService />
-                  </ProtectedRoute>
-                } />
-                <Route path="/reservations" element={<Reservations />} />
-                <Route path="/maintenance" element={<Maintenance />} />
-                <Route path="/departments" element={<Departments />} />
-                <Route path="/users" element={
-                  <ProtectedRoute allowedRoles={['Admin']}>
-                    <Users />
-                  </ProtectedRoute>
-                } />
-                <Route path="/audit-logs" element={
-                  <ProtectedRoute allowedRoles={['Admin']}>
-                    <AuditLogs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings" element={<Navigate to="/settings/profile" replace />} />
-                <Route path="/settings/profile" element={<Settings view="profile" />} />
-                <Route path="/settings/system" element={<Settings view="system" />} />
-              </Route>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          
+          <Route element={<ProtectedRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/inventory" element={
+                <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+                  <Inventory />
+                </ProtectedRoute>
+              } />
+              <Route path="/my-gear" element={
+                <ProtectedRoute allowedRoles={['Employee']}>
+                  <SelfService />
+                </ProtectedRoute>
+              } />
+              <Route path="/reservations" element={<Reservations />} />
+              <Route path="/maintenance" element={<Maintenance />} />
+              <Route path="/departments" element={<Departments />} />
+              <Route path="/users" element={
+                <ProtectedRoute allowedRoles={['Admin']}>
+                  <Users />
+                </ProtectedRoute>
+              } />
+              <Route path="/audit-logs" element={
+                <ProtectedRoute allowedRoles={['Admin']}>
+                  <AuditLogs />
+                </ProtectedRoute>
+              } />
             </Route>
-            
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </LanguageProvider>
+          </Route>
+          
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

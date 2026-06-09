@@ -141,7 +141,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setLanguage = (lang: Language) => {
     setLang(lang);
     localStorage.setItem('system_lang', lang);
-    // Dispatch a custom event to notify other components/instances if needed
     window.dispatchEvent(new Event('languagechange'));
   };
 

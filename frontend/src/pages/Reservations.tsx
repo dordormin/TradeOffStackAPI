@@ -22,6 +22,8 @@ import { Plus, CheckCircle, XCircle, Edit } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { useTableState } from '@/hooks/useTableState';
+import { DataTableControls, DataTablePagination, SortableHeader } from '@/components/DataTableControls';
 import { getAssetImageUrl } from '@/utils/assetImages';
 
 export const Reservations: React.FC = () => {
@@ -45,6 +47,12 @@ export const Reservations: React.FC = () => {
     start_date: new Date().toISOString().split('T')[0],
     end_date: '',
     notes: ''
+  });
+
+  const table = useTableState<Reservation>({
+    data: reservations,
+    initialPageSize: 10,
+    searchableKeys: ['status', 'notes', 'user_id', 'equipment_id'],
   });
 
   const fetchReservations = async () => {
@@ -207,6 +215,13 @@ export const Reservations: React.FC = () => {
         </Button>
       </div>
 
+      <DataTableControls
+        searchTerm={table.searchTerm}
+        onSearchChange={table.setSearchTerm}
+        searchPlaceholder={isFr ? 'Rechercher par statut, notes...' : 'Search by status, notes...'}
+        isFr={isFr}
+      />
+
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-muted-foreground animate-pulse">
@@ -220,21 +235,27 @@ export const Reservations: React.FC = () => {
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead>{isFr ? 'Nom de l\'équipement' : 'Asset Name'}</TableHead>
                 <TableHead>{isFr ? 'Utilisateur' : 'User'}</TableHead>
-                <TableHead>{isFr ? 'Date de début' : 'Start Date'}</TableHead>
-                <TableHead>{isFr ? 'Date de fin' : 'End Date'}</TableHead>
-                <TableHead>{isFr ? 'Statut' : 'Status'}</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Date de début' : 'Start Date'} sortKey="start_date" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Date de fin' : 'End Date'} sortKey="end_date" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Statut' : 'Status'} sortKey="status" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {reservations.length === 0 ? (
+              {table.paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     {isFr ? 'Aucune réservation trouvée.' : 'No reservations found.'}
                   </TableCell>
                 </TableRow>
               ) : (
-                reservations.map((res) => {
+                table.paginatedData.map((res) => {
                   const assetName = res.equipment?.name || equipments.find(e => e.id === res.equipment_id)?.name || (isFr ? 'Équipement inconnu' : 'Unknown Asset');
                   const userEmail = res.user?.email || users.find(u => u.id === res.user_id)?.email || res.user_id;
 
@@ -303,6 +324,16 @@ export const Reservations: React.FC = () => {
               )}
             </TableBody>
           </Table>
+
+          <DataTablePagination
+            currentPage={table.currentPage}
+            totalPages={table.totalPages}
+            totalFiltered={table.totalFiltered}
+            pageSize={table.pageSize}
+            onPageChange={table.setCurrentPage}
+            onPageSizeChange={table.setPageSize}
+            isFr={isFr}
+          />
         </div>
       )}
 

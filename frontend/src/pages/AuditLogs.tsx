@@ -20,6 +20,8 @@ import type { AuditLog, AuditAction } from '@/types';
 import { ShieldAlert, Eye } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useTranslation } from '@/context/LanguageContext';
+import { useTableState } from '@/hooks/useTableState';
+import { DataTableControls, DataTablePagination, SortableHeader } from '@/components/DataTableControls';
 
 export const AuditLogs: React.FC = () => {
   const { language } = useTranslation();
@@ -27,6 +29,12 @@ export const AuditLogs: React.FC = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
+
+  const table = useTableState<AuditLog>({
+    data: logs,
+    initialPageSize: 10,
+    searchableKeys: ['entity_type', 'action', 'entity_id'],
+  });
 
   const fetchLogs = async () => {
     setIsLoading(true);
@@ -88,6 +96,13 @@ export const AuditLogs: React.FC = () => {
         </div>
       </div>
 
+      <DataTableControls
+        searchTerm={table.searchTerm}
+        onSearchChange={table.setSearchTerm}
+        searchPlaceholder={isFr ? 'Rechercher par type, action, ID...' : 'Search by type, action, ID...'}
+        isFr={isFr}
+      />
+
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-muted-foreground animate-pulse">
@@ -99,23 +114,29 @@ export const AuditLogs: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead>{isFr ? 'Date et heure' : 'Timestamp'}</TableHead>
-                <TableHead>{isFr ? 'Type d\'entité' : 'Entity Type'}</TableHead>
-                <TableHead>Action</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Date et heure' : 'Timestamp'} sortKey="performed_at" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Type d\'entité' : 'Entity Type'} sortKey="entity_type" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label="Action" sortKey="action" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 <TableHead>{isFr ? 'ID d\'entité' : 'Entity ID'}</TableHead>
                 <TableHead>{isFr ? 'Effectué par' : 'Performed By'}</TableHead>
                 <TableHead className="text-right">Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {logs.length === 0 ? (
+              {table.paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     {isFr ? 'Aucun journal d\'audit trouvé.' : 'No logs found.'}
                   </TableCell>
                 </TableRow>
               ) : (
-                logs.map((log) => {
+                table.paginatedData.map((log) => {
                   const userName = log.performed_by 
                     ? `${log.performed_by.first_name} ${log.performed_by.last_name}` 
                     : (isFr ? 'Admin système' : 'System Admin');
@@ -146,6 +167,16 @@ export const AuditLogs: React.FC = () => {
               )}
             </TableBody>
           </Table>
+
+          <DataTablePagination
+            currentPage={table.currentPage}
+            totalPages={table.totalPages}
+            totalFiltered={table.totalFiltered}
+            pageSize={table.pageSize}
+            onPageChange={table.setCurrentPage}
+            onPageSizeChange={table.setPageSize}
+            isFr={isFr}
+          />
         </div>
       )}
 

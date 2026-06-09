@@ -1,20 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { User, UserRole } from '@/types';
-import { apiClient } from '@/api/apiClient';
+import type { UserRole } from '@/types';
 
 interface AuthState {
   isAuthenticated: boolean;
   role: UserRole | null;
   token: string | null;
   userId: string | null;
-  user: User | null;
   isLoading: boolean;
 }
 
 interface AuthContextType extends AuthState {
-  login: (token: string, role: UserRole, userId: string) => Promise<void>;
+  login: (token: string, role: UserRole, userId: string) => void;
   logout: () => void;
-  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,30 +22,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     role: null,
     token: null,
     userId: null,
-    user: null,
     isLoading: true,
   });
 
-  const fetchUserProfile = async (userId: string, token: string) => {
-    try {
-      const response = await apiClient.get<User>(`/user/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return response.data;
-    } catch (err) {
-      console.error('Failed to fetch user profile during initialization', err);
-      return null;
-    }
-  };
-
   useEffect(() => {
+    // Check local storage on mount
     const initAuth = async () => {
       const token = localStorage.getItem('jwt_token');
       const role = localStorage.getItem('user_role') as UserRole | null;
       const userId = localStorage.getItem('user_id');
 
       if (token && role && userId) {
+        console.log('initAuth: fetching user profile...');
         const userDetails = await fetchUserProfile(userId, token);
+        console.log('initAuth: fetchUserProfile done. userDetails:', userDetails ? 'found' : 'null');
         setAuthState({
           isAuthenticated: true,
           role,
@@ -58,14 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isLoading: false,
         });
       } else {
-        setAuthState({
-          isAuthenticated: false,
-          role: null,
-          token: null,
-          userId: null,
-          user: null,
-          isLoading: false,
-        });
+        setAuthState({ isAuthenticated: false, role: null, token: null, userId: null, isLoading: false, user: null });
       }
     };
 
@@ -84,8 +64,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('jwt_token', token);
     localStorage.setItem('user_role', role);
     localStorage.setItem('user_id', userId);
-
+    console.log('login: fetching user profile...');
     const userDetails = await fetchUserProfile(userId, token);
+    console.log('login: fetchUserProfile done. userDetails:', userDetails ? 'found' : 'null');
 
     setAuthState({
       isAuthenticated: true,
@@ -95,38 +76,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user: userDetails,
       isLoading: false,
     });
+    console.log('login: set isAuthenticated to true');
   };
 
   const logout = () => {
+    console.log('logout called');
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_role');
     localStorage.removeItem('user_id');
-    setAuthState({
-      isAuthenticated: false,
-      role: null,
-      token: null,
-      userId: null,
-      user: null,
-      isLoading: false,
-    });
-  };
-
-  const refreshUser = async () => {
-    if (authState.userId && authState.token) {
-      try {
-        const response = await apiClient.get<User>(`/user/${authState.userId}`);
-        setAuthState((prev) => ({
-          ...prev,
-          user: response.data,
-        }));
-      } catch (err) {
-        console.error('Failed to refresh user profile', err);
-      }
-    }
+    setAuthState({ isAuthenticated: false, role: null, token: null, userId: null, isLoading: false, user: null });
   };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout, refreshUser }}>
+    <AuthContext.Provider value={{ ...authState, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

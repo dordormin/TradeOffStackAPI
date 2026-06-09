@@ -22,6 +22,8 @@ import { Users as UsersIcon, Plus, Edit, Trash2 } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { useTableState } from '@/hooks/useTableState';
+import { DataTableControls, DataTablePagination, SortableHeader } from '@/components/DataTableControls';
 
 export const Users: React.FC = () => {
   const { role } = useAuth();
@@ -44,6 +46,12 @@ export const Users: React.FC = () => {
     role: 'Employee' as UserRole,
     department_id: '',
     is_active: true
+  });
+
+  const table = useTableState<User>({
+    data: users,
+    initialPageSize: 10,
+    searchableKeys: ['first_name', 'last_name', 'email', 'role'],
   });
 
   const fetchUsers = async () => {
@@ -176,6 +184,13 @@ export const Users: React.FC = () => {
         )}
       </div>
 
+      <DataTableControls
+        searchTerm={table.searchTerm}
+        onSearchChange={table.setSearchTerm}
+        searchPlaceholder={isFr ? 'Rechercher par nom, e-mail, rôle...' : 'Search by name, email, role...'}
+        isFr={isFr}
+      />
+
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-muted-foreground animate-pulse">
@@ -187,23 +202,31 @@ export const Users: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead>{isFr ? 'Nom complet' : 'Full Name'}</TableHead>
-                <TableHead>{isFr ? 'E-mail' : 'Email'}</TableHead>
-                <TableHead>{isFr ? 'Rôle' : 'Role'}</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Nom complet' : 'Full Name'} sortKey="first_name" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'E-mail' : 'Email'} sortKey="email" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Rôle' : 'Role'} sortKey="role" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 <TableHead>{isFr ? 'Département' : 'Department'}</TableHead>
-                <TableHead>{isFr ? 'Statut' : 'Status'}</TableHead>
+                <TableHead>
+                  <SortableHeader label={isFr ? 'Statut' : 'Status'} sortKey="is_active" sortConfig={table.sortConfig} onSort={table.handleSort} />
+                </TableHead>
                 {role === 'Admin' && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.length === 0 ? (
+              {table.paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={role === 'Admin' ? 6 : 5} className="text-center py-8 text-muted-foreground">
                     {isFr ? 'Aucun utilisateur trouvé.' : 'No users found.'}
                   </TableCell>
                 </TableRow>
               ) : (
-                users.map((usr) => {
+                table.paginatedData.map((usr) => {
                   const depName = usr.department?.name || departments.find(d => d.id === usr.department_id)?.name || (isFr ? 'Aucun' : 'None');
 
                   return (
@@ -254,6 +277,16 @@ export const Users: React.FC = () => {
               )}
             </TableBody>
           </Table>
+
+          <DataTablePagination
+            currentPage={table.currentPage}
+            totalPages={table.totalPages}
+            totalFiltered={table.totalFiltered}
+            pageSize={table.pageSize}
+            onPageChange={table.setCurrentPage}
+            onPageSizeChange={table.setPageSize}
+            isFr={isFr}
+          />
         </div>
       )}
 
