@@ -52,14 +52,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('initAuth: fetching user profile...');
         const userDetails = await fetchUserProfile(userId, token);
         console.log('initAuth: fetchUserProfile done. userDetails:', userDetails ? 'found' : 'null');
-        setAuthState({
-          isAuthenticated: true,
-          role,
-          token,
-          userId,
-          user: userDetails,
-          isLoading: false,
-        });
+        if (userDetails) {
+          setAuthState({
+            isAuthenticated: true,
+            role,
+            token,
+            userId,
+            user: userDetails,
+            isLoading: false,
+          });
+        } else {
+          // Token exists but user is not found (e.g., deleted from database). Force logout.
+          localStorage.removeItem('jwt_token');
+          localStorage.removeItem('user_role');
+          localStorage.removeItem('user_id');
+          setAuthState({ isAuthenticated: false, role: null, token: null, userId: null, isLoading: false, user: null });
+        }
       } else {
         setAuthState({ isAuthenticated: false, role: null, token: null, userId: null, isLoading: false, user: null });
       }
