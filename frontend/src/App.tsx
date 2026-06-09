@@ -10,8 +10,10 @@ import { Maintenance } from '@/pages/Maintenance';
 import { Departments } from '@/pages/Departments';
 import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
+import { Settings } from '@/pages/Settings';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, LayoutGrid } from 'lucide-react';
+import { Logo } from './components/Logo';
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
   const { isAuthenticated, role, isLoading } = useAuth();
   
@@ -125,12 +127,7 @@ const LoginForm = () => {
           {/* Header */}
           <div className="flex flex-col space-y-2">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-gradient-to-tr from-primary to-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]">
-                <LayoutGrid className="w-6 h-6" />
-              </div>
-              <span className="text-xl font-bold tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground/80 font-mono">
-                TradeOffStack
-              </span>
+              <Logo className="scale-150 origin-left mb-6" />
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight text-foreground/90 pt-4">
               {activeTab === 'signin' ? 'Welcome back' : 'Create an account'}
@@ -421,6 +418,7 @@ function App() {
                   <AuditLogs />
                 </ProtectedRoute>
               } />
+              <Route path="/settings/*" element={<Settings />} />
             </Route>
           </Route>
           

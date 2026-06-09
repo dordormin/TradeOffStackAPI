@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { Logo } from '@/components/Logo';
+import { AssetPortalIcon } from '@/components/AssetPortalIcon';
 import { 
   LayoutDashboard, 
   MonitorSmartphone, 
@@ -45,12 +47,7 @@ export const DashboardLayout: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-[260px] border-r bg-card flex flex-col hidden md:flex">
         <div className="h-16 flex items-center px-6 border-b">
-          <div className="flex items-center gap-2 font-bold text-lg text-primary">
-            <div className="w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center">
-              TS
-            </div>
-            TradeOffStack
-          </div>
+          <Logo />
         </div>
         
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -87,7 +84,8 @@ export const DashboardLayout: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
         <header className="h-16 border-b bg-card flex items-center justify-between px-6 shrink-0">
-          <div className="font-semibold text-lg text-foreground">
+          <div className="font-semibold text-lg text-foreground flex items-center gap-2">
+            <AssetPortalIcon />
             Asset Portal
           </div>
           <div className="flex items-center gap-4">
