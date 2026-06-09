@@ -50,7 +50,13 @@ public class ReservationServiceTests
         
         _mockEquipmentRepo.Setup(r => r.GetByIdAsync(equipmentId)).ReturnsAsync(equipment);
         _mockRepo.Setup(r => r.HasActiveReservationAsync(equipmentId)).ReturnsAsync(false);
-        _mockRepo.Setup(r => r.AddAsync(It.IsAny<Reservation>())).ReturnsAsync(true);
+        _mockRepo.Setup(r => r.AddAsync(It.IsAny<Reservation>()))
+            .Callback<Reservation>(r => 
+            {
+                _context.Reservations.Add(r);
+                _context.SaveChanges();
+            })
+            .ReturnsAsync(true);
         _mockEquipmentRepo.Setup(r => r.UpdateAsync(It.IsAny<Equipment>())).ReturnsAsync(true);
 
         var reservation = NewReservation(equipmentId);
