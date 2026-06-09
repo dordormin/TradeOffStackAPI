@@ -12,4 +12,5 @@ public interface IUserService
     Task<ServiceResponse<User>> AddUserAsync(User user);
     Task<ServiceResponse<User>> UpdateUserAsync(Guid id, User user);
     Task<ServiceResponse<bool>> DeleteUserAsync(Guid id);
+    Task<ServiceResponse<bool>> UpdatePasswordAsync(Guid id, string newPassword);
 }

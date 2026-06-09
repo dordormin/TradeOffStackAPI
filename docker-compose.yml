@@ -35,6 +35,8 @@ services:
         condition: service_healthy
     ports:
       - "5000:8080"
+    volumes:
+      - uploads:/app/wwwroot/uploads
     environment:
       # Injection de la chaîne de connexion (écrase le appsettings.json)
       - ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Port=5432;
@@ -43,4 +45,6 @@ services:
 
 volumes:
   pgdata:
+    driver: local
+  uploads:
     driver: local

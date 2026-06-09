@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Self-Service Portal - TradeOffStack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Courier+Prime&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#d9773a",
+                "inverse-surface": "#f1dfd7",
+                "tertiary": "#f6adfc",
+                "status-available": "#10B981",
+                "error-container": "#93000a",
+                "surface-container-lowest": "#140c08",
+                "on-tertiary-fixed": "#35003f",
+                "on-tertiary-container": "#480c53",
+                "on-tertiary": "#50155a",
+                "on-secondary-fixed-variant": "#3f4755",
+                "on-primary-container": "#491c00",
+                "on-tertiary-fixed-variant": "#6a2e73",
+                "error": "#ffb4ab",
+                "background": "#1a120d",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#3d332d",
+                "on-primary-fixed-variant": "#773300",
+                "tertiary-fixed-dim": "#f6adfc",
+                "on-secondary-container": "#adb5c6",
+                "tertiary-fixed": "#ffd6fe",
+                "outline-variant": "#554339",
+                "status-repair": "#F59E0B",
+                "surface": "#1a120d",
+                "surface-dim": "#1a120d",
+                "surface-container": "#271e19",
+                "surface-container-high": "#322823",
+                "outline": "#a38c80",
+                "on-surface": "#f1dfd7",
+                "on-surface-variant": "#dbc1b5",
+                "on-error": "#690005",
+                "surface-charcoal": "#0F1115",
+                "on-secondary-fixed": "#141c28",
+                "tertiary-container": "#bc78c3",
+                "status-reserved": "#3B82F6",
+                "on-primary": "#542200",
+                "surface-container-low": "#231a15",
+                "status-critical": "#EF4444",
+                "surface-tint": "#ffb68e",
+                "secondary": "#bfc7d8",
+                "surface-bright": "#423731",
+                "surface-container-highest": "#3d332d",
+                "on-primary-fixed": "#331200",
+                "secondary-container": "#3f4755",
+                "primary-fixed": "#ffdbca",
+                "on-secondary": "#29313e",
+                "border-subtle": "#334155",
+                "primary-fixed-dim": "#ffb68e",
+                "inverse-on-surface": "#392e29",
+                "secondary-fixed": "#dbe3f4",
+                "secondary-fixed-dim": "#bfc7d8",
+                "inverse-primary": "#99460a",
+                "surface-slate": "#1E293B",
+                "primary": "#ffb68e",
+                "on-background": "#f1dfd7"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "header-height": "64px",
+                "container-max": "1440px",
+                "gutter": "1rem",
+                "stack-sm": "0.5rem",
+                "stack-lg": "1.5rem",
+                "stack-md": "1rem",
+                "sidebar-width": "260px"
+        },
+        "fontFamily": {
+                "headline-xl": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ],
+                "body-sm": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Manrope"
+                ],
+                "mono-sm": [
+                        "Courier Prime"
+                ],
+                "label-md": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "headline-xl": [
+                        "36px",
+                        {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-sm": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "mono-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            background-color: #1a120d; /* surface */
+            color: #f1dfd7; /* on-surface */
+            font-family: 'Manrope', sans-serif;
+        }
+        
+        /* Custom scrollbar for high-density tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a120d; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3d332d; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #554339; 
+        }
+    </style>
+</head>
+<body class="flex h-screen bg-surface text-on-surface overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width bg-surface-container flex flex-col h-full border-r border-outline-variant flex-shrink-0 z-50 transition-all duration-300 relative group hidden md:flex">
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl font-bold">hexagon</span>
+<span class="font-headline-md text-headline-md tracking-tight font-bold">TradeOffStack</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4 custom-scrollbar">
+<div class="px-4 mb-2">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider px-2">Main Menu</p>
+</div>
+<nav class="space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-primary-container bg-primary-container hover:bg-primary-container/90 transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">event_available</span>
+<span class="font-label-md text-label-md">Reservations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">history</span>
+<span class="font-label-md text-label-md">Audit Logs</span>
+</a>
+</nav>
+<div class="px-4 mt-8 mb-2">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider px-2">System</p>
+</div>
+<nav class="space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-variant transition-colors cursor-pointer">
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida/AP1WRLttM3ScfuVvLsIJ7Wzls-Pj9i5kHVdrga_Sd0Ck4Bf-a8DMECtf-tR1qcn5wplx5tDKNsJK0a0Fr5TcKkKbXBnD4FlVZCJTfwTyw6dE2dG11ydH1jFZKdTdQc-kEWqRL2QAq0bS4OacswR8FkeUU_vAI42YwCjZ2wsZ6_NdUiuqv8mC3FJCL2qH7ZZZQak0kKKrT-Th8TUYdv31ZTjbIbKcURSMUa1NWBDUmrwZRWfcBZzM8FmMqeTpodM"/>
+<div class="flex-1 min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">Alex Mercer</p>
+<p class="text-[10px] text-on-surface-variant truncate">alex.mercer@tradeoffstack.com</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">unfold_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
+<!-- Top Navigation Header -->
+<header class="h-header-height bg-surface-container/80 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-gutter sticky top-0 z-40 transition-all duration-300 flex-shrink-0">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center text-on-surface-variant text-sm">
+<span class="hover:text-primary cursor-pointer transition-colors font-body-sm text-body-sm">Home</span>
+<span class="material-symbols-outlined text-sm mx-1 opacity-50">chevron_right</span>
+<span class="text-on-surface font-body-sm text-body-sm font-medium">Dashboard</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-high border border-outline-variant text-on-surface text-sm rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all placeholder:text-on-surface-variant font-body-sm text-body-sm" placeholder="Search resources..." type="text"/>
+</div>
+<button class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">apps</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-gutter custom-scrollbar">
+<div class="max-w-container-max mx-auto space-y-stack-lg">
+<!-- Hero Section -->
+<section class="mb-10">
+<h2 class="font-headline-xl text-headline-xl text-on-surface">Hello, Alex. <span class="text-primary">How can we help you today?</span></h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 max-w-2xl">Manage your assigned equipment, request new assets, or track maintenance tickets from this central portal.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<!-- Left Column: Equipment & Requests (2/3 width) -->
+<div class="xl:col-span-2 space-y-6">
+<!-- My Equipment Cards -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">devices</span>
+                                    My Equipment
+                                </h3>
+<button class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors uppercase">View All Details</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Laptop Card -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-5 hover:bg-surface-variant transition-colors group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">laptop_mac</span>
+</div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-status-available/10 text-status-available font-label-md text-label-md uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span> Active
+                                            </span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="relative z-10">
+<h4 class="font-headline-lg text-headline-lg text-on-surface">MacBook Pro 16"</h4>
+<p class="font-mono-sm text-mono-sm text-on-surface-variant mt-1">TAG: MAC-2023-0042</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Apple M2 Max, 32GB RAM, 1TB SSD. Standard engineering build.</p>
+<div class="mt-4 pt-4 border-t border-outline-variant flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Assigned: Jan 12, 2023</span>
+<button class="font-label-md text-label-md text-primary hover:underline uppercase">Report Issue</button>
+</div>
+</div>
+</div>
+<!-- Monitor Card -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-5 hover:bg-surface-variant transition-colors group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary">monitor</span>
+</div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div>
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-status-available/10 text-status-available font-label-md text-label-md uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available"></span> Active
+                                            </span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="relative z-10">
+<h4 class="font-headline-lg text-headline-lg text-on-surface">Dell UltraSharp 27"</h4>
+<p class="font-mono-sm text-mono-sm text-on-surface-variant mt-1">TAG: MON-2022-1108</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">4K USB-C Hub Monitor. Located at Desk 4B.</p>
+<div class="mt-4 pt-4 border-t border-outline-variant flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Assigned: Nov 05, 2022</span>
+<button class="font-label-md text-label-md text-primary hover:underline uppercase">Report Issue</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Request Asset Inline Wizard -->
+<section class="bg-surface-container border border-outline-variant rounded-lg p-6 relative overflow-hidden">
+<!-- Subtle background accent -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">add_shopping_cart</span>
+                                Request New Asset
+                            </h3>
+<!-- Stepper Header -->
+<div class="flex items-center mb-8">
+<div class="flex items-center text-primary">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">1</div>
+<span class="ml-2 font-label-md text-label-md uppercase">Category</span>
+</div>
+<div class="flex-1 h-px bg-outline-variant mx-4"></div>
+<div class="flex items-center text-on-surface-variant opacity-50">
+<div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center font-label-md text-label-md">2</div>
+<span class="ml-2 font-label-md text-label-md uppercase">Select</span>
+</div>
+<div class="flex-1 h-px bg-outline-variant mx-4"></div>
+<div class="flex items-center text-on-surface-variant opacity-50">
+<div class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center font-label-md text-label-md">3</div>
+<span class="ml-2 font-label-md text-label-md uppercase">Details</span>
+</div>
+</div>
+<!-- Step 1 Content -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<button class="border-2 border-primary bg-primary/5 rounded-lg p-6 flex flex-col items-center justify-center gap-3 hover:bg-primary/10 transition-colors text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">laptop_mac</span>
+<span class="font-label-md text-label-md uppercase">Computers</span>
+</button>
+<button class="border border-outline-variant bg-surface-container-low rounded-lg p-6 flex flex-col items-center justify-center gap-3 hover:border-outline hover:bg-surface-variant transition-colors text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-4xl">keyboard</span>
+<span class="font-label-md text-label-md uppercase">Peripherals</span>
+</button>
+<button class="border border-outline-variant bg-surface-container-low rounded-lg p-6 flex flex-col items-center justify-center gap-3 hover:border-outline hover:bg-surface-variant transition-colors text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-4xl">router</span>
+<span class="font-label-md text-label-md uppercase">Network</span>
+</button>
+</div>
+<div class="mt-6 flex justify-end gap-3">
+<button class="border border-outline-variant text-on-surface-variant font-label-md text-label-md px-6 py-2.5 rounded-lg hover:bg-surface-variant transition-colors flex items-center gap-2 uppercase">
+                                    Cancel
+                                </button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 uppercase">
+                                    Next Step
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Maintenance Board (1/3 width) -->
+<div class="xl:col-span-1">
+<section class="bg-surface-container border border-outline-variant rounded-lg h-full flex flex-col">
+<div class="p-5 border-b border-outline-variant flex justify-between items-center bg-surface-container-high rounded-t-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-status-repair">build_circle</span>
+                                    My Tickets
+                                </h3>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-colors bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="p-4 flex-1 overflow-y-auto space-y-3">
+<!-- Ticket Card: In Progress -->
+<div class="bg-surface border border-outline-variant rounded-lg p-4 hover:border-outline transition-colors cursor-pointer shadow-sm relative group">
+<div class="absolute top-2 right-2 hidden group-hover:flex gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">cancel</span></button>
+</div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">TKT-892</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-status-repair/10 text-status-repair font-label-md text-[10px] uppercase tracking-wider border border-status-repair/20">In Progress</span>
+</div>
+<h5 class="font-body-md text-body-md font-bold text-on-surface mb-2 pr-12">Keyboard double-typing issue</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3 line-clamp-2">The built-in keyboard on my MacBook Pro is double typing 'e' and 't' intermittently.</p>
+<div class="flex justify-between items-center pt-3 border-t border-outline-variant/50">
+<span class="inline-flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-status-repair"></span> Medium
+                                        </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Updated 2h ago</span>
+</div>
+</div>
+<!-- Ticket Card: Pending -->
+<div class="bg-surface border border-outline-variant rounded-lg p-4 hover:border-outline transition-colors cursor-pointer shadow-sm relative group">
+<div class="absolute top-2 right-2 hidden group-hover:flex gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">cancel</span></button>
+</div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">TKT-904</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-surface-variant text-on-surface-variant font-label-md text-[10px] uppercase tracking-wider border border-outline-variant">Pending</span>
+</div>
+<h5 class="font-body-md text-body-md font-bold text-on-surface mb-2 pr-12">Request external webcam for meetings</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3 line-clamp-2">Need a 1080p webcam for client presentations as my laptop is usually docked.</p>
+<div class="flex justify-between items-center pt-3 border-t border-outline-variant/50">
+<span class="inline-flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full border border-on-surface-variant"></span> Low
+                                        </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Created 1d ago</span>
+</div>
+</div>
+<!-- Ticket Card: Resolved -->
+<div class="bg-surface border border-outline-variant/50 rounded-lg p-4 opacity-70 hover:opacity-100 transition-opacity cursor-pointer shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">TKT-845</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-status-available/10 text-status-available font-label-md text-[10px] uppercase tracking-wider border border-status-available/20">Resolved</span>
+</div>
+<h5 class="font-body-md text-body-md font-bold text-on-surface mb-2 line-through decoration-on-surface-variant">VPN Access configuration</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3 line-clamp-2">Unable to connect to the production network VPN from home.</p>
+<div class="flex justify-between items-center pt-3 border-t border-outline-variant/50">
+<span class="inline-flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-status-critical"></span> High
+                                        </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Closed Oct 12</span>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-container-low rounded-b-lg">
+<button class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span> New Ticket
+                                </button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors uppercase">View All</button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

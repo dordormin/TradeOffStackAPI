@@ -21,7 +21,14 @@ public class UserService : IUserService
     {
         if (!string.IsNullOrEmpty(user.ProfileImage))
         {
-            user.ProfileImageUrl = $"{_r2BaseUrl}/Users/{user.ProfileImage}";
+            if (user.ProfileImage.StartsWith("http://") || user.ProfileImage.StartsWith("https://"))
+            {
+                user.ProfileImageUrl = user.ProfileImage;
+            }
+            else
+            {
+                user.ProfileImageUrl = $"{_r2BaseUrl}/Users/{user.ProfileImage}";
+            }
         }
     }
 
@@ -134,6 +141,21 @@ public class UserService : IUserService
         return success 
             ? ServiceResponse<bool>.Ok(true, "User deleted.") 
             : ServiceResponse<bool>.Fail("User not found or failed to delete.");
+    }
+
+    /// <inheritdoc />
+    public async Task<ServiceResponse<bool>> UpdatePasswordAsync(Guid id, string newPassword)
+    {
+        var existingUser = await _repo.GetByIdAsync(id);
+        if (existingUser == null) 
+            return ServiceResponse<bool>.Fail("User not found.");
+
+        existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        
+        var success = await _repo.UpdateAsync(existingUser);
+        return success 
+            ? ServiceResponse<bool>.Ok(true, "Password updated successfully.") 
+            : ServiceResponse<bool>.Fail("Failed to update the password.");
     }
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Inventory } from '@/pages/Inventory';
@@ -10,6 +11,7 @@ import { Maintenance } from '@/pages/Maintenance';
 import { Departments } from '@/pages/Departments';
 import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
+import { Settings } from '@/pages/Settings';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, LayoutGrid } from 'lucide-react';
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
@@ -385,46 +387,62 @@ const LoginForm = () => {
 };
 
 function App() {
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('system_theme') || 'dark';
+    const root = document.documentElement;
+    root.className = '';
+    if (savedTheme === 'dark') {
+      root.classList.add('dark');
+    } else if (savedTheme === 'cyberpunk') {
+      root.classList.add('dark', 'theme-cyberpunk');
+    }
+  }, []);
+
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          
-          <Route element={<ProtectedRoute />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/inventory" element={
-                <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
-                  <Inventory />
-                </ProtectedRoute>
-              } />
-              <Route path="/my-gear" element={
-                <ProtectedRoute allowedRoles={['Employee']}>
-                  <SelfService />
-                </ProtectedRoute>
-              } />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/maintenance" element={<Maintenance />} />
-              <Route path="/departments" element={<Departments />} />
-              <Route path="/users" element={
-                <ProtectedRoute allowedRoles={['Admin']}>
-                  <Users />
-                </ProtectedRoute>
-              } />
-              <Route path="/audit-logs" element={
-                <ProtectedRoute allowedRoles={['Admin']}>
-                  <AuditLogs />
-                </ProtectedRoute>
-              } />
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginForm />} />
+            
+            <Route element={<ProtectedRoute />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/inventory" element={
+                  <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+                    <Inventory />
+                  </ProtectedRoute>
+                } />
+                <Route path="/my-gear" element={
+                  <ProtectedRoute allowedRoles={['Employee']}>
+                    <SelfService />
+                  </ProtectedRoute>
+                } />
+                <Route path="/reservations" element={<Reservations />} />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route path="/departments" element={<Departments />} />
+                <Route path="/users" element={
+                  <ProtectedRoute allowedRoles={['Admin']}>
+                    <Users />
+                  </ProtectedRoute>
+                } />
+                <Route path="/audit-logs" element={
+                  <ProtectedRoute allowedRoles={['Admin']}>
+                    <AuditLogs />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={<Navigate to="/settings/profile" replace />} />
+                <Route path="/settings/profile" element={<Settings view="profile" />} />
+                <Route path="/settings/system" element={<Settings view="system" />} />
+              </Route>
             </Route>
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+            
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

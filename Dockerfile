@@ -25,11 +25,15 @@ RUN dotnet publish "TradeOffStackAPI.csproj" -c Release -o /app/publish /p:UseAp
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
-# Sécurité : utiliser l'utilisateur non-root 'app' intégré dans les images .NET 8+
-USER app
-
 # Copier les fichiers compilés depuis le build stage
 COPY --from=build /app/publish .
+
+# Créer le répertoire d'uploads et donner les permissions à l'utilisateur app
+RUN mkdir -p /app/wwwroot/uploads/Equipments /app/wwwroot/uploads/Users \
+    && chown -R app:app /app/wwwroot
+
+# Sécurité : utiliser l'utilisateur non-root 'app' intégré dans les images .NET 8+
+USER app
 
 # Définir le port d'écoute (8080 est le standard par défaut dans .NET 8+)
 EXPOSE 8080
