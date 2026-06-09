@@ -154,6 +154,9 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
           
+          # Login to GHCR to pull private images
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          
           # Pull latest images and update containers
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d --remove-orphans
