@@ -25,7 +25,7 @@
     <!-- Redis & Data Protection -->
     <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.8" />
     
     <!-- Swagger -->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
