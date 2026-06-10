@@ -209,10 +209,10 @@ export const CentralHub: React.FC = () => {
             <AppWindow className="w-3.5 h-3.5 text-primary" />
             {isFr ? 'Portail Central' : 'Central Hub'}
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-4 text-center font-outfit drop-shadow-xl">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground mb-4 text-center font-outfit drop-shadow-xl">
             {isFr ? 'Enterprise Hub' : 'Application Central'}
           </h1>
-          <p className="text-slate-200 text-lg max-w-2xl text-center drop-shadow-md">
+          <p className="text-muted-foreground text-lg max-w-2xl text-center drop-shadow-md">
             {isFr 
               ? 'Bienvenue dans votre espace centralisé. Accédez à vos outils et services autorisés ci-dessous.'
               : 'Welcome to your workspace. Select any of your authorized tools and management hubs below.'}

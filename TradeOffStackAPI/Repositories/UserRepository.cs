@@ -9,13 +9,13 @@ namespace TradeOffStackAPI.Repositories;
 /// Repository implementation for User entities.
 /// Overrides generic methods to include relational data (e.g., Department).
 /// </summary>
-public class UserRepository : GenericRepository<User>, IUserRepository
+public class UserRepository : GenericRepository<User, CoreDbContext>, IUserRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserRepository"/> class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    public UserRepository(AppDbContext context) : base(context)
+    public UserRepository(CoreDbContext context) : base(context)
     {
     }
 

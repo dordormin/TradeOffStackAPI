@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Inventory } from '@/pages/Inventory';
+import { Software } from '@/pages/Software';
 import { SelfService } from '@/pages/SelfService';
 import { Reservations } from '@/pages/Reservations';
 import { Maintenance } from '@/pages/Maintenance';
@@ -456,6 +457,11 @@ function App() {
               <Route path="/inventory" element={
                 <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
                   <Inventory />
+                </ProtectedRoute>
+              } />
+              <Route path="/software" element={
+                <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
+                  <Software />
                 </ProtectedRoute>
               } />
               <Route path="/my-gear" element={

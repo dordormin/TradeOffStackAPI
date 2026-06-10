@@ -32,10 +32,7 @@ public class AuditLogController : ControllerBase
         var logs = await _service.GetAllAsync();
         var currentUserRole = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
 
-        if (currentUserRole == Roles.Tester)
-        {
-            logs = logs.Where(log => log.PerformedBy == null || log.PerformedBy.Role != UserRole.Admin);
-        }
+
 
         return Ok(logs);
     }
@@ -49,10 +46,7 @@ public class AuditLogController : ControllerBase
         var logs = await _service.GetByEntityAsync(entityType, entityId);
         var currentUserRole = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
 
-        if (currentUserRole == Roles.Tester)
-        {
-            logs = logs.Where(log => log.PerformedBy == null || log.PerformedBy.Role != UserRole.Admin);
-        }
+
 
         return Ok(logs);
     }

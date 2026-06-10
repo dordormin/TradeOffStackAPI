@@ -18,6 +18,13 @@ public enum AssetCategory
     Peripheral,
     NetworkDevice
 }
+
+public enum DepreciationMethod
+{
+    None,
+    StraightLine,     // Linéaire
+    DecliningBalance  // Dégressif
+}
 /// <summary>
 /// Représente un équipement (ordinateur, écran, etc.) dans l'inventaire de l'entreprise.
 /// </summary>
@@ -70,6 +77,27 @@ public class Equipment
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    /// <summary>Valeur comptable actuelle (calculée dynamiquement).</summary>
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    [JsonPropertyName("current_book_value")]
+    public decimal CurrentBookValue { get; set; }
+
+    /// <summary>Valeur résiduelle estimée (valeur de récupération).</summary>
+    [JsonPropertyName("salvage_value")]
+    public decimal SalvageValue { get; set; }
+
+    /// <summary>Durée d'amortissement estimée en années.</summary>
+    [JsonPropertyName("useful_life_years")]
+    public int UsefulLifeYears { get; set; }
+
+    /// <summary>Méthode d'amortissement financière.</summary>
+    [JsonPropertyName("depreciation_method")]
+    public DepreciationMethod DepreciationMethod { get; set; } = DepreciationMethod.None;
+
+    /// <summary>Date d'expiration de la garantie.</summary>
+    [JsonPropertyName("warranty_expiration_date")]
+    public DateTime? WarrantyExpirationDate { get; set; }
+
     /// <summary>Historique des réservations de cet équipement.</summary>
     [JsonIgnore]
     public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
@@ -77,4 +105,8 @@ public class Equipment
     /// <summary>Historique des demandes de maintenance de cet équipement.</summary>
     [JsonIgnore]
     public ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
+
+    /// <summary>Licences logicielles installées sur cet équipement.</summary>
+    [JsonPropertyName("equipment_licenses")]
+    public ICollection<EquipmentLicense> EquipmentLicenses { get; set; } = new List<EquipmentLicense>();
 }

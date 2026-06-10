@@ -10,12 +10,12 @@ public class MaintenanceRequestService : IMaintenanceRequestService
 {
     private readonly IMaintenanceRequestRepository _repo;
     private readonly IEquipmentRepository _equipmentRepo;
-    private readonly TradeOffStackAPI.Data.AppDbContext _context;
+    private readonly TradeOffStackAPI.Data.AssetDbContext _context;
 
     public MaintenanceRequestService(
         IMaintenanceRequestRepository repo, 
         IEquipmentRepository equipmentRepo,
-        TradeOffStackAPI.Data.AppDbContext context)
+        TradeOffStackAPI.Data.AssetDbContext context)
     {
         _repo = repo;
         _equipmentRepo = equipmentRepo;

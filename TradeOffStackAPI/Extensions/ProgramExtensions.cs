@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TradeOffStackAPI.Data;
+using TradeOffStackAPI.Services.Interfaces;
 
 namespace TradeOffStackAPI.Extensions;
 
@@ -120,16 +121,23 @@ public static class ProgramExtensions
         
         try
         {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            if (!db.Database.ProviderName?.Contains("Sqlite", StringComparison.OrdinalIgnoreCase) ?? false)
+            var userManager = scope.ServiceProvider.GetRequiredService<IUserService>();
+            var coreDb = scope.ServiceProvider.GetRequiredService<CoreDbContext>();
+            var assetDb = scope.ServiceProvider.GetRequiredService<AssetDbContext>();
+
+            if (!coreDb.Database.ProviderName?.Contains("Sqlite", StringComparison.OrdinalIgnoreCase) ?? false)
             {
-                logger.LogInformation("Applying database migrations...");
-                await db.Database.MigrateAsync();
-                
-                // Patch the PostgreSQL Enum to include the Tester role
-                await db.Database.ExecuteSqlRawAsync("ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'Tester';");
-                
-                logger.LogInformation("Database migrations applied successfully.");
+                logger.LogInformation("Applying Core database migrations...");
+                await coreDb.Database.MigrateAsync();
+                await coreDb.Database.ExecuteSqlRawAsync("ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'Tester';");
+                logger.LogInformation("Core database migrations applied successfully.");
+            }
+
+            if (!assetDb.Database.ProviderName?.Contains("Sqlite", StringComparison.OrdinalIgnoreCase) ?? false)
+            {
+                logger.LogInformation("Applying Asset database migrations...");
+                await assetDb.Database.MigrateAsync();
+                logger.LogInformation("Asset database migrations applied successfully.");
             }
             else
             {
@@ -137,9 +145,24 @@ public static class ProgramExtensions
             }
             
             // ==========================================
-            // SÉCURITÉ : Initialisation de l'Administrateur et du Testeur par défaut
+            // SÉCURITÉ : Initialisation du Département, Administrateur et Testeur
             // ==========================================
-            if (!await db.Users.AnyAsync(u => u.Email == "admin@tradeoffstack.com"))
+            
+            // Ensure the main department exists
+            var itDept = await coreDb.Departments.FirstOrDefaultAsync(d => d.Name == "IT Department");
+            if (itDept == null)
+            {
+                itDept = new TradeOffStackAPI.Models.Department
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "IT Department",
+                    Description = "Global Information Technology"
+                };
+                coreDb.Departments.Add(itDept);
+                await coreDb.SaveChangesAsync();
+            }
+
+            if (!await coreDb.Users.AnyAsync(u => u.Email == "admin@tradeoffstack.com"))
             {
                 logger.LogInformation("Creating default Administrator account...");
                 var adminUser = new TradeOffStackAPI.Models.User
@@ -153,12 +176,12 @@ public static class ProgramExtensions
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!Secure")
                 };
                 
-                await db.Users.AddAsync(adminUser);
-                await db.SaveChangesAsync();
+                await coreDb.Users.AddAsync(adminUser);
+                await coreDb.SaveChangesAsync();
                 logger.LogInformation("Default Administrator account created (admin@tradeoffstack.com / Admin123!Secure).");
             }
 
-            if (!await db.Users.AnyAsync(u => u.Email == "tester@tradeoffstack.com"))
+            if (!await coreDb.Users.AnyAsync(u => u.Email == "tester@tradeoffstack.com"))
             {
                 logger.LogInformation("Creating default Tester account...");
                 var testerUser = new TradeOffStackAPI.Models.User
@@ -172,8 +195,8 @@ public static class ProgramExtensions
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("Tester123!Secure")
                 };
                 
-                await db.Users.AddAsync(testerUser);
-                await db.SaveChangesAsync();
+                await coreDb.Users.AddAsync(testerUser);
+                await coreDb.SaveChangesAsync();
                 logger.LogInformation("Default Tester account created (tester@tradeoffstack.com / Tester123!Secure).");
             }
         }

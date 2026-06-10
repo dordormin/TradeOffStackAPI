@@ -28,10 +28,5 @@ public class MaintenanceRequestConfiguration : IEntityTypeConfiguration<Maintena
             .WithMany(e => e.MaintenanceRequests)
             .HasForeignKey(m => m.EquipmentId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(m => m.RequestedBy)
-            .WithMany(u => u.MaintenanceRequests)
-            .HasForeignKey(m => m.RequestedById)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -4,6 +4,8 @@ using System.Text.Json.Serialization;
 public enum ReservationStatus
 {
     Pending,   // En attente d'approbation
+    Approved,  // Approuvé par le manager
+    Rejected,  // Refusé par le manager
     Active,    // Équipement en possession de l'utilisateur
     Returned,  // Équipement retourné
     Cancelled  // Réservation annulée
@@ -30,10 +32,6 @@ public class Reservation
     [JsonPropertyName("user_id")]
     public Guid UserId { get; set; }
 
-    /// <summary>Utilisateur ayant effectué la réservation.</summary>
-    [JsonPropertyName("user")]
-    public User? User { get; set; }
-
     /// <summary>Statut actuel de la réservation (En attente, Active, Retourné, Annulé).</summary>
     [JsonPropertyName("status")]
     public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
@@ -57,4 +55,16 @@ public class Reservation
     /// <summary>Date de création de la demande de réservation.</summary>
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    /// <summary>Identifiant du manager/admin qui a approuvé ou refusé.</summary>
+    [JsonPropertyName("approver_id")]
+    public Guid? ApproverId { get; set; }
+
+    /// <summary>Date d'approbation ou de refus.</summary>
+    [JsonPropertyName("approved_at")]
+    public DateTime? ApprovedAt { get; set; }
+
+    /// <summary>Motif en cas de refus.</summary>
+    [JsonPropertyName("rejection_reason")]
+    public string? RejectionReason { get; set; }
 }

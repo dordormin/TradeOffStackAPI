@@ -9,13 +9,13 @@ namespace TradeOffStackAPI.Repositories;
 /// Repository implementation for MaintenanceRequest entities.
 /// Overrides generic methods to include relational data (Equipment, RequestedBy).
 /// </summary>
-public class MaintenanceRequestRepository : GenericRepository<MaintenanceRequest>, IMaintenanceRequestRepository
+public class MaintenanceRequestRepository : GenericRepository<MaintenanceRequest, AssetDbContext>, IMaintenanceRequestRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MaintenanceRequestRepository"/> class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    public MaintenanceRequestRepository(AppDbContext context) : base(context)
+    public MaintenanceRequestRepository(AssetDbContext context) : base(context)
     {
     }
 
@@ -23,20 +23,17 @@ public class MaintenanceRequestRepository : GenericRepository<MaintenanceRequest
     public override async Task<IEnumerable<MaintenanceRequest>> GetAllAsync() =>
         await _dbSet
             .Include(m => m.Equipment)
-            .Include(m => m.RequestedBy)
             .ToListAsync();
 
     /// <inheritdoc />
     public override async Task<MaintenanceRequest?> GetByIdAsync(Guid id) =>
         await _dbSet
             .Include(m => m.Equipment)
-            .Include(m => m.RequestedBy)
             .FirstOrDefaultAsync(m => m.Id == id);
 
     /// <inheritdoc />
     public async Task<IEnumerable<MaintenanceRequest>> GetByEquipmentAsync(Guid equipmentId) =>
         await _dbSet
-            .Include(m => m.RequestedBy)
             .Where(m => m.EquipmentId == equipmentId)
             .ToListAsync();
 
@@ -44,7 +41,6 @@ public class MaintenanceRequestRepository : GenericRepository<MaintenanceRequest
     public async Task<IEnumerable<MaintenanceRequest>> GetByStatusAsync(MaintenanceStatus status) =>
         await _dbSet
             .Include(m => m.Equipment)
-            .Include(m => m.RequestedBy)
             .Where(m => m.Status == status)
             .ToListAsync();
 

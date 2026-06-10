@@ -9,13 +9,13 @@ namespace TradeOffStackAPI.Repositories;
 /// Repository implementation for Reservation entities.
 /// Overrides generic methods to include relational data (Equipment, User).
 /// </summary>
-public class ReservationRepository : GenericRepository<Reservation>, IReservationRepository
+public class ReservationRepository : GenericRepository<Reservation, AssetDbContext>, IReservationRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ReservationRepository"/> class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    public ReservationRepository(AppDbContext context) : base(context)
+    public ReservationRepository(AssetDbContext context) : base(context)
     {
     }
 
@@ -23,20 +23,17 @@ public class ReservationRepository : GenericRepository<Reservation>, IReservatio
     public override async Task<IEnumerable<Reservation>> GetAllAsync() =>
         await _dbSet
             .Include(r => r.Equipment)
-            .Include(r => r.User)
             .ToListAsync();
 
     /// <inheritdoc />
     public override async Task<Reservation?> GetByIdAsync(Guid id) =>
         await _dbSet
             .Include(r => r.Equipment)
-            .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.Id == id);
 
     /// <inheritdoc />
     public async Task<IEnumerable<Reservation>> GetByEquipmentAsync(Guid equipmentId) =>
         await _dbSet
-            .Include(r => r.User)
             .Where(r => r.EquipmentId == equipmentId)
             .ToListAsync();
 
@@ -49,18 +46,16 @@ public class ReservationRepository : GenericRepository<Reservation>, IReservatio
 
     /// <inheritdoc />
     // Data protection: reservations where the user belongs to the given department.
-    public async Task<IEnumerable<Reservation>> GetByDepartmentAsync(Guid departmentId) =>
+    public async Task<IEnumerable<Reservation>> GetByUserIdsAsync(IEnumerable<Guid> userIds) =>
         await _dbSet
             .Include(r => r.Equipment)
-            .Include(r => r.User)
-            .Where(r => r.User!.DepartmentId == departmentId)
+            .Where(r => userIds.Contains(r.UserId))
             .ToListAsync();
 
     /// <inheritdoc />
     public async Task<IEnumerable<Reservation>> GetActiveAsync() =>
         await _dbSet
             .Include(r => r.Equipment)
-            .Include(r => r.User)
             .Where(r => r.Status == ReservationStatus.Active)
             .ToListAsync();
 

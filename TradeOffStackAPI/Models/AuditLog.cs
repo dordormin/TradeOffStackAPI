@@ -41,10 +41,6 @@ public class AuditLog
     [JsonPropertyName("performed_by_id")]
     public Guid? PerformedById { get; set; }
 
-    /// <summary>Utilisateur ayant effectué l'action.</summary>
-    [JsonPropertyName("performed_by")]
-    public User? PerformedBy { get; set; }
-
     /// <summary>Date et heure précise de l'action.</summary>
     [JsonPropertyName("performed_at")]
     public DateTime PerformedAt { get; set; } = DateTime.UtcNow;

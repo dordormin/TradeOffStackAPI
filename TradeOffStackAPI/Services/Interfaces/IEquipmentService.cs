@@ -28,4 +28,10 @@ public interface IEquipmentService
     
     /// <summary>Removes a piece of equipment from the inventory.</summary>
     Task<ServiceResponse> DeleteEquipmentAsync(Guid id);
+    
+    /// <summary>Assigns a software license to the equipment.</summary>
+    Task<ServiceResponse> AssignLicenseAsync(Guid equipmentId, Guid softwareLicenseId);
+    
+    /// <summary>Revokes a software license from the equipment.</summary>
+    Task<ServiceResponse> RevokeLicenseAsync(Guid equipmentId, Guid softwareLicenseId);
 }

@@ -11,16 +11,19 @@ public class ReservationService : IReservationService
 {
     private readonly IReservationRepository _repo;
     private readonly IEquipmentRepository _equipmentRepo;
-    private readonly AppDbContext _context;
+    private readonly AssetDbContext _context;
+    private readonly IUserService _userService;
 
     public ReservationService(
         IReservationRepository repo, 
         IEquipmentRepository equipmentRepo,
-        AppDbContext context)
+        AssetDbContext context,
+        IUserService userService)
     {
         _repo = repo;
         _equipmentRepo = equipmentRepo;
         _context = context;
+        _userService = userService;
     }
 
     /// <inheritdoc />
@@ -61,7 +64,19 @@ public class ReservationService : IReservationService
 
     public async Task<ServiceResponse<IEnumerable<Reservation>>> GetByDepartmentAsync(Guid departmentId)
     {
-        var reservations = await _repo.GetByDepartmentAsync(departmentId);
+        var usersResponse = await _userService.GetByDepartmentAsync(departmentId);
+        if (!usersResponse.Success || usersResponse.Data == null)
+        {
+            return ServiceResponse<IEnumerable<Reservation>>.Ok(new List<Reservation>());
+        }
+        
+        var userIds = usersResponse.Data.Select(u => u.Id).ToList();
+        if (!userIds.Any())
+        {
+            return ServiceResponse<IEnumerable<Reservation>>.Ok(new List<Reservation>());
+        }
+
+        var reservations = await _repo.GetByUserIdsAsync(userIds);
         return ServiceResponse<IEnumerable<Reservation>>.Ok(reservations);
     }
 
@@ -250,6 +265,48 @@ public class ReservationService : IReservationService
         }
     }
 
+    public async Task<ServiceResponse> ApproveReservationAsync(Guid id, Guid approverId)
+    {
+        var reservation = await _repo.GetByIdAsync(id);
+        if (reservation == null)
+            return ServiceResponse.Fail("Reservation not found.");
+
+        if (reservation.Status != ReservationStatus.Pending)
+            return ServiceResponse.Fail("Only pending reservations can be approved.");
+
+        reservation.Status = ReservationStatus.Approved;
+        reservation.ApproverId = approverId;
+        reservation.ApprovedAt = DateTime.UtcNow;
+
+        await _repo.UpdateAsync(reservation);
+        await UpdateEquipmentStatusAsync(reservation.EquipmentId);
+
+        return ServiceResponse.Ok("Reservation approved successfully.");
+    }
+
+    public async Task<ServiceResponse> RejectReservationAsync(Guid id, Guid approverId, string reason)
+    {
+        if (string.IsNullOrWhiteSpace(reason))
+            return ServiceResponse.Fail("A rejection reason is required.");
+
+        var reservation = await _repo.GetByIdAsync(id);
+        if (reservation == null)
+            return ServiceResponse.Fail("Reservation not found.");
+
+        if (reservation.Status != ReservationStatus.Pending)
+            return ServiceResponse.Fail("Only pending reservations can be rejected.");
+
+        reservation.Status = ReservationStatus.Rejected;
+        reservation.ApproverId = approverId;
+        reservation.ApprovedAt = DateTime.UtcNow;
+        reservation.RejectionReason = reason;
+
+        await _repo.UpdateAsync(reservation);
+        await UpdateEquipmentStatusAsync(reservation.EquipmentId);
+
+        return ServiceResponse.Ok("Reservation rejected.");
+    }
+
     private async Task UpdateEquipmentStatusAsync(Guid equipmentId)
     {
         var equipment = await _equipmentRepo.GetByIdAsync(equipmentId);
@@ -267,7 +324,7 @@ public class ReservationService : IReservationService
         {
             var hasActiveReservation = await _context.Reservations
                 .AnyAsync(r => r.EquipmentId == equipmentId && 
-                               (r.Status == ReservationStatus.Active || r.Status == ReservationStatus.Pending));
+                               (r.Status == ReservationStatus.Active || r.Status == ReservationStatus.Pending || r.Status == ReservationStatus.Approved));
                                
             if (hasActiveReservation)
             {

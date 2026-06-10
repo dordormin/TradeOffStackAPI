@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TradeOffStackAPI.Auth;
 using TradeOffStackAPI.Models;
 using TradeOffStackAPI.Services.Interfaces;
 
@@ -102,6 +103,26 @@ public class ReservationController : ControllerBase
     {
         var response = await _service.CancelReservationAsync(id);
         return response.Success ? NoContent() : NotFound(new { message = response.Message });
+    }
+
+    [HttpPost("{id}/approve")]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
+    public async Task<IActionResult> Approve(Guid id)
+    {
+        if (_currentUser.UserId == null) return Unauthorized();
+        var response = await _service.ApproveReservationAsync(id, _currentUser.UserId.Value);
+        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
+    }
+
+    public class RejectionDto { public string Reason { get; set; } = string.Empty; }
+
+    [HttpPost("{id}/reject")]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
+    public async Task<IActionResult> Reject(Guid id, [FromBody] RejectionDto dto)
+    {
+        if (_currentUser.UserId == null) return Unauthorized();
+        var response = await _service.RejectReservationAsync(id, _currentUser.UserId.Value, dto.Reason);
+        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
