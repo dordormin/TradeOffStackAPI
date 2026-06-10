@@ -54,7 +54,7 @@ export const CentralHub: React.FC = () => {
         : 'End-to-end IT hardware management, real-time inventory, and reservations.',
       icon: (props: any) => <AssetPortalIcon showWrapper={false} {...props} />,
       active: true,
-      path: '/dashboard',
+      path: '/asset-portal',
       gradient: 'from-blue-500/20 via-indigo-500/10 to-transparent',
       borderGlow: 'hover:border-blue-500/40 hover:shadow-blue-500/5',
       badge: isFr ? 'Actif' : 'Active',
@@ -200,57 +200,64 @@ export const CentralHub: React.FC = () => {
       </header>
 
       {/* Hero Banner */}
-      <main className="flex-1 max-w-[1280px] w-full mx-auto px-6 py-12 flex flex-col justify-center">
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-            <AppWindow className="w-3.5 h-3.5" />
+      <div className="relative w-full h-[320px] lg:h-[400px] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
+        <div className="absolute inset-0 bg-primary/10 mix-blend-overlay z-10" />
+        <img src="/jetbrains_mosaic.png" alt="Hero Background" className="w-full h-full object-cover object-center opacity-60" />
+        
+        <div className="absolute inset-0 flex flex-col justify-center items-center z-20 px-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-background/50 backdrop-blur-md text-foreground border border-border/60 mb-4 shadow-xl">
+            <AppWindow className="w-3.5 h-3.5 text-primary" />
             {isFr ? 'Portail Central' : 'Central Hub'}
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent">
-            {isFr ? 'Portail Applications' : 'Application Central'}
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-4 text-center font-outfit drop-shadow-xl">
+            {isFr ? 'Enterprise Hub' : 'Application Central'}
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-slate-200 text-lg max-w-2xl text-center drop-shadow-md">
             {isFr 
               ? 'Bienvenue dans votre espace centralisé. Accédez à vos outils et services autorisés ci-dessous.'
               : 'Welcome to your workspace. Select any of your authorized tools and management hubs below.'}
           </p>
         </div>
+      </div>
 
-        {/* Apps Grid */}
+      <main className="flex-1 max-w-[1280px] w-full mx-auto px-6 pb-12 -mt-16 relative z-30">
+        {/* Apps Bento Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {apps.map((app) => {
             const IconComponent = app.icon;
+            const isMainApp = app.id === 'asset-portal';
+            
             return (
               <Card 
                 key={app.id} 
                 onClick={() => app.active ? navigate(app.path!) : showMockToast(app.name)}
-                className={`relative overflow-hidden border border-border/80 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 group ${app.borderGlow} cursor-pointer hover:-translate-y-1`}
+                className={`relative overflow-hidden border border-border/80 bg-card/80 backdrop-blur-xl shadow-xl transition-all duration-300 group ${app.borderGlow} cursor-pointer hover:-translate-y-1 hover:shadow-2xl ${isMainApp ? 'sm:col-span-2 lg:col-span-2 min-h-[220px]' : ''}`}
               >
                 {/* Visual gradient accent */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${app.gradient} opacity-40 transition-opacity duration-300 group-hover:opacity-60`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${app.gradient} opacity-40 transition-opacity duration-300 group-hover:opacity-70 pointer-events-none`} />
 
-                <CardHeader className="relative pb-2">
+                <CardHeader className="relative pb-2 z-10 h-full flex flex-col">
                   <div className="flex items-start justify-between">
-                    <div className="p-3 rounded-xl bg-secondary/80 text-foreground border border-border/60 group-hover:text-primary transition-colors duration-300">
-                      <IconComponent className="w-6 h-6" />
+                    <div className="p-4 rounded-2xl bg-secondary/80 text-foreground border border-border/60 group-hover:text-primary transition-colors duration-300 shadow-sm">
+                      <IconComponent className="w-7 h-7" />
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${app.badgeColor}`}>
+                    <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${app.badgeColor} shadow-sm bg-background/50 backdrop-blur-sm`}>
                       {app.badge}
                     </span>
                   </div>
-                  <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mt-4 flex items-center gap-1.5">
-                    {app.name}
-                    {app.active && (
-                      <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    )}
-                  </CardTitle>
+                  <div className="mt-auto pt-6">
+                    <CardTitle className={`font-semibold text-foreground group-hover:text-primary transition-colors duration-300 flex items-center gap-1.5 ${isMainApp ? 'text-3xl' : 'text-xl'}`}>
+                      {app.name}
+                      {app.active && (
+                        <ChevronRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      )}
+                    </CardTitle>
+                    <CardDescription className={`text-muted-foreground leading-relaxed mt-2 ${isMainApp ? 'text-base max-w-md' : 'text-sm'}`}>
+                      {app.description}
+                    </CardDescription>
+                  </div>
                 </CardHeader>
-
-                <CardContent className="relative">
-                  <CardDescription className="text-muted-foreground text-sm leading-relaxed">
-                    {app.description}
-                  </CardDescription>
-                </CardContent>
               </Card>
             );
           })}

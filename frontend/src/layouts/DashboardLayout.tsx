@@ -37,7 +37,7 @@ export const DashboardLayout: React.FC = () => {
   };
 
   const navItems = [
-    { labelKey: 'dashboard' as const, path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
+    { labelKey: 'dashboard' as const, path: '/asset-portal', icon: LayoutDashboard, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
     { labelKey: 'inventory' as const, path: '/inventory', icon: MonitorSmartphone, roles: ['Admin', 'Manager', 'Tester'] },
     { labelKey: 'myGear' as const, path: '/my-gear', icon: MonitorSmartphone, roles: ['Employee'] },
     { labelKey: 'reservations' as const, path: '/reservations', icon: CalendarClock, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
@@ -60,7 +60,7 @@ export const DashboardLayout: React.FC = () => {
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {/* Back to Central Hub button */}
           <NavLink
-            to="/hub"
+            to="/dashboard"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-primary/80 hover:bg-primary/5 hover:text-primary transition-colors border border-primary/10 mb-4 bg-primary/[0.02]"
           >
             <Grid className="w-4 h-4 text-primary" />
@@ -124,7 +124,7 @@ export const DashboardLayout: React.FC = () => {
                   </div>
                   
                   <button 
-                    onClick={() => { navigate('/hub'); setSwitcherOpen(false); }}
+                    onClick={() => { navigate('/dashboard'); setSwitcherOpen(false); }}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-foreground hover:bg-secondary/60 transition-colors text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export const DashboardLayout: React.FC = () => {
                   </button>
 
                   <button 
-                    onClick={() => { navigate('/dashboard'); setSwitcherOpen(false); }}
+                    onClick={() => { navigate('/asset-portal'); setSwitcherOpen(false); }}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-primary font-medium bg-primary/5 hover:bg-primary/10 transition-colors text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-2">

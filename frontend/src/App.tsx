@@ -54,7 +54,7 @@ const LoginForm = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/hub" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
 
@@ -103,14 +103,14 @@ const LoginForm = () => {
       });
       const data = response.data;
       const token = data.token || data.Token;
-      const role = data.role || data.Role;
-      const userId = data.userId || data.UserId || data.user_id;
       
       setSuccess('Account created successfully! Logging you in...');
       
       setTimeout(async () => {
-        if (token && role && userId) {
-          await login(token, role, userId);
+        if (response.data && response.data.token) {
+          setSuccess('Login successful! Redirecting to dashboard...');
+          await login(response.data.token, response.data.role, response.data.userId);
+          navigate('/dashboard');
         } else {
           setActiveTab('signin');
           setSuccess('');
@@ -446,7 +446,7 @@ function App() {
           
           <Route element={<ProtectedRoute />}>
             {/* Central Hub page - outside of the normal sub-app DashboardLayout */}
-            <Route path="/hub" element={<CentralHub />} />
+            <Route path="/dashboard" element={<CentralHub />} />
             
             {/* Placeholder Modules */}
             <Route path="/saas" element={<ComingSoon title="SaaS & License Management" />} />
@@ -455,8 +455,8 @@ function App() {
             <Route path="/hr" element={<ComingSoon title="HR & Onboarding Hub" />} />
 
             <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Navigate to="/hub" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/asset-portal" element={<Dashboard />} />
               <Route path="/inventory" element={
                 <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
                   <Inventory />
