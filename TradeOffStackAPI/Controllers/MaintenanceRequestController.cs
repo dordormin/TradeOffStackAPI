@@ -80,7 +80,7 @@ public class MaintenanceRequestController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = Roles.AdminOrManager)]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteRequestAsync(id);

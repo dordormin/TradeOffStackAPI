@@ -13,7 +13,7 @@ import { AuditLogs } from '@/pages/AuditLogs';
 import { Settings } from '@/pages/Settings';
 import { CentralHub } from '@/pages/CentralHub';
 import { apiClient } from '@/api/apiClient';
-import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
+import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { Logo } from './components/Logo';
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
   const { isAuthenticated, role, isLoading } = useAuth();
@@ -164,6 +164,22 @@ const LoginForm = () => {
               <UserPlus className="w-4 h-4" />
               Sign Up
             </button>
+          </div>
+
+          {/* Demo Credentials */}
+          <div className="p-3 bg-secondary/20 border border-border/40 rounded-xl space-y-1.5 text-xs text-muted-foreground">
+            <div className="font-semibold text-foreground/80 mb-1 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span>Demo Access / Accès démo :</span>
+            </div>
+            <div className="flex justify-between items-center bg-background/40 p-1.5 rounded-lg border border-border/20">
+              <span>Admin: <code className="text-primary select-all">admin@tradeoffstack.com</code></span>
+              <span className="font-mono text-[10px]">Admin123!Secure</span>
+            </div>
+            <div className="flex justify-between items-center bg-background/40 p-1.5 rounded-lg border border-border/20">
+              <span>Tester: <code className="text-primary select-all">tester@tradeoffstack.com</code></span>
+              <span className="font-mono text-[10px]">Tester123!Secure</span>
+            </div>
           </div>
 
           {/* Notifications */}
@@ -424,7 +440,7 @@ function App() {
               <Route path="/" element={<Navigate to="/hub" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={
-                <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+                <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
                   <Inventory />
                 </ProtectedRoute>
               } />
@@ -442,7 +458,7 @@ function App() {
                 </ProtectedRoute>
               } />
               <Route path="/audit-logs" element={
-                <ProtectedRoute allowedRoles={['Admin']}>
+                <ProtectedRoute allowedRoles={['Admin', 'Tester']}>
                   <AuditLogs />
                 </ProtectedRoute>
               } />

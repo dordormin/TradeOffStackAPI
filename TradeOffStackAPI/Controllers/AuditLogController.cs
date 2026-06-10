@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TradeOffStackAPI.Auth;
 using TradeOffStackAPI.Services.Interfaces;
+using System.Security.Claims;
+using System.Linq;
+using TradeOffStackAPI.Models;
 
 namespace TradeOffStackAPI.Controllers;
 
@@ -10,7 +13,7 @@ namespace TradeOffStackAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.Admin)] // Piste d'audit : consultation administrateur uniquement.
+[Authorize(Roles = Roles.AdminOrTester)] // Piste d'audit : consultation admin et testeurs restreints.
 public class AuditLogController : ControllerBase
 {
     private readonly IAuditLogService _service;
@@ -24,12 +27,33 @@ public class AuditLogController : ControllerBase
     /// Liste tous les journaux d'audit enregistrés.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
+    public async Task<IActionResult> GetAll()
+    {
+        var logs = await _service.GetAllAsync();
+        var currentUserRole = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
+
+        if (currentUserRole == Roles.Tester)
+        {
+            logs = logs.Where(log => log.PerformedBy == null || log.PerformedBy.Role != UserRole.Admin);
+        }
+
+        return Ok(logs);
+    }
 
     /// <summary>
     /// Récupère l'historique des modifications pour une entité spécifique.
     /// </summary>
     [HttpGet("{entityType}/{entityId}")]
-    public async Task<IActionResult> GetByEntity(string entityType, Guid entityId) =>
-        Ok(await _service.GetByEntityAsync(entityType, entityId));
+    public async Task<IActionResult> GetByEntity(string entityType, Guid entityId)
+    {
+        var logs = await _service.GetByEntityAsync(entityType, entityId);
+        var currentUserRole = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
+
+        if (currentUserRole == Roles.Tester)
+        {
+            logs = logs.Where(log => log.PerformedBy == null || log.PerformedBy.Role != UserRole.Admin);
+        }
+
+        return Ok(logs);
+    }
 }

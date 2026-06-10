@@ -47,7 +47,7 @@ public class EquipmentController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.AdminOrManager)]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
     public async Task<IActionResult> Create([FromBody] Equipment equipment)
     {
         var response = await _service.AddEquipmentAsync(equipment);
@@ -57,7 +57,7 @@ public class EquipmentController : ControllerBase
     }
     
     [HttpPut("{id}")]
-    [Authorize(Roles = Roles.AdminOrManager)]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
     public async Task<IActionResult> Update(Guid id, [FromBody] Equipment equipment)
     {
         if (id != equipment.Id)
@@ -68,7 +68,7 @@ public class EquipmentController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.AdminOrTester)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteEquipmentAsync(id);

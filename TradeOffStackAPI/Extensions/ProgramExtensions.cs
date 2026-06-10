@@ -133,11 +133,11 @@ public static class ProgramExtensions
             }
             
             // ==========================================
-            // SÉCURITÉ : Initialisation de l'Administrateur par défaut
+            // SÉCURITÉ : Initialisation de l'Administrateur et du Testeur par défaut
             // ==========================================
-            if (!await db.Users.AnyAsync())
+            if (!await db.Users.AnyAsync(u => u.Email == "admin@tradeoffstack.com"))
             {
-                logger.LogInformation("No users found. Creating default Administrator account...");
+                logger.LogInformation("Creating default Administrator account...");
                 var adminUser = new TradeOffStackAPI.Models.User
                 {
                     Id = Guid.NewGuid(),
@@ -152,6 +152,25 @@ public static class ProgramExtensions
                 await db.Users.AddAsync(adminUser);
                 await db.SaveChangesAsync();
                 logger.LogInformation("Default Administrator account created (admin@tradeoffstack.com / Admin123!Secure).");
+            }
+
+            if (!await db.Users.AnyAsync(u => u.Email == "tester@tradeoffstack.com"))
+            {
+                logger.LogInformation("Creating default Tester account...");
+                var testerUser = new TradeOffStackAPI.Models.User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "App",
+                    LastName = "Tester",
+                    Email = "tester@tradeoffstack.com",
+                    Role = TradeOffStackAPI.Models.UserRole.Tester,
+                    IsActive = true,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Tester123!Secure")
+                };
+                
+                await db.Users.AddAsync(testerUser);
+                await db.SaveChangesAsync();
+                logger.LogInformation("Default Tester account created (tester@tradeoffstack.com / Tester123!Secure).");
             }
         }
         catch (Exception ex)

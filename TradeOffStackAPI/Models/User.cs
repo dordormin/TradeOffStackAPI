@@ -5,7 +5,8 @@ public enum UserRole
 {
     Admin,
     Manager,
-    Employee
+    Employee,
+    Tester
 }
 
 /// <summary>

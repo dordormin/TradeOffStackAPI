@@ -33,6 +33,7 @@ public class AuditLogRepository : GenericRepository<AuditLog>, IAuditLogReposito
     /// <inheritdoc />
     public async Task<IEnumerable<AuditLog>> GetByEntityAsync(string entityType, Guid entityId) =>
         await _dbSet
+            .Include(a => a.PerformedBy)
             .Where(a => a.EntityType == entityType && a.EntityId == entityId)
             .OrderByDescending(a => a.PerformedAt)
             .ToListAsync();

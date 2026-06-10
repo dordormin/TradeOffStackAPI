@@ -37,14 +37,14 @@ export const DashboardLayout: React.FC = () => {
   };
 
   const navItems = [
-    { labelKey: 'dashboard' as const, path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Manager', 'Employee'] },
-    { labelKey: 'inventory' as const, path: '/inventory', icon: MonitorSmartphone, roles: ['Admin', 'Manager'] },
+    { labelKey: 'dashboard' as const, path: '/dashboard', icon: LayoutDashboard, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
+    { labelKey: 'inventory' as const, path: '/inventory', icon: MonitorSmartphone, roles: ['Admin', 'Manager', 'Tester'] },
     { labelKey: 'myGear' as const, path: '/my-gear', icon: MonitorSmartphone, roles: ['Employee'] },
-    { labelKey: 'reservations' as const, path: '/reservations', icon: CalendarClock, roles: ['Admin', 'Manager', 'Employee'] },
-    { labelKey: 'maintenance' as const, path: '/maintenance', icon: Wrench, roles: ['Admin', 'Manager', 'Employee'] },
-    { labelKey: 'departments' as const, path: '/departments', icon: Building2, roles: ['Admin'] },
+    { labelKey: 'reservations' as const, path: '/reservations', icon: CalendarClock, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
+    { labelKey: 'maintenance' as const, path: '/maintenance', icon: Wrench, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
+    { labelKey: 'departments' as const, path: '/departments', icon: Building2, roles: ['Admin', 'Tester'] },
     { labelKey: 'users' as const, path: '/users', icon: Users, roles: ['Admin'] },
-    { labelKey: 'auditLogs' as const, path: '/audit-logs', icon: ShieldAlert, roles: ['Admin'] },
+    { labelKey: 'auditLogs' as const, path: '/audit-logs', icon: ShieldAlert, roles: ['Admin', 'Tester'] },
   ];
 
   const filteredNavItems = navItems.filter((item) => role && item.roles.includes(role));
@@ -102,7 +102,7 @@ export const DashboardLayout: React.FC = () => {
         <header className="h-16 border-b bg-card flex items-center justify-between px-6 shrink-0">
           <div className="font-semibold text-lg text-foreground flex items-center gap-2 relative">
             <div className="flex items-center gap-2">
-              <AssetPortalIcon />
+              <AssetPortalIcon showWrapper={false} className="w-6 h-6" />
               <span>Asset Portal</span>
             </div>
             

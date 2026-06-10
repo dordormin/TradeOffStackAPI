@@ -33,7 +33,7 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.AdminOrTester)]
     public async Task<IActionResult> Create([FromBody] Department department)
     {
         var response = await _service.AddDepartmentAsync(department);
@@ -43,7 +43,7 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.AdminOrTester)]
     public async Task<IActionResult> Update(Guid id, [FromBody] Department department)
     {
         if (id != department.Id)
@@ -54,7 +54,7 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.AdminOrTester)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteDepartmentAsync(id);
