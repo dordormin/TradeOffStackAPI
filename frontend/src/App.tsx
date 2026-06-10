@@ -101,16 +101,12 @@ const LoginForm = () => {
         email,
         password
       });
-      const data = response.data;
-      const token = data.token || data.Token;
-      
       setSuccess('Account created successfully! Logging you in...');
       
       setTimeout(async () => {
         if (response.data && response.data.token) {
           setSuccess('Login successful! Redirecting to dashboard...');
           await login(response.data.token, response.data.role, response.data.userId);
-          navigate('/dashboard');
         } else {
           setActiveTab('signin');
           setSuccess('');
