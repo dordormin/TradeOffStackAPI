@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
@@ -11,6 +11,7 @@ import { Departments } from '@/pages/Departments';
 import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
 import { Settings } from '@/pages/Settings';
+import { CentralHub } from '@/pages/CentralHub';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
 import { Logo } from './components/Logo';
@@ -19,7 +20,7 @@ const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode
   
   if (isLoading) return <div>Loading...</div>;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (allowedRoles && role && !allowedRoles.includes(role)) return <Navigate to="/dashboard" replace />;
+  if (allowedRoles && role && !allowedRoles.includes(role)) return <Navigate to="/hub" replace />;
   
   return children ? <>{children}</> : <Outlet />;
 };
@@ -29,8 +30,8 @@ const LoginForm = () => {
   console.log('LoginForm render. isAuthenticated =', isAuthenticated);
   
   if (isAuthenticated) {
-    console.log('LoginForm: Navigating to /dashboard because isAuthenticated is true');
-    return <Navigate to="/dashboard" replace />;
+    console.log('LoginForm: Navigating to /hub because isAuthenticated is true');
+    return <Navigate to="/hub" replace />;
   }// Tab State: 'signin' | 'signup'
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   
@@ -361,7 +362,7 @@ const LoginForm = () => {
             IT Asset Lifecycle Management, Orchestrated.
           </h1>
           <p className="text-slate-300 text-base max-w-lg">
-            Track hardware parameters, automate reservation lifecycles, and coordinate technical interventions inside a unified glassmorphic enterprise dashboard.
+            Track hardware parameters, automate reservation lifecycles, and coordinate technical interventions inside a unified glassmorphic dashboard.
           </p>
           
           <div className="pt-4 grid grid-cols-3 gap-6 border-t border-white/10 max-w-md">
@@ -384,16 +385,43 @@ const LoginForm = () => {
   );
 };
 
+const ThemeInitializer = () => {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isAuthenticated) {
+      const theme = localStorage.getItem('system_theme') || 'dark';
+      root.className = '';
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      } else if (theme === 'cyberpunk') {
+        root.classList.add('dark', 'theme-cyberpunk');
+      }
+    } else {
+      // Default to neutral dark mode when logged out (e.g. login screen)
+      root.className = '';
+      root.classList.add('dark');
+    }
+  }, [isAuthenticated]);
+
+  return null;
+};
+
 function App() {
   return (
     <AuthProvider>
+      <ThemeInitializer />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           
           <Route element={<ProtectedRoute />}>
+            {/* Central Hub page - outside of the normal sub-app DashboardLayout */}
+            <Route path="/hub" element={<CentralHub />} />
+
             <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<Navigate to="/hub" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory" element={
                 <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
@@ -422,7 +450,7 @@ function App() {
             </Route>
           </Route>
           
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/hub" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
