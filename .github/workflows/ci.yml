@@ -129,38 +129,113 @@ jobs:
     # ==========================================
     # 🚀 CONTINUOUS DEPLOYMENT (CD) TO HOSTINGER VPS
     # ==========================================
-    - name: 📤 Copy Configuration Files to VPS
+    - name: 🔍 Diagnose VPS Connectivity
       if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.VPS_IP }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "Caddyfile,docker-compose.prod.yml"
-        target: "/app/tradeoffstack"
+      run: |
+        echo "Testing connectivity to VPS..."
+        echo "Target: ${{ secrets.VPS_IP }}:22"
+        timeout 15 bash -c "cat < /dev/null > /dev/tcp/${{ secrets.VPS_IP }}/22" 2>&1 && echo "✅ Port 22 is OPEN" || echo "❌ Port 22 is UNREACHABLE"
 
-    - name: 🚀 Deploy to VPS via SSH
+    - name: 🚀 Deploy to VPS (All-in-One SSH)
       if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.VPS_IP }}
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 60s
+        command_timeout: 10m
         script: |
+          # Create deployment directory
+          mkdir -p /app/tradeoffstack
           cd /app/tradeoffstack
-          
-          # Inject production environment variables safely
-          echo "POSTGRES_USER=tradeoff_admin" > .env
-          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-          
+
+          # Write Caddyfile directly (no SCP needed)
+          cat > Caddyfile << 'CADDY_EOF'
+          tradeoffstack.dordorapps.tech {
+              handle /api/* {
+                  reverse_proxy api:8080
+              }
+              handle {
+                  reverse_proxy frontend:80
+              }
+              encode gzip zstd
+          }
+          CADDY_EOF
+
+          # Write docker-compose.prod.yml directly (no SCP needed)
+          cat > docker-compose.prod.yml << 'COMPOSE_EOF'
+          version: '3.8'
+
+          services:
+            db:
+              image: postgres:17-alpine
+              container_name: tradeoffstack-db-prod
+              environment:
+                POSTGRES_USER: ${POSTGRES_USER:-tradeoff_admin}
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_DB: tradeoffstack
+              volumes:
+                - pg_prod_data:/var/lib/postgresql/data
+              restart: always
+              healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tradeoff_admin} -d tradeoffstack"]
+                interval: 5s
+                timeout: 5s
+                retries: 5
+
+            api:
+              image: ghcr.io/dordormin/tradeoffstack-api:latest
+              container_name: tradeoffstack-api-prod
+              depends_on:
+                db:
+                  condition: service_healthy
+              environment:
+                ConnectionStrings__DefaultConnection: Host=db;Database=tradeoffstack;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD}
+                JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+                ASPNETCORE_ENVIRONMENT: Production
+              restart: always
+
+            frontend:
+              image: ghcr.io/dordormin/tradeoffstack-frontend:latest
+              container_name: tradeoffstack-frontend-prod
+              restart: always
+
+            caddy:
+              image: caddy:2-alpine
+              container_name: tradeoffstack-proxy-prod
+              ports:
+                - "80:80"
+                - "443:443"
+              volumes:
+                - ./Caddyfile:/etc/caddy/Caddyfile
+                - caddy_data:/data
+                - caddy_config:/config
+              depends_on:
+                - api
+                - frontend
+              restart: always
+
+          volumes:
+            pg_prod_data:
+            caddy_data:
+            caddy_config:
+          COMPOSE_EOF
+
+          # Inject production environment variables
+          cat > .env << ENV_EOF
+          POSTGRES_USER=tradeoff_admin
+          POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          ENV_EOF
+
           # Login to GHCR to pull private images
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-          
+
           # Pull latest images and update containers
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d --remove-orphans
-          
+
           # Cleanup unused images to keep disk space free
           docker image prune -f
 
