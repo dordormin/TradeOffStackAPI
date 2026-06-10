@@ -46,6 +46,7 @@ export interface Equipment {
   useful_life_years?: number;
   depreciation_method?: DepreciationMethod;
   warranty_expiration_date?: string;
+  equipment_licenses?: EquipmentLicense[];
 }
 
 export interface SoftwareLicense {
@@ -56,6 +57,13 @@ export interface SoftwareLicense {
   expiration_date?: string;
   price: number;
   created_at: string;
+}
+
+export interface EquipmentLicense {
+  equipment_id: string;
+  software_license_id: string;
+  assigned_at: string;
+  software_license?: SoftwareLicense;
 }
 
 export interface Reservation {

@@ -107,6 +107,6 @@ public class Equipment
     public ICollection<MaintenanceRequest> MaintenanceRequests { get; set; } = new List<MaintenanceRequest>();
 
     /// <summary>Licences logicielles installées sur cet équipement.</summary>
-    [JsonIgnore]
+    [JsonPropertyName("equipment_licenses")]
     public ICollection<EquipmentLicense> EquipmentLicenses { get; set; } = new List<EquipmentLicense>();
 }

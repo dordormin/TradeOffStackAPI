@@ -74,4 +74,20 @@ public class EquipmentController : ControllerBase
         var response = await _service.DeleteEquipmentAsync(id);
         return response.Success ? NoContent() : NotFound(new { message = response.Message });
     }
+
+    [HttpPost("{id}/licenses/{licenseId}")]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
+    public async Task<IActionResult> AssignLicense(Guid id, Guid licenseId)
+    {
+        var response = await _service.AssignLicenseAsync(id, licenseId);
+        return response.Success ? Ok(new { message = response.Message }) : BadRequest(new { message = response.Message });
+    }
+
+    [HttpDelete("{id}/licenses/{licenseId}")]
+    [Authorize(Roles = Roles.AdminOrManagerOrTester)]
+    public async Task<IActionResult> RevokeLicense(Guid id, Guid licenseId)
+    {
+        var response = await _service.RevokeLicenseAsync(id, licenseId);
+        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
+    }
 }

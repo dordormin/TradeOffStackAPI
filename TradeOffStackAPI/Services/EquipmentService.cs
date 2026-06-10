@@ -143,4 +143,40 @@ public class EquipmentService : IEquipmentService
             ? ServiceResponse.Ok("Equipment successfully deleted.")
             : ServiceResponse.Fail("Equipment not found or failed to delete.");
     }
+
+    /// <inheritdoc />
+    public async Task<ServiceResponse> AssignLicenseAsync(Guid equipmentId, Guid softwareLicenseId)
+    {
+        var equipment = await _repo.GetByIdAsync(equipmentId);
+        if (equipment == null) return ServiceResponse.Fail("Equipment not found.");
+
+        if (equipment.EquipmentLicenses.Any(el => el.SoftwareLicenseId == softwareLicenseId))
+            return ServiceResponse.Fail("License is already assigned to this equipment.");
+
+        equipment.EquipmentLicenses.Add(new EquipmentLicense
+        {
+            EquipmentId = equipmentId,
+            SoftwareLicenseId = softwareLicenseId,
+            AssignedAt = DateTime.UtcNow
+        });
+
+        var success = await _repo.UpdateAsync(equipment);
+        return success ? ServiceResponse.Ok("License assigned successfully.") : ServiceResponse.Fail("Failed to assign license.");
+    }
+
+    /// <inheritdoc />
+    public async Task<ServiceResponse> RevokeLicenseAsync(Guid equipmentId, Guid softwareLicenseId)
+    {
+        var equipment = await _repo.GetByIdAsync(equipmentId);
+        if (equipment == null) return ServiceResponse.Fail("Equipment not found.");
+
+        var assignment = equipment.EquipmentLicenses.FirstOrDefault(el => el.SoftwareLicenseId == softwareLicenseId);
+        if (assignment == null)
+            return ServiceResponse.Fail("License is not assigned to this equipment.");
+
+        equipment.EquipmentLicenses.Remove(assignment);
+
+        var success = await _repo.UpdateAsync(equipment);
+        return success ? ServiceResponse.Ok("License revoked successfully.") : ServiceResponse.Fail("Failed to revoke license.");
+    }
 }

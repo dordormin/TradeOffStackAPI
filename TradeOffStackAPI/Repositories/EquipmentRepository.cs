@@ -20,9 +20,22 @@ public class EquipmentRepository : GenericRepository<Equipment, AssetDbContext>,
 
     /// <inheritdoc />
     public async Task<IEnumerable<Equipment>> GetByStatusAsync(AssetStatus status) =>
-        await _dbSet.Where(e => e.Status == status).ToListAsync();
+        await _dbSet.Include(e => e.EquipmentLicenses).ThenInclude(el => el.SoftwareLicense)
+                    .Where(e => e.Status == status).ToListAsync();
 
     /// <inheritdoc />
     public async Task<IEnumerable<Equipment>> GetByCategoryAsync(AssetCategory category) =>
-        await _dbSet.Where(e => e.Category == category).ToListAsync();
+        await _dbSet.Include(e => e.EquipmentLicenses).ThenInclude(el => el.SoftwareLicense)
+                    .Where(e => e.Category == category).ToListAsync();
+
+    public override async Task<IEnumerable<Equipment>> GetAllAsync()
+    {
+        return await _dbSet.Include(e => e.EquipmentLicenses).ThenInclude(el => el.SoftwareLicense).ToListAsync();
+    }
+
+    public override async Task<Equipment?> GetByIdAsync(Guid id)
+    {
+        return await _dbSet.Include(e => e.EquipmentLicenses).ThenInclude(el => el.SoftwareLicense)
+                           .FirstOrDefaultAsync(e => e.Id == id);
+    }
 }

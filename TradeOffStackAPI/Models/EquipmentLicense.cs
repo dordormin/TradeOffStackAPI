@@ -19,7 +19,7 @@ public class EquipmentLicense
     public Guid SoftwareLicenseId { get; set; }
 
     /// <summary>La licence logicielle associée.</summary>
-    [JsonIgnore]
+    [JsonPropertyName("software_license")]
     public SoftwareLicense? SoftwareLicense { get; set; }
 
     /// <summary>Date à laquelle la licence a été installée/assignée à l'équipement.</summary>
