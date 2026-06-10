@@ -13,6 +13,9 @@ interface DashboardStats {
   availableGear: number;
   activeReservations: number;
   criticalMaintenances: number;
+  totalBookValue: number;
+  totalPurchaseValue: number;
+  pendingApprovals: number;
 }
 
 interface ActivityItem {
@@ -35,6 +38,9 @@ export const Dashboard: React.FC = () => {
     availableGear: 0,
     activeReservations: 0,
     criticalMaintenances: 0,
+    totalBookValue: 0,
+    totalPurchaseValue: 0,
+    pendingApprovals: 0,
   });
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,11 +84,18 @@ export const Dashboard: React.FC = () => {
           m => m.priority === 'Critical' && m.status !== 'Completed' && m.status !== 'Cancelled'
         ).length;
 
+        const totalPurchaseValue = equipments.reduce((sum, e) => sum + (e.price || 0), 0);
+        const totalBookValue = equipments.reduce((sum, e) => sum + (e.current_book_value ?? e.price ?? 0), 0);
+        const pendingApprovals = reservations.filter(r => r.status === 'Pending').length;
+
         setStats({
           totalAssets,
           availableGear,
           activeReservations,
           criticalMaintenances,
+          totalBookValue,
+          totalPurchaseValue,
+          pendingApprovals,
         });
 
         const equipMap = new Map(equipments.map(e => [e.id, e.name]));
@@ -231,7 +244,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <Card className="relative overflow-hidden bg-card/60 backdrop-blur-md border border-border/80 shadow-sm transition-all duration-300 group hover:border-indigo-500/30 hover:shadow-indigo-500/5 hover:-translate-y-1">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent opacity-50 transition-opacity group-hover:opacity-80" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
@@ -304,6 +317,42 @@ export const Dashboard: React.FC = () => {
             <div className="text-3xl font-bold text-foreground font-outfit">{stats.criticalMaintenances}</div>
             <p className="text-xs text-rose-500/80 mt-1 font-medium group-hover:text-rose-500 transition-colors">
               {isFr ? 'Nécessite une action immédiate' : 'Requires immediate action'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-card/60 backdrop-blur-md border border-border/80 shadow-sm transition-all duration-300 group hover:border-violet-500/30 hover:shadow-violet-500/5 hover:-translate-y-1">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent opacity-50 transition-opacity group-hover:opacity-80" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+              {isFr ? 'Valeur Nette du Parc' : 'Total Book Value'}
+            </CardTitle>
+            <div className="p-2 rounded-xl bg-violet-500/10 text-violet-500 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+              <Activity className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-3xl font-bold text-foreground font-outfit">${stats.totalBookValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {isFr ? 'Valeur comptable après amortissement' : 'Net value after depreciation'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-card/60 backdrop-blur-md border border-border/80 shadow-sm transition-all duration-300 group hover:border-amber-500/30 hover:shadow-amber-500/5 hover:-translate-y-1">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent opacity-50 transition-opacity group-hover:opacity-80" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+              {isFr ? 'Approbations Requises' : 'Pending Approvals'}
+            </CardTitle>
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <ShieldAlert className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-3xl font-bold text-foreground font-outfit">{stats.pendingApprovals}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {isFr ? 'Réservations en attente d\'examen' : 'Reservations awaiting review'}
             </p>
           </CardContent>
         </Card>

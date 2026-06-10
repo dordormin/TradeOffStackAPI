@@ -18,7 +18,8 @@ import {
   Grid,
   ChevronDown,
   Check,
-  Sparkles
+  Sparkles,
+  KeySquare
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
@@ -39,6 +40,7 @@ export const DashboardLayout: React.FC = () => {
   const navItems = [
     { labelKey: 'dashboard' as const, path: '/asset-portal', icon: LayoutDashboard, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
     { labelKey: 'inventory' as const, path: '/inventory', icon: MonitorSmartphone, roles: ['Admin', 'Manager', 'Tester'] },
+    { labelKey: 'software' as const, path: '/software', icon: KeySquare, roles: ['Admin', 'Manager', 'Tester'] },
     { labelKey: 'myGear' as const, path: '/my-gear', icon: MonitorSmartphone, roles: ['Employee'] },
     { labelKey: 'reservations' as const, path: '/reservations', icon: CalendarClock, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
     { labelKey: 'maintenance' as const, path: '/maintenance', icon: Wrench, roles: ['Admin', 'Manager', 'Employee', 'Tester'] },
