@@ -125,20 +125,20 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-background text-foreground overflow-hidden">
+    <div className="h-screen w-full flex bg-background text-foreground overflow-hidden">
       {/* Left Pane - Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 md:px-16 lg:px-20 py-12 relative z-10 bg-gradient-to-br from-background via-background/95 to-secondary/10">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center px-6 md:px-16 lg:px-20 py-4 relative z-10 bg-gradient-to-br from-background via-background/95 to-secondary/10">
         
         {/* Decorative Neon Glow Elements */}
         <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[350px] h-[350px] bg-indigo-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-        <div className="w-full max-w-md mx-auto space-y-8">
+        <div className="w-full max-w-md mx-auto space-y-6">
           
           {/* Header */}
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-1">
             <div className="flex items-center gap-3">
-              <Logo className="scale-150 origin-left mb-6" />
+              <Logo className="scale-125 origin-left mb-4" />
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight text-foreground/90 pt-4">
               {activeTab === 'signin' ? 'Welcome back' : 'Create an account'}

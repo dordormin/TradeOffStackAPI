@@ -6,7 +6,6 @@ import { Logo } from '@/components/Logo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  MonitorSmartphone, 
   LifeBuoy, 
   ShoppingCart, 
   Briefcase, 
