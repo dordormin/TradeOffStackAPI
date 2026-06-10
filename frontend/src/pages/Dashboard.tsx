@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MonitorSmartphone, CalendarClock, Wrench, ShieldAlert, Plus, AlertCircle } from 'lucide-react';
+import { MonitorSmartphone, CalendarClock, Wrench, ShieldAlert, Plus, AlertCircle, Activity } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { apiClient } from '@/api/apiClient';
