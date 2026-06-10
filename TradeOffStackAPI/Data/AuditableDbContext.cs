@@ -6,55 +6,38 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TradeOffStackAPI.Models;
 using TradeOffStackAPI.Services.Interfaces;
 
-public class AppDbContext : DbContext
+public abstract class AuditableDbContext : DbContext
 {
-    // Propriétés à NE JAMAIS journaliser (secrets).
     private static readonly HashSet<string> SensitiveProperties = new(StringComparer.Ordinal)
     {
-        nameof(User.PasswordHash)
+        "PasswordHash"
     };
 
-    private readonly ICurrentUserService? _currentUser;
+    protected readonly ICurrentUserService? _currentUser;
 
-    // currentUser est optionnel : au design-time (dotnet ef) il n'y a pas de HttpContext.
-    public AppDbContext(DbContextOptions options, ICurrentUserService? currentUser = null)
+    public AuditableDbContext(DbContextOptions options, ICurrentUserService? currentUser = null)
         : base(options)
     {
         _currentUser = currentUser;
     }
 
-    public DbSet<Equipment> Equipments { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Department> Departments { get; set; }
-    public DbSet<Reservation> Reservations { get; set; }
-    public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-    }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var auditEntries = CaptureAuditEntries();
 
-        // 1er save : persiste les entités métier (et génère les clés des entités Added).
         var result = await base.SaveChangesAsync(cancellationToken);
 
         if (auditEntries.Count > 0)
         {
             AuditLogs.AddRange(auditEntries.Select(BuildAuditLog));
-            // 2e save : on cible base.SaveChangesAsync (pas this) pour éviter toute récursion.
             await base.SaveChangesAsync(cancellationToken);
         }
 
         return result;
     }
 
-
-    /// <summary>Parcourt le ChangeTracker pour produire les entrées d'audit, de façon générique.</summary>
     private List<AuditEntry> CaptureAuditEntries()
     {
         ChangeTracker.DetectChanges();
@@ -62,7 +45,6 @@ public class AppDbContext : DbContext
         var entries = new List<AuditEntry>();
         foreach (var entry in ChangeTracker.Entries())
         {
-            // On n'audite jamais les AuditLog eux-mêmes, ni les entités inchangées.
             if (entry.Entity is AuditLog)
                 continue;
             if (entry.State is not (EntityState.Added or EntityState.Modified or EntityState.Deleted))
@@ -89,7 +71,6 @@ public class AppDbContext : DbContext
     private static string? Serialize(IReadOnlyDictionary<string, object?> values) =>
         values.Count == 0 ? null : JsonSerializer.Serialize(values);
 
-    /// <summary>Capture l'état d'une entité au moment du SaveChanges, hors propriétés sensibles.</summary>
     private sealed class AuditEntry
     {
         private readonly EntityEntry _entry;
@@ -131,7 +112,6 @@ public class AppDbContext : DbContext
             }
         }
 
-        /// <summary>Résout la clé primaire (Guid) APRÈS le premier save (clé générée disponible).</summary>
         public Guid ResolveEntityId()
         {
             var keyProperty = _entry.Metadata.FindPrimaryKey()?.Properties.FirstOrDefault();

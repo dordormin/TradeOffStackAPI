@@ -13,16 +13,19 @@ namespace TradeOffStackAPI.Services;
 public class EquipmentService : IEquipmentService
 {
     private readonly IEquipmentRepository _repo;
+    private readonly IDepreciationService _depreciationService;
     private readonly string _r2BaseUrl;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EquipmentService"/> class.
     /// </summary>
     /// <param name="repo">The equipment repository.</param>
+    /// <param name="depreciationService">The depreciation service.</param>
     /// <param name="r2Settings">Cloudflare R2 settings for image URLs.</param>
-    public EquipmentService(IEquipmentRepository repo, IOptions<CloudflareR2Settings> r2Settings)
+    public EquipmentService(IEquipmentRepository repo, IDepreciationService depreciationService, IOptions<CloudflareR2Settings> r2Settings)
     {
         _repo = repo;
+        _depreciationService = depreciationService;
         _r2BaseUrl = r2Settings.Value.PublicUrl;
     }
 
@@ -46,6 +49,7 @@ public class EquipmentService : IEquipmentService
                 equipment.ImageUrlHttps = url;
             }
         }
+        equipment.CurrentBookValue = _depreciationService.CalculateCurrentBookValue(equipment);
     }
 
     /// <inheritdoc />

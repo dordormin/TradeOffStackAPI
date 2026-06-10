@@ -9,32 +9,34 @@ namespace TradeOffStackAPI.Repositories;
 /// Centralizes and factors out data access logic to reduce code duplication.
 /// </summary>
 /// <typeparam name="T">The EF Core entity type (must be a model class).</typeparam>
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class GenericRepository<TEntity, TContext> : IGenericRepository<TEntity> 
+    where TEntity : class
+    where TContext : DbContext
 {
     /// <summary>The injected database context.</summary>
-    protected readonly AppDbContext _context;
+    protected readonly TContext _context;
     
     /// <summary>The typed DbSet corresponding to the current entity.</summary>
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
 
     /// <summary>
     /// Initializes a new instance of the generic repository.
     /// </summary>
     /// <param name="context">The Entity Framework database context.</param>
-    public GenericRepository(AppDbContext context)
+    public GenericRepository(TContext context)
     {
         _context = context;
-        _dbSet = _context.Set<T>();
+        _dbSet = _context.Set<TEntity>();
     }
 
     /// <inheritdoc />
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await _dbSet.ToListAsync();
     }
 
     /// <inheritdoc />
-    public virtual async Task<T?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
@@ -53,14 +55,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
 
     /// <inheritdoc />
-    public virtual async Task<bool> AddAsync(T entity)
+    public virtual async Task<bool> AddAsync(TEntity entity)
     {
         await _dbSet.AddAsync(entity);
         return await _context.SaveChangesAsync() > 0;
     }
 
     /// <inheritdoc />
-    public virtual async Task<bool> UpdateAsync(T entity)
+    public virtual async Task<bool> UpdateAsync(TEntity entity)
     {
         _dbSet.Update(entity);
         return await _context.SaveChangesAsync() > 0;

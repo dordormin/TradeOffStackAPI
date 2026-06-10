@@ -38,10 +38,6 @@ public class MaintenanceRequest
     [JsonPropertyName("requested_by_id")]
     public Guid RequestedById { get; set; }
 
-    /// <summary>Utilisateur ayant soumis la demande.</summary>
-    [JsonPropertyName("requested_by")]
-    public User? RequestedBy { get; set; }
-
     /// <summary>Statut actuel de la demande (En attente, En cours, Terminé, Annulé).</summary>
     [JsonPropertyName("status")]
     public MaintenanceStatus Status { get; set; } = MaintenanceStatus.Pending;

@@ -8,13 +8,13 @@ namespace TradeOffStackAPI.Repositories;
 /// <summary>
 /// Repository implementation for Equipment entities.
 /// </summary>
-public class EquipmentRepository : GenericRepository<Equipment>, IEquipmentRepository
+public class EquipmentRepository : GenericRepository<Equipment, AssetDbContext>, IEquipmentRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="EquipmentRepository"/> class.
     /// </summary>
     /// <param name="context">The database context.</param>
-    public EquipmentRepository(AppDbContext context) : base(context)
+    public EquipmentRepository(AssetDbContext context) : base(context)
     {
     }
 

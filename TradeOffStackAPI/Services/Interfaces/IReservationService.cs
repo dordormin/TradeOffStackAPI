@@ -15,5 +15,7 @@ public interface IReservationService
     Task<ServiceResponse<Reservation>> UpdateReservationAsync(Guid id, Reservation reservation);
     Task<ServiceResponse> ReturnEquipmentAsync(Guid reservationId);
     Task<ServiceResponse> CancelReservationAsync(Guid id);
+    Task<ServiceResponse> ApproveReservationAsync(Guid id, Guid approverId);
+    Task<ServiceResponse> RejectReservationAsync(Guid id, Guid approverId, string reason);
     Task<ServiceResponse> DeleteReservationAsync(Guid id);
 }

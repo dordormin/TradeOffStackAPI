@@ -487,6 +487,18 @@ export const Inventory: React.FC = () => {
                       {selectedAsset.purchase_date ? new Date(selectedAsset.purchase_date).toLocaleDateString(isFr ? 'fr-FR' : 'en-US') : 'N/A'}
                     </p>
                   </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">{isFr ? 'Valeur comptable actuelle' : 'Current Book Value'}</p>
+                    <p className="text-sm font-mono text-foreground mt-0.5">
+                      ${selectedAsset.current_book_value?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? selectedAsset.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">{isFr ? 'Valeur résiduelle' : 'Salvage Value'}</p>
+                    <p className="text-sm font-mono text-foreground mt-0.5">
+                      ${selectedAsset.salvage_value?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '0.00'}
+                    </p>
+                  </div>
                   <div className="col-span-2">
                     <p className="text-xs text-muted-foreground">Description</p>
                     <p className="text-sm text-foreground mt-0.5">{selectedAsset.description || (isFr ? 'Aucune description fournie.' : 'No description provided.')}</p>

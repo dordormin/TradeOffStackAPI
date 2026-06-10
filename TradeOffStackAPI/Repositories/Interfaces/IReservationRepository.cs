@@ -22,11 +22,10 @@ public interface IReservationRepository : IGenericRepository<Reservation>
     Task<IEnumerable<Reservation>> GetByUserAsync(Guid userId);
 
     /// <summary>
-    /// Retrieves all reservations made by any user belonging to a specific department.
+    /// Retrieves all reservations made by a list of users. Useful for cross-service queries.
     /// </summary>
-    /// <param name="departmentId">The unique identifier of the department.</param>
-    /// <returns>A collection of reservations associated with the specified department.</returns>
-    Task<IEnumerable<Reservation>> GetByDepartmentAsync(Guid departmentId);
+    /// <param name="userIds">A collection of user IDs.</param>
+    Task<IEnumerable<Reservation>> GetByUserIdsAsync(IEnumerable<Guid> userIds);
 
     /// <summary>
     /// Retrieves all currently active reservations.

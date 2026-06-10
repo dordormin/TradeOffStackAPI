@@ -16,6 +16,7 @@ public class EquipmentConfiguration : IEntityTypeConfiguration<Equipment>
 
         // numeric(18,2) : stockage monétaire exact.
         builder.Property(e => e.Price).HasColumnType("numeric(18,2)");
+        builder.Property(e => e.SalvageValue).HasColumnType("numeric(18,2)");
 
         // ENUMs PostgreSQL :
         // On NE met PAS HasColumnType ici. Le type natif (asset_status / asset_category)

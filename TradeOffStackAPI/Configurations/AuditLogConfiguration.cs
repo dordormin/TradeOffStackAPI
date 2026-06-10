@@ -22,9 +22,6 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
         builder.Property(a => a.NewValues).HasColumnType("jsonb");
         builder.Property(a => a.PerformedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasOne(a => a.PerformedBy)
-            .WithMany()
-            .HasForeignKey(a => a.PerformedById)
-            .OnDelete(DeleteBehavior.SetNull);
+
     }
 }
