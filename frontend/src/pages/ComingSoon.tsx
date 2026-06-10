@@ -11,7 +11,7 @@ export const ComingSoon = ({ title }: { title?: string }) => {
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] -z-10 animate-pulse delay-1000" />
 
       <div className="max-w-md w-full bg-card/50 backdrop-blur-xl border border-border rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
         
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
           <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
@@ -28,7 +28,7 @@ export const ComingSoon = ({ title }: { title?: string }) => {
 
         <button 
           onClick={() => navigate('/hub')}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20"
+          className="relative z-10 inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Hub
