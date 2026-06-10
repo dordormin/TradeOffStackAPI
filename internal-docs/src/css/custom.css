@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 1 0 0;
+  --foreground: 0.145 0 0;
+  --card: 1 0 0;
+  --card-foreground: 0.145 0 0;
+  --primary: 0.205 0 0;
+  --primary-foreground: 0.985 0 0;
+  --border: 0.922 0 0;
+}
+
+[data-theme='dark'] {
+  --background: 0.145 0 0;
+  --foreground: 0.985 0 0;
+  --card: 0.205 0 0;
+  --card-foreground: 0.985 0 0;
+  --primary: 0.922 0 0;
+  --primary-foreground: 0.205 0 0;
+  --border: 1 0 0 / 10%;
+}
+
+
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  /* Sync with TradeOffStack's main app --primary (HSL 24.6 100% 50%) -> #ff6900 */
+  --ifm-color-primary: #ff6900;
+  --ifm-color-primary-dark: #e65e00;
+  --ifm-color-primary-darker: #d95900;
+  --ifm-color-primary-darkest: #b34a00;
+  --ifm-color-primary-light: #ff781a;
+  --ifm-color-primary-lighter: #ff8026;
+  --ifm-color-primary-lightest: #ff974d;
+  
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Sync Fonts */
+  --ifm-font-family-base: 'Manrope', system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8fafc;
+}
+
+/* For dark mode */
+[data-theme='dark'] {
+  --ifm-color-primary: #ff6900;
+  --ifm-color-primary-dark: #e65e00;
+  --ifm-color-primary-darker: #d95900;
+  --ifm-color-primary-darkest: #b34a00;
+  --ifm-color-primary-light: #ff781a;
+  --ifm-color-primary-lighter: #ff8026;
+  --ifm-color-primary-lightest: #ff974d;
+  
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  
+  /* Sync background with TradeOffStack OKLCH background */
+  --ifm-background-color: #1a120d; /* surface */
+  --ifm-background-surface-color: #1E293B; /* surface-slate */
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: var(--ifm-background-color);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: none;
+  padding: 0.5rem 1rem;
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Footer styling */
+.footer {
+  background-color: var(--ifm-background-color);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  padding: 3rem 1rem;
+}
+
+[data-theme='dark'] .footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
