@@ -123,9 +123,13 @@ public static class ProgramExtensions
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             if (!db.Database.ProviderName?.Contains("Sqlite", StringComparison.OrdinalIgnoreCase) ?? false)
             {
-                logger.LogInformation("Applying EF Core migrations...");
+                logger.LogInformation("Applying database migrations...");
                 await db.Database.MigrateAsync();
-                logger.LogInformation("EF Core migrations applied successfully.");
+                
+                // Patch the PostgreSQL Enum to include the Tester role
+                await db.Database.ExecuteSqlRawAsync("ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'Tester';");
+                
+                logger.LogInformation("Database migrations applied successfully.");
             }
             else
             {
