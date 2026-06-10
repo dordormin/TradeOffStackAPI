@@ -26,13 +26,9 @@ const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode
 };
 
 const LoginForm = () => {
-  const { login, isAuthenticated } = useAuth();
-  console.log('LoginForm render. isAuthenticated =', isAuthenticated);
+  const { login, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
-  if (isAuthenticated) {
-    console.log('LoginForm: Navigating to /hub because isAuthenticated is true');
-    return <Navigate to="/hub" replace />;
-  }// Tab State: 'signin' | 'signup'
+  // Tab State: 'signin' | 'signup'
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   
   // Shared States
@@ -47,6 +43,19 @@ const LoginForm = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <span className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/hub" replace />;
+  }
+
 
   const handleSignInSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
