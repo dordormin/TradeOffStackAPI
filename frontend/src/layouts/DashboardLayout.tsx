@@ -138,7 +138,7 @@ export const DashboardLayout: React.FC = () => {
                     className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-primary font-medium bg-primary/5 hover:bg-primary/10 transition-colors text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
-                      <AssetPortalIcon className="w-4 h-4" />
+                      <AssetPortalIcon className="w-4 h-4" showWrapper={false} />
                       <span>Asset Portal</span>
                     </div>
                     <Check className="w-4 h-4 text-primary" />
