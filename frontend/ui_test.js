@@ -35,10 +35,17 @@ import path from 'path';
     await page.fill('input[type="password"]', 'Admin123!Secure');
     await page.click('button:has-text("Sign In to Account")');
 
-    // Step 3: Wait for Dashboard
-    console.log('3. Waiting for Dashboard redirection...');
+    // Step 3: Wait for Central Hub and Click Asset Portal
+    console.log('3. Waiting for Central Hub redirection...');
+    await page.waitForURL('**/hub');
+    await page.waitForTimeout(1000); // allow animations
+    await page.screenshot({ path: path.join(artifactDir, 'test_step2_hub.png') });
+    console.log('   Saved test_step2_hub.png');
+
+    console.log('3b. Clicking Asset Portal to navigate to Dashboard...');
+    await page.click('text=Asset Portal');
     await page.waitForURL('**/dashboard');
-    await page.waitForTimeout(1500); // allow animations
+    await page.waitForTimeout(1000); // allow animations
     await page.screenshot({ path: path.join(artifactDir, 'test_step2_dashboard.png') });
     console.log('   Saved test_step2_dashboard.png');
 
