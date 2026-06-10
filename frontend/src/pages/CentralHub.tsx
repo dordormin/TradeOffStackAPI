@@ -18,6 +18,7 @@ import {
   ChevronRight,
   AppWindow
 } from 'lucide-react';
+import { AssetPortalIcon } from '@/components/AssetPortalIcon';
 
 export const CentralHub: React.FC = () => {
   const { user, logout, role } = useAuth();
@@ -51,7 +52,7 @@ export const CentralHub: React.FC = () => {
       description: isFr 
         ? 'Gestion complète du parc informatique, inventaire et réservations de matériel.'
         : 'End-to-end IT hardware management, real-time inventory, and reservations.',
-      icon: MonitorSmartphone,
+      icon: (props: any) => <AssetPortalIcon showWrapper={false} {...props} />,
       active: true,
       path: '/dashboard',
       gradient: 'from-blue-500/20 via-indigo-500/10 to-transparent',

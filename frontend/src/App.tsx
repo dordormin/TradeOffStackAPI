@@ -370,39 +370,41 @@ const LoginForm = () => {
       </div>
 
       {/* Right Pane - Visual Image */}
-      <div className="hidden lg:block lg:w-1/2 relative">
-        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/90 via-slate-900/60 to-transparent z-10" />
-        <img
-          src="/login_hero.png"
-          alt="Futuristic IT Infrastructure"
-          className="object-cover w-full h-full"
-        />
-        
-        {/* Overlay Content */}
-        <div className="absolute bottom-16 left-16 right-16 z-20 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs font-semibold text-primary-foreground font-mono">v4.0.0 Stable</span>
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-white leading-tight">
-            IT Asset Lifecycle Management, Orchestrated.
-          </h1>
-          <p className="text-slate-300 text-base max-w-lg">
-            Track hardware parameters, automate reservation lifecycles, and coordinate technical interventions inside a unified glassmorphic dashboard.
-          </p>
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center p-6 bg-background">
+        <div className="w-full h-full relative rounded-3xl overflow-hidden shadow-2xl border border-border/30">
+          <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/90 via-slate-900/60 to-transparent z-10" />
+          <img
+            src="/jetbrains_mosaic.png"
+            alt="3D JetBrains Mosaic"
+            className="object-cover w-full h-full"
+          />
           
-          <div className="pt-4 grid grid-cols-3 gap-6 border-t border-white/10 max-w-md">
-            <div>
-              <p className="text-2xl font-bold text-white">99.9%</p>
-              <p className="text-xs text-slate-400">System Uptime</p>
+          {/* Overlay Content */}
+          <div className="absolute bottom-12 left-12 right-12 z-20 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-semibold text-primary-foreground font-mono">v4.0.0 Stable</span>
             </div>
-            <div>
-              <p className="text-2xl font-bold text-white">100ms</p>
-              <p className="text-xs text-slate-400">Avg API Response</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-white">Active</p>
-              <p className="text-xs text-slate-400">Audit Journaling</p>
+            <h1 className="text-3xl xl:text-4xl font-extrabold tracking-tight text-white leading-tight">
+              Enterprise Hub, Orchestrated.
+            </h1>
+            <p className="text-slate-300 text-sm xl:text-base max-w-lg">
+              Track hardware parameters, automate reservation lifecycles, and coordinate technical interventions inside a unified glassmorphic dashboard.
+            </p>
+            
+            <div className="pt-4 grid grid-cols-3 gap-6 border-t border-white/10 max-w-md">
+              <div>
+                <p className="text-xl xl:text-2xl font-bold text-white">99.9%</p>
+                <p className="text-xs text-slate-400">System Uptime</p>
+              </div>
+              <div>
+                <p className="text-xl xl:text-2xl font-bold text-white">100ms</p>
+                <p className="text-xs text-slate-400">Avg API Response</p>
+              </div>
+              <div>
+                <p className="text-xl xl:text-2xl font-bold text-white">Active</p>
+                <p className="text-xs text-slate-400">Audit Journaling</p>
+              </div>
             </div>
           </div>
         </div>
