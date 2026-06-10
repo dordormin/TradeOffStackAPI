@@ -12,6 +12,7 @@ import { Users } from '@/pages/Users';
 import { AuditLogs } from '@/pages/AuditLogs';
 import { Settings } from '@/pages/Settings';
 import { CentralHub } from '@/pages/CentralHub';
+import { ComingSoon } from '@/pages/ComingSoon';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { Logo } from './components/Logo';
@@ -444,6 +445,12 @@ function App() {
           <Route element={<ProtectedRoute />}>
             {/* Central Hub page - outside of the normal sub-app DashboardLayout */}
             <Route path="/hub" element={<CentralHub />} />
+            
+            {/* Placeholder Modules */}
+            <Route path="/saas" element={<ComingSoon title="SaaS & License Management" />} />
+            <Route path="/helpdesk" element={<ComingSoon title="IT Support Help Desk" />} />
+            <Route path="/procurement" element={<ComingSoon title="Procurement & Purchasing" />} />
+            <Route path="/hr" element={<ComingSoon title="HR & Onboarding Hub" />} />
 
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<Navigate to="/hub" replace />} />

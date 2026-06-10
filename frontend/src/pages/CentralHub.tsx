@@ -7,10 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   MonitorSmartphone, 
-  ShieldAlert, 
-  Users, 
-  Coins, 
-  Activity, 
+  LifeBuoy, 
+  ShoppingCart, 
+  Briefcase, 
+  Cloud, 
   LogOut, 
   Settings, 
   User as UserIcon,
@@ -60,56 +60,60 @@ export const CentralHub: React.FC = () => {
       badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
     },
     {
-      id: 'identity-manager',
-      name: isFr ? 'Portail Identités' : 'Identity & Access',
+      id: 'saas-manager',
+      name: isFr ? 'Gestion SaaS & Licences' : 'SaaS & License Mgmt',
       description: isFr
-        ? 'Gestion des rôles, permissions de sécurité et annuaire centralisé.'
-        : 'Secure identity access, single sign-on, and RBAC governance.',
-      icon: Users,
-      active: false,
+        ? 'Suivi des licences logicielles, optimisation des abonnements et gestion des accès cloud.'
+        : 'Track software licenses, optimize cloud subscriptions, and monitor seat utilization.',
+      icon: Cloud,
+      active: true,
+      path: '/saas',
+      gradient: 'from-sky-500/10 via-cyan-500/5 to-transparent',
+      borderGlow: 'hover:border-sky-500/30 hover:shadow-sky-500/5',
+      badge: isFr ? 'Nouveau' : 'New',
+      badgeColor: 'bg-sky-500/10 text-sky-500 border-sky-500/20'
+    },
+    {
+      id: 'help-desk',
+      name: isFr ? 'Support & Help Desk' : 'IT Help Desk',
+      description: isFr
+        ? 'Création de tickets de support, assistance technique et résolution des incidents.'
+        : 'Create support tickets, technical assistance, and incident resolution tracking.',
+      icon: LifeBuoy,
+      active: true,
+      path: '/helpdesk',
       gradient: 'from-amber-500/10 via-orange-500/5 to-transparent',
       borderGlow: 'hover:border-amber-500/30 hover:shadow-amber-500/5',
-      badge: isFr ? 'Bientôt disponible' : 'Coming Soon',
+      badge: isFr ? 'Nouveau' : 'New',
       badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/20'
     },
     {
-      id: 'finops-console',
-      name: 'Cloud FinOps',
+      id: 'procurement',
+      name: isFr ? 'Achats & Fournisseurs' : 'Procurement',
       description: isFr
-        ? 'Optimisation des coûts d\'infrastructure et suivi des budgets cloud en temps réel.'
-        : 'Cloud resource financial management, cost allocation, and anomaly detection.',
-      icon: Coins,
-      active: false,
-      gradient: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-      borderGlow: 'hover:border-emerald-500/30 hover:shadow-emerald-500/5',
-      badge: isFr ? 'Bientôt disponible' : 'Coming Soon',
-      badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+        ? 'Gestion des bons de commande, évaluation des fournisseurs et remboursements de frais.'
+        : 'Manage purchase orders, vendor evaluation, and expense reimbursements.',
+      icon: ShoppingCart,
+      active: true,
+      path: '/procurement',
+      gradient: 'from-purple-500/10 via-fuchsia-500/5 to-transparent',
+      borderGlow: 'hover:border-purple-500/30 hover:shadow-purple-500/5',
+      badge: isFr ? 'Nouveau' : 'New',
+      badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/20'
     },
     {
-      id: 'security-hub',
-      name: 'Security & Audit',
+      id: 'hr-onboarding',
+      name: isFr ? 'Portail RH & Onboarding' : 'HR & Onboarding',
       description: isFr
-        ? 'Rapports de conformité réglementaire, audits système et détection des menaces.'
-        : 'Continuous compliance monitoring, log audits, and real-time security events.',
-      icon: ShieldAlert,
-      active: false,
+        ? 'Annuaire de l\'entreprise, organigrammes et suivi des arrivées/départs des employés.'
+        : 'Company directory, org charts, and employee onboarding/offboarding workflows.',
+      icon: Briefcase,
+      active: true,
+      path: '/hr',
       gradient: 'from-rose-500/10 via-red-500/5 to-transparent',
       borderGlow: 'hover:border-rose-500/30 hover:shadow-rose-500/5',
-      badge: isFr ? 'Bientôt disponible' : 'Coming Soon',
+      badge: isFr ? 'Nouveau' : 'New',
       badgeColor: 'bg-rose-500/10 text-rose-500 border-rose-500/20'
-    },
-    {
-      id: 'network-monitor',
-      name: 'Network Ops',
-      description: isFr
-        ? 'Supervision de la bande passante, latences et état de santé du serveur central.'
-        : 'Bandwidth traffic insights, packet latencies, and main server health status.',
-      icon: Activity,
-      active: false,
-      gradient: 'from-purple-500/10 via-violet-500/5 to-transparent',
-      borderGlow: 'hover:border-purple-500/30 hover:shadow-purple-500/5',
-      badge: isFr ? 'Bientôt disponible' : 'Coming Soon',
-      badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/20'
     }
   ];
 
