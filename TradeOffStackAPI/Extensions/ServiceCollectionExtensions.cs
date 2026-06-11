@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
         var noTranslation = new NpgsqlNullNameTranslator();
         
         // Core Data Source
-        var coreDataSourceBuilder = new NpgsqlDataSourceBuilder(coreConnectionString);
+        if (string.IsNullOrEmpty(coreConnectionString)) return services; var coreDataSourceBuilder = new NpgsqlDataSourceBuilder(coreConnectionString);
         coreDataSourceBuilder.MapEnum<UserRole>("user_role", noTranslation);
         coreDataSourceBuilder.MapEnum<AuditAction>("audit_action", noTranslation);
         var coreDataSource = coreDataSourceBuilder.Build();
@@ -91,6 +91,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<IAuditLogService, AuditLogService>();
+
+        services.AddScoped<ISaaSService, SaaSService>();
 
         return services;
     }

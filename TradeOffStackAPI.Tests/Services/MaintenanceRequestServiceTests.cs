@@ -13,7 +13,7 @@ public class MaintenanceRequestServiceTests
 {
     private readonly Mock<IMaintenanceRequestRepository> _mockRepo;
     private readonly Mock<IEquipmentRepository> _mockEquipmentRepo;
-    private readonly TradeOffStackAPI.Data.AppDbContext _context;
+    private readonly TradeOffStackAPI.Data.AssetDbContext _context;
     private readonly IMaintenanceRequestService _service;
 
     public MaintenanceRequestServiceTests()
@@ -21,11 +21,11 @@ public class MaintenanceRequestServiceTests
         _mockRepo = new Mock<IMaintenanceRequestRepository>();
         _mockEquipmentRepo = new Mock<IEquipmentRepository>();
 
-        var options = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<TradeOffStackAPI.Data.AppDbContext>()
+        var options = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<TradeOffStackAPI.Data.AssetDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning))
             .Options;
-        _context = new TradeOffStackAPI.Data.AppDbContext(options);
+        _context = new TradeOffStackAPI.Data.AssetDbContext(options);
 
         _service = new MaintenanceRequestService(_mockRepo.Object, _mockEquipmentRepo.Object, _context);
     }

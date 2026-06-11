@@ -32,7 +32,7 @@ public class ConcurrencyAndScalabilityTests : IClassFixture<CustomWebApplication
         // Promotion en Admin via la DB (la faille email est corrigée)
         using (var scope = _factory.Services.CreateScope())
         {
-            var db = scope.ServiceProvider.GetRequiredService<TradeOffStackAPI.Data.AppDbContext>();
+            var db = scope.ServiceProvider.GetRequiredService<TradeOffStackAPI.Data.CoreDbContext>();
             var dbUser = await db.Users.FindAsync(adminAuth!.UserId);
             dbUser!.Role = UserRole.Admin;
             await db.SaveChangesAsync();

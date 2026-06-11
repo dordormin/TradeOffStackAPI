@@ -15,7 +15,8 @@ public class ReservationServiceTests
 {
     private readonly Mock<IReservationRepository> _mockRepo;
     private readonly Mock<IEquipmentRepository> _mockEquipmentRepo;
-    private readonly AppDbContext _context;
+    private readonly AssetDbContext _context;
+    private readonly Mock<IUserService> _mockUserService;
     private readonly IReservationService _service;
 
     public ReservationServiceTests()
@@ -23,14 +24,15 @@ public class ReservationServiceTests
         _mockRepo = new Mock<IReservationRepository>();
         _mockEquipmentRepo = new Mock<IEquipmentRepository>();
         
-        var options = new DbContextOptionsBuilder<AppDbContext>()
+        var options = new DbContextOptionsBuilder<AssetDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             // CORRECTION : On dit à la base In-Memory d'ignorer les appels aux transactions
             .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
-        _context = new AppDbContext(options);
+        _context = new AssetDbContext(options);
+        _mockUserService = new Mock<IUserService>();
 
-        _service = new ReservationService(_mockRepo.Object, _mockEquipmentRepo.Object, _context);
+        _service = new ReservationService(_mockRepo.Object, _mockEquipmentRepo.Object, _context, _mockUserService.Object);
     }
 
     private static Reservation NewReservation(Guid equipmentId) => new()
