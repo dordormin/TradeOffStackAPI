@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Logo } from '@/components/Logo';
+import { UserProfileDropdown } from '@/components/UserProfileDropdown';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   LifeBuoy, 
   ShoppingCart, 
   Briefcase, 
   Cloud, 
-  LogOut, 
-  Settings, 
-  User as UserIcon,
   Sparkles,
   ChevronRight,
   AppWindow
@@ -20,18 +16,11 @@ import {
 import { AssetPortalIcon } from '@/components/AssetPortalIcon';
 
 export const CentralHub: React.FC = () => {
-  const { user, logout, role } = useAuth();
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const isFr = language === 'fr';
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const showMockToast = (appName: string) => {
     const message = isFr 
@@ -139,63 +128,7 @@ export const CentralHub: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <div className="text-sm font-medium text-foreground">
-              {user ? `${user.first_name} ${user.last_name || ''}`.trim() || user.email : 'User'}
-            </div>
-            <div className="text-xs text-muted-foreground">{role}</div>
-          </div>
-          
-          <div className="relative">
-            <Avatar className="cursor-pointer border border-border/80 hover:border-primary/50 transition-colors" onClick={() => setDropdownOpen(!dropdownOpen)}>
-              <AvatarImage src={user?.profile_image_url || ''} alt="@user" />
-              <AvatarFallback className="bg-primary/20 text-primary font-medium">
-                {user?.first_name ? user.first_name[0].toUpperCase() : 'U'}
-              </AvatarFallback>
-            </Avatar>
-
-            {dropdownOpen && (
-              <>
-                <div className="fixed inset-0 z-30" onClick={() => setDropdownOpen(false)} />
-                <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card p-2 shadow-lg z-40 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-3 py-2 border-b border-border/60 mb-1">
-                    <div className="text-sm font-medium text-foreground">
-                      {user ? `${user.first_name} ${user.last_name || ''}`.trim() : 'User'}
-                    </div>
-                    <div className="text-xs text-muted-foreground truncate">{user?.email}</div>
-                  </div>
-                  
-                  <button 
-                    onClick={() => { navigate('/settings/profile'); setDropdownOpen(false); }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-secondary/60 text-left transition-colors cursor-pointer"
-                  >
-                    <UserIcon className="w-4 h-4 text-primary" />
-                    {t('profileSettings')}
-                  </button>
-                  
-                  <button 
-                    onClick={() => { navigate('/settings/system'); setDropdownOpen(false); }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-secondary/60 text-left transition-colors cursor-pointer"
-                  >
-                    <Settings className="w-4 h-4 text-primary" />
-                    {t('systemSettings')}
-                  </button>
-
-                  <div className="border-t border-border/60 my-1" />
-
-                  <button 
-                    onClick={() => { handleLogout(); setDropdownOpen(false); }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-destructive/10 text-left transition-colors cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    {t('signOut')}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        <UserProfileDropdown />
       </header>
 
       {/* Hero Banner */}

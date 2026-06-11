@@ -17,13 +17,13 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
-import type { SoftwareLicense } from '@/types';
 import { KeySquare, Plus, Edit, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import type { SoftwareLicense } from '@/types';
 
-export const Software: React.FC = () => {
+export const Licenses: React.FC = () => {
   const { role } = useAuth();
   const { language } = useTranslation();
   const isFr = language === 'fr';
@@ -123,18 +123,18 @@ export const Software: React.FC = () => {
     }
   };
 
-  const isExpiringSoon = (dateString?: string) => {
+  const isExpired = (dateString?: string | null) => {
+    if (!dateString) return false;
+    return new Date(dateString) < new Date();
+  };
+
+  const isExpiringSoon = (dateString?: string | null) => {
     if (!dateString) return false;
     const expDate = new Date(dateString);
     const today = new Date();
     const diffTime = expDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 && diffDays <= 30;
-  };
-
-  const isExpired = (dateString?: string) => {
-    if (!dateString) return false;
-    return new Date(dateString) < new Date();
+    return diffDays <= 30 && diffDays > 0;
   };
 
   return (
@@ -142,10 +142,10 @@ export const Software: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            {isFr ? 'Licences Logicielles' : 'Software Licenses'}
+            {isFr ? 'Licences Matérielles & OS' : 'Hardware & OS Licenses'}
           </h1>
           <p className="text-muted-foreground mt-1">
-            {isFr ? 'Gérez vos clés de produits, abonnements et assignations.' : 'Manage product keys, subscriptions, and assignments.'}
+            {isFr ? 'Gérez vos clés de produits perpétuelles (Windows, etc).' : 'Manage your perpetual product keys (Windows, etc).'}
           </p>
         </div>
         {(role === 'Admin' || role === 'Manager') && (
@@ -234,20 +234,18 @@ export const Software: React.FC = () => {
                             <Button 
                               onClick={() => openEditForm(lic)} 
                               size="sm" 
-                              variant="outline" 
-                              className="border-border hover:bg-secondary flex items-center gap-1 cursor-pointer"
+                              variant="ghost" 
+                              className="h-8 w-8 p-0 text-sky-500 hover:text-sky-600 hover:bg-sky-500/10 cursor-pointer"
                             >
-                              <Edit className="w-3.5 h-3.5" />
-                              {isFr ? 'Modifier' : 'Edit'}
+                              <Edit className="w-4 h-4" />
                             </Button>
                             <Button 
                               onClick={() => handleDelete(lic.id)} 
                               size="sm" 
-                              variant="destructive" 
-                              className="flex items-center gap-1 cursor-pointer"
+                              variant="ghost" 
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              {isFr ? 'Supprimer' : 'Delete'}
+                              <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
                         </TableCell>
@@ -291,7 +289,7 @@ export const Software: React.FC = () => {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g. Office 365, Adobe CC" 
+                placeholder="e.g. Windows 11 Pro, SQL Server" 
                 className="w-full px-3 py-2 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
@@ -327,7 +325,7 @@ export const Software: React.FC = () => {
 
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  {isFr ? 'Prix ($)' : 'Price ($)'}
+                  {isFr ? 'Prix unitaire ($)' : 'Price ($)'}
                 </label>
                 <input 
                   type="number" 
@@ -354,7 +352,7 @@ export const Software: React.FC = () => {
             </div>
 
             <DialogFooter className="pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)} className="border-border cursor-pointer">
+              <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)} className="cursor-pointer">
                 {isFr ? 'Annuler' : 'Cancel'}
               </Button>
               <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer">

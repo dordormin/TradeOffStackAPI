@@ -16,6 +16,11 @@ public class AssetDbContext : AuditableDbContext
     public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
     public DbSet<SoftwareLicense> SoftwareLicenses { get; set; }
     public DbSet<EquipmentLicense> EquipmentLicenses { get; set; }
+    
+    // SaaS Management module
+    public DbSet<SaaSProvider> SaaSProviders { get; set; }
+    public DbSet<SaaSSubscription> SaaSSubscriptions { get; set; }
+    public DbSet<SaaSAssignment> SaaSAssignments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

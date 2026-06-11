@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { ToastProvider } from '@/context/ToastContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Inventory } from '@/pages/Inventory';
-import { Software } from '@/pages/Software';
+import { Licenses } from '@/pages/Licenses';
+import { SaaSLayout } from '@/layouts/SaaSLayout';
+import { SaaSDashboard } from '@/pages/saas/SaaSDashboard';
+import { SaaSLicenses } from '@/pages/saas/SaaSLicenses';
+import { SaaSUsers } from '@/pages/saas/SaaSUsers';
+import { SaaSBilling } from '@/pages/saas/SaaSBilling';
 import { SelfService } from '@/pages/SelfService';
 import { Reservations } from '@/pages/Reservations';
 import { Maintenance } from '@/pages/Maintenance';
@@ -17,6 +23,19 @@ import { ComingSoon } from '@/pages/ComingSoon';
 import { apiClient } from '@/api/apiClient';
 import { Shield, UserPlus, LogIn, Lock, Mail, User, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { Logo } from './components/Logo';
+import { withPermission } from '@/components/withPermission';
+
+// Protected Components wrapped with HOC (Higher-Order Component Pattern)
+const ProtectedSaaSDashboard = withPermission(SaaSDashboard, ['Admin', 'Manager', 'Tester']);
+const ProtectedSaaSLicenses = withPermission(SaaSLicenses, ['Admin', 'Manager', 'Tester']);
+const ProtectedSaaSUsers = withPermission(SaaSUsers, ['Admin', 'Manager', 'Tester']);
+const ProtectedSaaSBilling = withPermission(SaaSBilling, ['Admin', 'Manager', 'Tester']);
+const ProtectedInventory = withPermission(Inventory, ['Admin', 'Manager', 'Tester']);
+const ProtectedLicenses = withPermission(Licenses, ['Admin', 'Manager', 'Tester']);
+const ProtectedSelfService = withPermission(SelfService, ['Employee']);
+const ProtectedUsers = withPermission(Users, ['Admin']);
+const ProtectedAuditLogs = withPermission(AuditLogs, ['Admin', 'Tester']);
+
 const ProtectedRoute = ({ children, allowedRoles }: { children?: React.ReactNode, allowedRoles?: string[] }) => {
   const { isAuthenticated, role, isLoading } = useAuth();
   
@@ -435,61 +454,51 @@ const ThemeInitializer = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeInitializer />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          
-          <Route element={<ProtectedRoute />}>
-            {/* Central Hub page - outside of the normal sub-app DashboardLayout */}
-            <Route path="/dashboard" element={<CentralHub />} />
+    <ToastProvider>
+      <AuthProvider>
+        <ThemeInitializer />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginForm />} />
             
-            {/* Placeholder Modules */}
-            <Route path="/saas" element={<ComingSoon title="SaaS & License Management" />} />
-            <Route path="/helpdesk" element={<ComingSoon title="IT Support Help Desk" />} />
-            <Route path="/procurement" element={<ComingSoon title="Procurement & Purchasing" />} />
-            <Route path="/hr" element={<ComingSoon title="HR & Onboarding Hub" />} />
+            <Route element={<ProtectedRoute />}>
+              {/* Central Hub page - outside of the normal sub-app DashboardLayout */}
+              <Route path="/dashboard" element={<CentralHub />} />
+              
+              {/* SaaS Management Module */}
+              <Route element={<SaaSLayout />}>
+                <Route path="/saas" element={<ProtectedSaaSDashboard />} />
+                <Route path="/saas/licenses" element={<ProtectedSaaSLicenses />} />
+                <Route path="/saas/users" element={<ProtectedSaaSUsers />} />
+                <Route path="/saas/billing" element={<ProtectedSaaSBilling />} />
+              </Route>
 
-            <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/asset-portal" element={<Dashboard />} />
-              <Route path="/inventory" element={
-                <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
-                  <Inventory />
-                </ProtectedRoute>
-              } />
-              <Route path="/software" element={
-                <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Tester']}>
-                  <Software />
-                </ProtectedRoute>
-              } />
-              <Route path="/my-gear" element={
-                <ProtectedRoute allowedRoles={['Employee']}>
-                  <SelfService />
-                </ProtectedRoute>
-              } />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/maintenance" element={<Maintenance />} />
-              <Route path="/departments" element={<Departments />} />
-              <Route path="/users" element={
-                <ProtectedRoute allowedRoles={['Admin']}>
-                  <Users />
-                </ProtectedRoute>
-              } />
-              <Route path="/audit-logs" element={
-                <ProtectedRoute allowedRoles={['Admin', 'Tester']}>
-                  <AuditLogs />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings/*" element={<Settings />} />
+              {/* Placeholder Modules */}
+              <Route path="/helpdesk" element={<ComingSoon title="IT Support Help Desk" />} />
+              <Route path="/procurement" element={<ComingSoon title="Procurement & Purchasing" />} />
+              <Route path="/hr" element={<ComingSoon title="HR & Onboarding Hub" />} />
+
+              <Route element={<DashboardLayout />}>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/asset-portal" element={<Dashboard />} />
+                <Route path="/inventory" element={<ProtectedInventory />} />
+                <Route path="/licenses" element={<ProtectedLicenses />} />
+
+                <Route path="/my-gear" element={<ProtectedSelfService />} />
+                <Route path="/reservations" element={<Reservations />} />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route path="/departments" element={<Departments />} />
+                <Route path="/users" element={<ProtectedUsers />} />
+                <Route path="/audit-logs" element={<ProtectedAuditLogs />} />
+                <Route path="/settings/*" element={<Settings />} />
+              </Route>
             </Route>
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/hub" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+            
+            <Route path="*" element={<Navigate to="/hub" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

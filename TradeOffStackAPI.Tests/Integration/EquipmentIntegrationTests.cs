@@ -53,7 +53,7 @@ public class EquipmentIntegrationTests : IClassFixture<CustomWebApplicationFacto
         // Note: dans les tests d'intégration, on doit promouvoir l'utilisateur en Admin
         // via le DbContext directement. Utilisons le scope du factory.
         using var scope = _factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<TradeOffStackAPI.Data.AppDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<TradeOffStackAPI.Data.CoreDbContext>();
         var user = await db.Users.FindAsync(authResponse!.UserId);
         Assert.NotNull(user);
         user!.Role = UserRole.Admin;

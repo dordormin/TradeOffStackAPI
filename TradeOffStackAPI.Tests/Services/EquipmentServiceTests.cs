@@ -13,19 +13,21 @@ public class EquipmentServiceTests
 {
     private readonly Mock<IEquipmentRepository> _mockRepo;
     private readonly Mock<IOptions<CloudflareR2Settings>> _mockR2Settings;
+    private readonly Mock<IDepreciationService> _mockDepreciationService;
     private readonly IEquipmentService _service;
 
     public EquipmentServiceTests()
     {
         _mockRepo = new Mock<IEquipmentRepository>();
         _mockR2Settings = new Mock<IOptions<CloudflareR2Settings>>();
+        _mockDepreciationService = new Mock<IDepreciationService>();
         
         _mockR2Settings.Setup(s => s.Value).Returns(new CloudflareR2Settings
         {
             PublicUrl = "https://r2.example.com/bucket"
         });
         
-        _service = new EquipmentService(_mockRepo.Object, _mockR2Settings.Object);
+        _service = new EquipmentService(_mockRepo.Object, _mockDepreciationService.Object, _mockR2Settings.Object);
     }
 
     private static Equipment NewEquipment(string name = "Dell XPS") => new()
