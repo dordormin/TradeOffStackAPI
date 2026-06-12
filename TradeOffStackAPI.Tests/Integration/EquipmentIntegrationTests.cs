@@ -155,6 +155,12 @@ public class EquipmentIntegrationTests : IClassFixture<CustomWebApplicationFacto
         // Act
         var response = await client.GetAsync("/api/equipment");
 
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            Assert.Fail($"Request failed with status {response.StatusCode} and body: {content}");
+        }
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }

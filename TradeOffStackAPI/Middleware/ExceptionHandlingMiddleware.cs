@@ -58,7 +58,7 @@ public sealed class ExceptionHandlingMiddleware
             Title = title,
             // CORRECTION : On utilise exception.ToString() en développement pour avoir tous les détails,
             // y compris les exceptions internes, ce qui est crucial pour le débogage.
-            Detail = _env.IsDevelopment() ? exception.ToString() : "An internal error occurred.",
+            Detail = (_env.IsDevelopment() || _env.IsEnvironment("Testing")) ? exception.ToString() : "An internal error occurred.",
             Instance = context.Request.Path
         };
 
