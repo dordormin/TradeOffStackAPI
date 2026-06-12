@@ -17,9 +17,19 @@ public class CoreDbContext : AuditableDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // Only apply configurations from this assembly that relate to Core
-        // For simplicity, we just apply all configurations since EF ignores irrelevant ones usually,
-        // but it's safer to only apply specific ones if we had them separated.
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreDbContext).Assembly);
+
+        // Register PostgreSQL Enums with PascalCase translator to match runtime config
+        var translator = new Npgsql.NameTranslation.NpgsqlNullNameTranslator();
+        modelBuilder.HasPostgresEnum<UserRole>(name: "user_role", nameTranslator: translator);
+        modelBuilder.HasPostgresEnum<AuditAction>(name: "audit_action", nameTranslator: translator);
+
+        // Ignore asset-related navigation properties on User for CoreDbContext
+        modelBuilder.Entity<User>().Ignore(u => u.Reservations);
+        modelBuilder.Entity<User>().Ignore(u => u.MaintenanceRequests);
+
+        // Register specific configurations to prevent configuration leakage between contexts
+        modelBuilder.ApplyConfiguration(new Configurations.UserConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.DepartmentConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.AuditLogConfiguration());
     }
 }

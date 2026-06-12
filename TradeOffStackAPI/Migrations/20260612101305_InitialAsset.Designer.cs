@@ -13,8 +13,8 @@ using TradeOffStackAPI.Models;
 namespace TradeOffStackAPI.Migrations
 {
     [DbContext(typeof(AssetDbContext))]
-    [Migration("20260610202709_AddSaaSArchitecture")]
-    partial class AddSaaSArchitecture
+    [Migration("20260612101305_InitialAsset")]
+    partial class InitialAsset
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,13 @@ namespace TradeOffStackAPI.Migrations
                 .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "asset_category", new[] { "None", "Laptop", "Monitor", "Peripheral", "NetworkDevice" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "asset_status", new[] { "None", "Available", "Reserved", "OutForRepair", "Retired" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "audit_action", new[] { "Created", "Updated", "Deleted" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "depreciation_method", new[] { "None", "StraightLine", "DecliningBalance" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "maintenance_priority", new[] { "Low", "Medium", "High", "Critical" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "maintenance_status", new[] { "Pending", "InProgress", "Completed", "Cancelled" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "reservation_status", new[] { "Pending", "Approved", "Rejected", "Active", "Returned", "Cancelled" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TradeOffStackAPI.Models.AuditLog", b =>
@@ -69,36 +76,6 @@ namespace TradeOffStackAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("audit_logs", (string)null);
-                });
-
-            modelBuilder.Entity("TradeOffStackAPI.Models.Department", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "description");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("departments", (string)null);
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "department");
                 });
 
             modelBuilder.Entity("TradeOffStackAPI.Models.Equipment", b =>
@@ -257,14 +234,9 @@ namespace TradeOffStackAPI.Migrations
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "technician_notes");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("maintenance_requests", (string)null);
                 });
@@ -326,8 +298,6 @@ namespace TradeOffStackAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("reservations", (string)null);
                 });
@@ -490,80 +460,6 @@ namespace TradeOffStackAPI.Migrations
                     b.HasAnnotation("Relational:JsonPropertyName", "software_license");
                 });
 
-            modelBuilder.Entity("TradeOffStackAPI.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                        .HasAnnotation("Relational:JsonPropertyName", "created_at");
-
-                    b.Property<Guid?>("DepartmentId")
-                        .HasColumnType("uuid")
-                        .HasAnnotation("Relational:JsonPropertyName", "department_id");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasAnnotation("Relational:JsonPropertyName", "email");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasAnnotation("Relational:JsonPropertyName", "first_name");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasAnnotation("Relational:JsonPropertyName", "is_active");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasAnnotation("Relational:JsonPropertyName", "last_name");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasAnnotation("Relational:JsonPropertyName", "phone_number");
-
-                    b.Property<string>("ProfileImage")
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "profile_image");
-
-                    b.Property<string>("ProfileImageUrl")
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "profile_image_url");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer")
-                        .HasColumnName("Role")
-                        .HasAnnotation("Relational:JsonPropertyName", "role");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("users", (string)null);
-                });
-
             modelBuilder.Entity("TradeOffStackAPI.Models.EquipmentLicense", b =>
                 {
                     b.HasOne("TradeOffStackAPI.Models.Equipment", "Equipment")
@@ -591,10 +487,6 @@ namespace TradeOffStackAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TradeOffStackAPI.Models.User", null)
-                        .WithMany("MaintenanceRequests")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Equipment");
                 });
 
@@ -604,12 +496,6 @@ namespace TradeOffStackAPI.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("EquipmentId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TradeOffStackAPI.Models.User", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Equipment");
@@ -637,21 +523,6 @@ namespace TradeOffStackAPI.Migrations
                     b.Navigation("Provider");
                 });
 
-            modelBuilder.Entity("TradeOffStackAPI.Models.User", b =>
-                {
-                    b.HasOne("TradeOffStackAPI.Models.Department", "Department")
-                        .WithMany("Users")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("TradeOffStackAPI.Models.Department", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("TradeOffStackAPI.Models.Equipment", b =>
                 {
                     b.Navigation("EquipmentLicenses");
@@ -674,13 +545,6 @@ namespace TradeOffStackAPI.Migrations
             modelBuilder.Entity("TradeOffStackAPI.Models.SoftwareLicense", b =>
                 {
                     b.Navigation("EquipmentLicenses");
-                });
-
-            modelBuilder.Entity("TradeOffStackAPI.Models.User", b =>
-                {
-                    b.Navigation("MaintenanceRequests");
-
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

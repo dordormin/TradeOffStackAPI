@@ -17,12 +17,15 @@ namespace TradeOffStackAPI.Tests.Integration;
 
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
-    private readonly DbConnection _connection;
+    private readonly DbConnection _coreConnection;
+    private readonly DbConnection _assetConnection;
 
     public CustomWebApplicationFactory()
     {
-        _connection = new SqliteConnection("DataSource=:memory:");
-        _connection.Open();
+        _coreConnection = new SqliteConnection("DataSource=:memory:");
+        _coreConnection.Open();
+        _assetConnection = new SqliteConnection("DataSource=:memory:");
+        _assetConnection.Open();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -55,22 +58,22 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
             services.AddDbContext<CoreDbContext, TestCoreDbContext>(options =>
             {
-                options.UseSqlite(_connection);
+                options.UseSqlite(_coreConnection);
             });
 
             services.AddScoped<DbContextOptions<CoreDbContext>>(sp =>
                 new DbContextOptionsBuilder<CoreDbContext>()
-                    .UseSqlite(_connection)
+                    .UseSqlite(_coreConnection)
                     .Options);
 
             services.AddDbContext<AssetDbContext, TestAssetDbContext>(options =>
             {
-                options.UseSqlite(_connection);
+                options.UseSqlite(_assetConnection);
             });
 
             services.AddScoped<DbContextOptions<AssetDbContext>>(sp =>
                 new DbContextOptionsBuilder<AssetDbContext>()
-                    .UseSqlite(_connection)
+                    .UseSqlite(_assetConnection)
                     .Options);
 
             var sp = services.BuildServiceProvider();
@@ -87,8 +90,10 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-        _connection.Close();
-        _connection.Dispose();
+        _coreConnection.Close();
+        _coreConnection.Dispose();
+        _assetConnection.Close();
+        _assetConnection.Dispose();
     }
 }
 
