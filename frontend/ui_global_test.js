@@ -45,14 +45,14 @@ import path from 'path';
     await page.fill('input[type="password"]', 'Admin123!Secure');
     await page.click('button:has-text("Sign In to Account")');
     
-    await page.waitForURL('**/dashboard');
+    await page.waitForURL('**/hub');
     await page.waitForTimeout(1000);
     await page.screenshot({ path: path.join(artifactDir, 'global_02_hub.png') });
     console.log('   Successfully logged in and reached Central Hub.');
 
     console.log('2b. Clicking Asset Portal to go to Dashboard...');
     await page.click('text=Asset Portal');
-    await page.waitForURL('**/asset-portal');
+    await page.waitForURL('**/dashboard');
     await page.waitForTimeout(1000);
     await page.screenshot({ path: path.join(artifactDir, 'global_02_dashboard.png') });
     console.log('   Reached Asset Dashboard.');
