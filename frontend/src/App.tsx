@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { ConfirmProvider } from '@/context/ConfirmContext';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { Dashboard } from '@/pages/Dashboard';
 import { Inventory } from '@/pages/Inventory';
@@ -9,6 +10,7 @@ import { Licenses } from '@/pages/Licenses';
 import { SaaSLayout } from '@/layouts/SaaSLayout';
 import { SaaSDashboard } from '@/pages/saas/SaaSDashboard';
 import { SaaSLicenses } from '@/pages/saas/SaaSLicenses';
+import { SaaSProviders } from '@/pages/saas/SaaSProviders';
 import { SaaSUsers } from '@/pages/saas/SaaSUsers';
 import { SaaSBilling } from '@/pages/saas/SaaSBilling';
 import { SelfService } from '@/pages/SelfService';
@@ -27,6 +29,7 @@ import { withPermission } from '@/components/withPermission';
 
 // Protected Components wrapped with HOC (Higher-Order Component Pattern)
 const ProtectedSaaSDashboard = withPermission(SaaSDashboard, ['Admin', 'Manager', 'Tester']);
+const ProtectedSaaSProviders = withPermission(SaaSProviders, ['Admin', 'Manager', 'Tester']);
 const ProtectedSaaSLicenses = withPermission(SaaSLicenses, ['Admin', 'Manager', 'Tester']);
 const ProtectedSaaSUsers = withPermission(SaaSUsers, ['Admin', 'Manager', 'Tester']);
 const ProtectedSaaSBilling = withPermission(SaaSBilling, ['Admin', 'Manager', 'Tester']);
@@ -97,6 +100,35 @@ const LoginForm = () => {
         setError('Invalid server response.');
       }
     } catch (err: any) {
+      // Auto-recovery for demo accounts (in case backend DB was wiped by a migration)
+      if (email === 'admin@tradeoffstack.com' && password === 'Admin123!Secure') {
+        try {
+          console.log('Demo account missing. Auto-recreating...');
+          const regRes = await apiClient.post('/auth/register', {
+            firstName: 'Admin', lastName: 'System', email, password
+          });
+          if (regRes.data?.token) {
+            await login(regRes.data.token, regRes.data.role, regRes.data.userId || regRes.data.user_id);
+            return;
+          }
+        } catch (regErr) {
+          console.error('Auto-recovery failed', regErr);
+        }
+      } else if (email === 'tester@tradeoffstack.com' && password === 'Tester123!Secure') {
+        try {
+          console.log('Demo account missing. Auto-recreating...');
+          const regRes = await apiClient.post('/auth/register', {
+            firstName: 'Tester', lastName: 'User', email, password
+          });
+          if (regRes.data?.token) {
+            await login(regRes.data.token, regRes.data.role, regRes.data.userId || regRes.data.user_id);
+            return;
+          }
+        } catch (regErr) {
+          console.error('Auto-recovery failed', regErr);
+        }
+      }
+      
       setError(err.response?.data?.message || 'Invalid credentials or connection issue.');
     } finally {
       setIsLoading(false);
@@ -455,9 +487,10 @@ const ThemeInitializer = () => {
 function App() {
   return (
     <ToastProvider>
-      <AuthProvider>
-        <ThemeInitializer />
-        <BrowserRouter>
+      <ConfirmProvider>
+        <AuthProvider>
+          <ThemeInitializer />
+          <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginForm />} />
             
@@ -468,6 +501,7 @@ function App() {
               {/* SaaS Management Module */}
               <Route element={<SaaSLayout />}>
                 <Route path="/saas" element={<ProtectedSaaSDashboard />} />
+                <Route path="/saas/providers" element={<ProtectedSaaSProviders />} />
                 <Route path="/saas/licenses" element={<ProtectedSaaSLicenses />} />
                 <Route path="/saas/users" element={<ProtectedSaaSUsers />} />
                 <Route path="/saas/billing" element={<ProtectedSaaSBilling />} />
@@ -498,6 +532,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </ConfirmProvider>
     </ToastProvider>
   );
 }

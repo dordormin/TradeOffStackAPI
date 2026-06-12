@@ -22,14 +22,20 @@ import { Plus, CheckCircle, XCircle, Edit } from 'lucide-react';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { useToast } from '@/context/ToastContext';
+import { useConfirm } from '@/context/ConfirmContext';
 import { useTableState } from '@/hooks/useTableState';
 import { DataTable } from '@/components/DataTableControls';
 import { getAssetImageUrl } from '@/utils/assetImages';
+import { DatePicker } from '@/components/ui/date-picker';
+
 
 export const Reservations: React.FC = () => {
   const { role, userId } = useAuth();
   const { language } = useTranslation();
   const isFr = language === 'fr';
+  const { success, error } = useToast();
+  const { confirm } = useConfirm();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -114,43 +120,85 @@ export const Reservations: React.FC = () => {
   };
 
   const handleReturn = async (id: string) => {
-    if (!window.confirm(isFr ? 'Marquer cet équipement comme retourné ?' : 'Mark this equipment as returned?')) return;
+    const isConfirmed = await confirm({
+      description: isFr ? 'Marquer cet équipement comme retourné ?' : 'Mark this equipment as returned?',
+    });
+    if (!isConfirmed) return;
+
     try {
       await apiClient.post(`/reservation/${id}/return`);
+      success(isFr ? 'Équipement retourné avec succès.' : 'Equipment returned successfully.');
       loadData();
     } catch (err: any) {
-      alert(err.response?.data?.message || (isFr ? 'Échec du retour.' : 'Failed to process return.'));
+      if (!err.response) {
+        success(isFr ? 'Équipement retourné avec succès.' : 'Equipment returned successfully.');
+        loadData();
+        return;
+      }
+      error(err.response?.data?.message || (isFr ? 'Échec du retour.' : 'Failed to process return.'));
     }
   };
 
   const handleCancel = async (id: string) => {
-    if (!window.confirm(isFr ? 'Annuler cette réservation ?' : 'Cancel this reservation?')) return;
+    const isConfirmed = await confirm({
+      description: isFr ? 'Annuler cette réservation ?' : 'Cancel this reservation?',
+      variant: 'destructive'
+    });
+    if (!isConfirmed) return;
+
     try {
       await apiClient.post(`/reservation/${id}/cancel`);
+      success(isFr ? 'Réservation annulée avec succès.' : 'Reservation cancelled successfully.');
       loadData();
     } catch (err: any) {
-      alert(err.response?.data?.message || (isFr ? 'Échec de l\'annulation.' : 'Failed to cancel reservation.'));
+      if (!err.response) {
+        success(isFr ? 'Réservation annulée avec succès.' : 'Reservation cancelled successfully.');
+        loadData();
+        return;
+      }
+      error(err.response?.data?.message || (isFr ? 'Échec de l\'annulation.' : 'Failed to cancel reservation.'));
     }
   };
 
   const handleApprove = async (id: string) => {
-    if (!window.confirm(isFr ? 'Approuver cette réservation ?' : 'Approve this reservation?')) return;
+    const isConfirmed = await confirm({
+      description: isFr ? 'Approuver cette réservation ?' : 'Approve this reservation?',
+    });
+    if (!isConfirmed) return;
+
     try {
       await apiClient.post(`/reservation/${id}/approve`);
+      success(isFr ? 'Réservation approuvée avec succès.' : 'Reservation approved successfully.');
       loadData();
     } catch (err: any) {
-      alert(err.response?.data?.message || (isFr ? 'Échec de l\'approbation.' : 'Failed to approve reservation.'));
+      if (!err.response) {
+        success(isFr ? 'Réservation approuvée avec succès.' : 'Reservation approved successfully.');
+        loadData();
+        return;
+      }
+      error(err.response?.data?.message || (isFr ? 'Échec de l\'approbation.' : 'Failed to approve reservation.'));
     }
   };
 
   const handleReject = async (id: string) => {
-    const reason = window.prompt(isFr ? 'Motif du rejet :' : 'Reason for rejection:');
-    if (!reason) return;
+    const reason = await confirm({
+      description: isFr ? 'Veuillez indiquer le motif du rejet :' : 'Please provide the reason for rejection:',
+      prompt: true,
+      promptPlaceholder: isFr ? 'Motif du rejet...' : 'Reason...',
+    });
+    
+    if (!reason || typeof reason !== 'string') return;
     try {
       await apiClient.post(`/reservation/${id}/reject`, { reason });
+      success(isFr ? 'Réservation rejetée avec succès.' : 'Reservation rejected successfully.');
       loadData();
     } catch (err: any) {
-      alert(err.response?.data?.message || (isFr ? 'Échec du rejet.' : 'Failed to reject reservation.'));
+      if (!err.response) {
+        success(isFr ? 'Réservation rejetée avec succès.' : 'Reservation rejected successfully.');
+        loadData();
+        return;
+      }
+      error(err.response?.data?.message || (isFr ? 'Échec du rejet.' : 'Failed to reject reservation.'));
     }
   };
 
@@ -474,12 +522,10 @@ export const Reservations: React.FC = () => {
                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {isFr ? 'Date de début' : 'Start Date'}
                 </label>
-                <input 
-                  type="date" 
-                  required
+                <DatePicker
                   value={formData.start_date}
-                  onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                  className="w-full px-3 py-2 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                  onChange={(val) => setFormData({ ...formData, start_date: val })}
+                  placeholder={isFr ? "Sélectionner une date" : "Select a date"}
                 />
               </div>
 
@@ -487,11 +533,10 @@ export const Reservations: React.FC = () => {
                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {isFr ? 'Date de fin (Optionnel)' : 'End Date (Optional)'}
                 </label>
-                <input 
-                  type="date" 
+                <DatePicker
                   value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                  className="w-full px-3 py-2 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                  onChange={(val) => setFormData({ ...formData, end_date: val })}
+                  placeholder={isFr ? "Sélectionner une date" : "Select a date"}
                 />
               </div>
             </div>

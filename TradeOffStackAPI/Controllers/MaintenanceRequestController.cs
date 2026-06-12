@@ -62,21 +62,21 @@ public class MaintenanceRequestController : ControllerBase
             return BadRequest("Object ID does not match route ID.");
 
         var response = await _service.UpdateRequestAsync(id, request);
-        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
+        return response.Success ? (IActionResult)Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/complete")]
     public async Task<IActionResult> Complete(Guid id, [FromBody] CompleteMaintenanceDto? body)
     {
         var response = await _service.CompleteRequestAsync(id, body?.TechnicianNotes);
-        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
+        return response.Success ? (IActionResult)Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/cancel")]
     public async Task<IActionResult> Cancel(Guid id)
     {
         var response = await _service.CancelRequestAsync(id);
-        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
+        return response.Success ? (IActionResult)Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
@@ -84,7 +84,7 @@ public class MaintenanceRequestController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteRequestAsync(id);
-        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
+        return response.Success ? (IActionResult)Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 }
 
