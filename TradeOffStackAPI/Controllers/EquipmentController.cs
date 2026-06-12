@@ -64,7 +64,7 @@ public class EquipmentController : ControllerBase
             return BadRequest("Object ID does not match route ID.");
 
         var response = await _service.UpdateEquipmentAsync(id, equipment);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
@@ -72,7 +72,7 @@ public class EquipmentController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteEquipmentAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/licenses/{licenseId}")]
@@ -88,6 +88,6 @@ public class EquipmentController : ControllerBase
     public async Task<IActionResult> RevokeLicense(Guid id, Guid licenseId)
     {
         var response = await _service.RevokeLicenseAsync(id, licenseId);
-        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : BadRequest(new { message = response.Message });
     }
 }

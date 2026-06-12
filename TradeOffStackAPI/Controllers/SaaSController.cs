@@ -49,7 +49,7 @@ public class SaaSController : ControllerBase
     {
         var response = await _saasService.DeleteProviderAsync(id);
         if (!response.Success) return BadRequest(new { message = response.Message });
-        return NoContent();
+        return Ok(new { message = "Success" });
     }
 
     [HttpGet("subscriptions")]
@@ -86,7 +86,7 @@ public class SaaSController : ControllerBase
     {
         var response = await _saasService.DeleteSubscriptionAsync(id);
         if (!response.Success) return NotFound(new { message = response.Message });
-        return NoContent();
+        return Ok(new { message = "Success" });
     }
 
     [HttpGet("assignments")]
@@ -118,6 +118,6 @@ public class SaaSController : ControllerBase
     {
         var response = await _saasService.UnassignUserAsync(id);
         if (!response.Success) return NotFound(new { message = response.Message });
-        return NoContent();
+        return Ok(new { message = "Success" });
     }
 }

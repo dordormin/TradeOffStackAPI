@@ -88,21 +88,21 @@ public class ReservationController : ControllerBase
             return BadRequest("Object ID does not match route ID.");
 
         var response = await _service.UpdateReservationAsync(id, reservation);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/return")]
     public async Task<IActionResult> Return(Guid id)
     {
         var response = await _service.ReturnEquipmentAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/cancel")]
     public async Task<IActionResult> Cancel(Guid id)
     {
         var response = await _service.CancelReservationAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPost("{id}/approve")]
@@ -111,7 +111,7 @@ public class ReservationController : ControllerBase
     {
         if (_currentUser.UserId == null) return Unauthorized();
         var response = await _service.ApproveReservationAsync(id, _currentUser.UserId.Value);
-        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : BadRequest(new { message = response.Message });
     }
 
     public class RejectionDto { public string Reason { get; set; } = string.Empty; }
@@ -122,13 +122,13 @@ public class ReservationController : ControllerBase
     {
         if (_currentUser.UserId == null) return Unauthorized();
         var response = await _service.RejectReservationAsync(id, _currentUser.UserId.Value, dto.Reason);
-        return response.Success ? NoContent() : BadRequest(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : BadRequest(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteReservationAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 }

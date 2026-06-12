@@ -24,7 +24,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: Host=db;Database=tradeoffstack;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
+      ConnectionStrings__CoreConnection: Host=db;Database=tradeoffstack_core;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
+      ConnectionStrings__AssetConnection: Host=db;Database=tradeoffstack_assetportal;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-Tr@de0ff_Super_Secret_Key_For_JWT_Auth_2026!}
       ASPNETCORE_ENVIRONMENT: Production
     restart: always

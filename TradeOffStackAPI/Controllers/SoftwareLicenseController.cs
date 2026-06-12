@@ -57,7 +57,7 @@ public class SoftwareLicenseController : ControllerBase
             return BadRequest("Object ID does not match route ID.");
 
         var response = await _service.UpdateAsync(id, license);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
@@ -65,6 +65,6 @@ public class SoftwareLicenseController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 }
