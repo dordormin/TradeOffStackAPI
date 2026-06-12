@@ -50,7 +50,7 @@ public class DepartmentController : ControllerBase
             return BadRequest("Object ID does not match route ID.");
 
         var response = await _service.UpdateDepartmentAsync(id, department);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpDelete("{id}")]
@@ -58,6 +58,6 @@ public class DepartmentController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteDepartmentAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 }

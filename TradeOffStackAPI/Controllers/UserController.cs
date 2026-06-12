@@ -104,7 +104,7 @@ public class UserController : ControllerBase
         }
         
         var response = await _service.UpdateUserAsync(id, user);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 
     [HttpPut("{id}/change-password")]
@@ -145,7 +145,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var response = await _service.DeleteUserAsync(id);
-        return response.Success ? NoContent() : NotFound(new { message = response.Message });
+        return response.Success ? Ok(new { message = "Success" }) : NotFound(new { message = response.Message });
     }
 }
 
