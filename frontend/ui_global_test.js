@@ -178,7 +178,7 @@ import path from 'path';
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      return delRes.status === 204 ? 'success' : 'failed';
+      return (delRes.status === 204 || delRes.status === 200) ? 'success' : 'failed';
     }, uniqueSerial);
     console.log(`    Result: ${maintDeleted}`);
 
@@ -195,7 +195,7 @@ import path from 'path';
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      return delRes.status === 204 ? 'success' : 'failed';
+      return (delRes.status === 204 || delRes.status === 200) ? 'success' : 'failed';
     }, uniqueSerial);
     console.log(`    Result: ${resDeleted}`);
 
@@ -213,6 +213,10 @@ import path from 'path';
 
     console.log('15. Deleting the asset...');
     await page.click('button:has-text("Delete")');
+    
+    // Click the Confirm button in the Shadcn dialog
+    await page.waitForSelector('button:has-text("Confirm")');
+    await page.click('button:has-text("Confirm")');
     
     // Wait for the asset to be removed from the list
     await page.waitForSelector(`text=${uniqueSerial}`, { state: 'detached' });
