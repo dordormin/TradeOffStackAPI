@@ -111,7 +111,7 @@ export const CentralHub: React.FC = () => {
       
       {/* Toast Alert Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div role="alert" aria-live="assertive" className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300">
           <div className="bg-card/90 backdrop-blur border border-border px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 max-w-sm">
             <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
             <p className="text-sm text-foreground">{toastMessage}</p>
@@ -135,7 +135,7 @@ export const CentralHub: React.FC = () => {
       <div className="relative w-full h-[320px] lg:h-[400px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
         <div className="absolute inset-0 bg-primary/10 mix-blend-overlay z-10" />
-        <img src="/jetbrains_mosaic.png" alt="Hero Background" className="w-full h-full object-cover object-center opacity-60" />
+        <img src="/jetbrains_mosaic.png" alt="" aria-hidden="true" className="w-full h-full object-cover object-center opacity-60" />
         
         <div className="absolute inset-0 flex flex-col justify-center items-center z-20 px-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-background/50 backdrop-blur-md text-foreground border border-border/60 mb-4 shadow-xl">
@@ -163,8 +163,17 @@ export const CentralHub: React.FC = () => {
             return (
               <Card 
                 key={app.id} 
+                role="button"
+                tabIndex={0}
+                aria-label={app.name}
                 onClick={() => app.active ? navigate(app.path!) : showMockToast(app.name)}
-                className={`relative overflow-hidden border border-border/80 bg-card/80 backdrop-blur-xl shadow-xl transition-all duration-300 group ${app.borderGlow} cursor-pointer hover:-translate-y-1 hover:shadow-2xl ${isMainApp ? 'sm:col-span-2 lg:col-span-2 min-h-[220px]' : ''}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    app.active ? navigate(app.path!) : showMockToast(app.name);
+                  }
+                }}
+                className={`relative overflow-hidden border border-border/80 bg-card/80 backdrop-blur-xl shadow-xl transition-all duration-300 group ${app.borderGlow} cursor-pointer hover:-translate-y-1 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isMainApp ? 'sm:col-span-2 lg:col-span-2 min-h-[220px]' : ''}`}
               >
                 {/* Visual gradient accent */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${app.gradient} opacity-40 transition-opacity duration-300 group-hover:opacity-70 pointer-events-none`} />
