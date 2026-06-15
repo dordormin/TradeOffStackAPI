@@ -138,7 +138,7 @@ jobs:
 
     - name: 🚀 Deploy to VPS (All-in-One SSH)
       if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.2.5
       with:
         host: ${{ secrets.VPS_IP }}
         username: ${{ secrets.VPS_USER }}
