@@ -8,13 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 // --- Composition de la DI ---
+// SECURITY (F-04): CORS restricted to the known production frontend origin.
+// AllowCredentials is required for the HttpOnly auth cookie (F-05).
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("TradeoffStackFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("https://tradeoffstack.dordorapps.tech")
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
@@ -39,7 +42,7 @@ await app.ApplyDatabaseMigrationsAsync();
 // --- Pipeline HTTP ---
 app.UseForwardedHeaders();
 app.UseExceptionHandling();
-app.UseCors("AllowAll");
+app.UseCors("TradeoffStackFrontend");
 app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())

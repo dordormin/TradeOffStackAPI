@@ -103,6 +103,15 @@ public static class ServiceCollectionExtensions
         var jwt = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
                   ?? throw new InvalidOperationException("Section de configuration 'Jwt' manquante.");
 
+        // SECURITY: never start with a missing, placeholder or weak signing key.
+        // Provide it via the 'Jwt:Key' setting (env var 'Jwt__Key'), min 32 chars.
+        if (string.IsNullOrWhiteSpace(jwt.Key)
+            || jwt.Key.Length < 32
+            || jwt.Key == "YOUR_SUPER_SECRET_JWT_KEY_MINIMUM_32_CHARACTERS_LONG!")
+            throw new InvalidOperationException(
+                "JWT signing key is missing, too short or still the placeholder. " +
+                "Set a strong key via the 'Jwt:Key' configuration value (environment variable 'Jwt__Key', minimum 32 characters).");
+
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddSingleton<ITokenService, TokenService>();
@@ -122,6 +131,22 @@ public static class ServiceCollectionExtensions
                     ValidAudience = jwt.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
                     ClockSkew = TimeSpan.Zero
+                };
+
+                // F-05: read the JWT from the HttpOnly 'tos_auth' cookie when no
+                // Authorization header is present (browser cookie flow).
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (string.IsNullOrEmpty(context.Token))
+                        {
+                            var cookieToken = context.Request.Cookies["tos_auth"];
+                            if (!string.IsNullOrEmpty(cookieToken))
+                                context.Token = cookieToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

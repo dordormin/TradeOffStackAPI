@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -173,12 +174,12 @@ public static class ProgramExtensions
                     Email = "admin@tradeoffstack.com",
                     Role = TradeOffStackAPI.Models.UserRole.Admin,
                     IsActive = true,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!Secure")
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(ResolveSeedPassword("SEED_ADMIN_PASSWORD", "Administrator", logger))
                 };
-                
+
                 await coreDb.Users.AddAsync(adminUser);
                 await coreDb.SaveChangesAsync();
-                logger.LogInformation("Default Administrator account created (admin@tradeoffstack.com / Admin123!Secure).");
+                logger.LogInformation("Default Administrator account created (admin@tradeoffstack.com).");
             }
 
             if (!await coreDb.Users.AnyAsync(u => u.Email == "tester@tradeoffstack.com"))
@@ -192,12 +193,12 @@ public static class ProgramExtensions
                     Email = "tester@tradeoffstack.com",
                     Role = TradeOffStackAPI.Models.UserRole.Tester,
                     IsActive = true,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Tester123!Secure")
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(ResolveSeedPassword("SEED_TESTER_PASSWORD", "Tester", logger))
                 };
-                
+
                 await coreDb.Users.AddAsync(testerUser);
                 await coreDb.SaveChangesAsync();
-                logger.LogInformation("Default Tester account created (tester@tradeoffstack.com / Tester123!Secure).");
+                logger.LogInformation("Default Tester account created (tester@tradeoffstack.com).");
             }
         }
         catch (Exception ex)
@@ -205,6 +206,42 @@ public static class ProgramExtensions
             logger.LogCritical(ex, "Database migration failed. The application cannot start.");
             throw; // Fail-fast: the application must not start with an inconsistent schema.
         }
+    }
+
+    /// <summary>
+    /// Resolves the initial password for a seeded account.
+    /// SECURITY: passwords are NEVER hardcoded. They are read from the
+    /// SEED_ADMIN_PASSWORD / SEED_TESTER_PASSWORD environment variables.
+    /// If unset, a cryptographically secure password is generated and printed
+    /// ONCE in the logs — it must be changed immediately after first login.
+    /// </summary>
+    private static string ResolveSeedPassword(string envVarName, string accountLabel, ILogger logger)
+    {
+        var password = Environment.GetEnvironmentVariable(envVarName);
+        if (!string.IsNullOrWhiteSpace(password))
+        {
+            if (password.Length < 12)
+                throw new InvalidOperationException($"{envVarName} must be at least 12 characters long.");
+            logger.LogInformation("{Account} seed password read from environment variable {EnvVar}.", accountLabel, envVarName);
+            return password;
+        }
+
+        password = GenerateSecurePassword(24);
+        logger.LogWarning("SECURITY: {EnvVar} is not set. One-time generated password for {Account}: {Password} — change it immediately after first login.", envVarName, accountLabel, password);
+        return password;
+    }
+
+    /// <summary>
+    /// Generates a cryptographically secure random password.
+    /// </summary>
+    private static string GenerateSecurePassword(int length)
+    {
+        const string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*-_+=";
+        var bytes = RandomNumberGenerator.GetBytes(length);
+        var chars = new char[length];
+        for (int i = 0; i < length; i++)
+            chars[i] = alphabet[bytes[i] % alphabet.Length];
+        return new string(chars);
     }
 
     /// <summary>

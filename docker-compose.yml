@@ -43,7 +43,7 @@ services:
       - ConnectionStrings__CoreConnection=Host=db;Database=tradeoffstack_core;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Port=5432;
       - ConnectionStrings__AssetConnection=Host=db;Database=tradeoffstack_assetportal;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Port=5432;
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
 
 volumes:
   pgdata:

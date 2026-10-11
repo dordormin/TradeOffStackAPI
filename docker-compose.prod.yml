@@ -6,7 +6,7 @@ services:
     container_name: tradeoffstack-db-prod
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-tradeoff_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required for production}
       POSTGRES_DB: tradeoffstack
     volumes:
       - pg_prod_data:/var/lib/postgresql/data
@@ -24,9 +24,11 @@ services:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__CoreConnection: Host=db;Database=tradeoffstack_core;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
-      ConnectionStrings__AssetConnection: Host=db;Database=tradeoffstack_assetportal;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:-Tr@de0ff_Secure!2026_Db#X9}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-Tr@de0ff_Super_Secret_Key_For_JWT_Auth_2026!}
+      ConnectionStrings__CoreConnection: Host=db;Database=tradeoffstack_core;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required for production}
+      ConnectionStrings__AssetConnection: Host=db;Database=tradeoffstack_assetportal;Username=${POSTGRES_USER:-tradeoff_admin};Password=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required for production}
+      Jwt__Key: ${JWT_SECRET_KEY:?JWT_SECRET_KEY is required for production}
+      CloudflareR2__AccessKey: ${R2_ACCESS_KEY:?R2_ACCESS_KEY is required for production}
+      CloudflareR2__SecretKey: ${R2_SECRET_KEY:?R2_SECRET_KEY is required for production}
       ASPNETCORE_ENVIRONMENT: Production
     restart: always
 

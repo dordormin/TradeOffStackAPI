@@ -46,9 +46,32 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
         var result = await _auth.LoginAsync(request, ct);
-        return result is null
-            ? Unauthorized(new { message = "Invalid credentials." })
-            : Ok(result);
+        if (result is null)
+            return Unauthorized(new { message = "Invalid credentials." });
+
+        // F-05: also issue the JWT as an HttpOnly cookie so browsers no longer
+        // need localStorage. The token stays in the response body as a fallback
+        // for non-browser clients (and plain-HTTP dev, where Secure cookies are refused).
+        Response.Cookies.Append("tos_auth", result.Token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Expires = result.ExpiresAt,
+            Path = "/"
+        });
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Logs out the current user by clearing the authentication cookie.
+    /// </summary>
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("tos_auth");
+        return Ok(new { message = "Logged out." });
     }
     
     /// <summary>
