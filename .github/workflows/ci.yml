@@ -35,10 +35,10 @@ jobs:
     - name: 🚀 Start Services (API & Database) via Docker Compose
       run: |
         echo "POSTGRES_USER=tradeoff_admin" >> .env
-        echo "POSTGRES_PASSWORD=Tr@de0ff_Secure!2026_Db#X9" >> .env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
         echo "POSTGRES_DB=tradeoffstack" >> .env
         echo "POSTGRES_PORT=5432" >> .env
-        echo "JWT_SECRET_KEY=Tr@de0ff_Super_Secret_Key_For_JWT_Auth_2026!" >> .env
+        echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
         docker compose up -d --build
 
     - name: 🩺 Wait for API to be healthy
@@ -226,7 +226,7 @@ jobs:
           # Inject production environment variables
           cat > .env << ENV_EOF
           POSTGRES_USER=tradeoff_admin
-          POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
           ENV_EOF
 
