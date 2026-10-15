@@ -2,9 +2,9 @@ name: TradeOffStack CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "feature/postman-tests" ]
+    branches: [ "dev", "preprod", "prod" ]
   pull_request:
-    branches: [ "main", "feature/postman-tests" ]
+    branches: [ "dev", "preprod", "prod" ]
 
 jobs:
   build-and-test:
@@ -103,10 +103,10 @@ jobs:
         path: frontend/screenshots/
 
     # ==========================================
-    # DOCKER PUBLISH TO GHCR (Only on push to main or feature/postman-tests)
+    # DOCKER PUBLISH TO GHCR (Only on push to prod)
     # ==========================================
     - name: 🔐 Log in to GitHub Container Registry
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/prod')
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
@@ -114,7 +114,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 🐳 Build and Push Docker Images to GHCR
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/prod')
       run: |
         OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
         
@@ -130,14 +130,14 @@ jobs:
     # 🚀 CONTINUOUS DEPLOYMENT (CD) TO HOSTINGER VPS
     # ==========================================
     - name: 🔍 Diagnose VPS Connectivity
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/prod')
       run: |
         echo "Testing connectivity to VPS..."
         echo "Target: ${{ secrets.VPS_IP }}:22"
         timeout 15 bash -c "cat < /dev/null > /dev/tcp/${{ secrets.VPS_IP }}/22" 2>&1 && echo "✅ Port 22 is OPEN" || echo "❌ Port 22 is UNREACHABLE"
 
     - name: 🚀 Deploy to VPS (All-in-One SSH)
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/postman-tests')
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/prod')
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.VPS_IP }}
